@@ -12,3 +12,4 @@ Slots: 12:30 IST and 19:30 IST daily.
 | 2026-11-24 | Hasanamba Temple, Hassan (new style) | 09:30 IST | bZFW422j8Jw (uploaded via Zapier) |
 
 Note: Kailasa video rejected by user (boring, music too loud) - do not upload it.
+| 2026-11-24 | Pushkar Brahma Mandir (Savitri shrap, Kartik Purnima) — new style | 12:30 IST | (not uploaded: Zapier 429) | file videos/2026-11-24_pushkar-brahma-mandir.mp4 sent to user for manual upload; 693 credits |
