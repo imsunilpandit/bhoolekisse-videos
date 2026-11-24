@@ -35,3 +35,5 @@ Upload run 2026-11-24 23:31 IST (18:01 UK): channel still has only 3 uploads. Za
 | 2026-11-25 | 19:30 IST target | Brihadeeswarar 80-ton stone (videos/2026-11-25_brihadeeswarar-80-ton-stone.mp4) | PENDING UPLOAD — not attempted (channel rate limit) |
 | 2026-11-26 | 12:30 IST target | Konark wheel clock (videos/2026-11-24_konark-wheel-clock.mp4) | PENDING UPLOAD — not attempted (channel rate limit) |
 | 2026-11-26 | 19:30 IST target | Rani ki Vav (videos/2026-11-24_rani-ki-vav.mp4) | PENDING UPLOAD — not attempted (channel rate limit) |
+| 2026-11-25 | Loktak Lake / Keibul Lamjao floating national park (phumdi 20/80, Sangai 14→260) — NEW recipe "misty lake dawn": code-drawn lake world + real lake photo, ripple / water-rise / water-fall transitions, Three.js phumdi + globe + bars, water SFX pack, lake pentatonic music | not scheduled (user decides) | — | file videos/2026-11-25_loktak-floating-park.mp4; 1,089 credits; voice -15.5 / music -37.8 / sfx -31.7 LUFS; final -14.1 LUFS, peak -2.9 |
+Note (2026-11-24 21:40 UK): user's Downloads\bhoolekisse also holds iron-pillar, jantar-mantar, modhera videos made earlier today (not logged above).
