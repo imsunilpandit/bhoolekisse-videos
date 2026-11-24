@@ -1,0 +1,38 @@
+Please create 8 separate images for my documentary YouTube Short about the Konark Sun Temple (Odisha, India). After making all 8, put them in ONE ZIP file named konark_images.zip and give me the download link. Use exactly the file names below.
+
+RULES FOR EVERY IMAGE (very important):
+- Photorealistic documentary photo style.
+- One single subject, centered, fully visible, with some empty margin around it.
+- Plain pure white background (#FFFFFF) only: no scenery, no sky, no ground, no shadow on the background.
+- Soft, even daylight.
+- NO text, NO letters, NO numbers, NO watermark, NO logo, NO people.
+- Very sharp detail.
+- Portrait 2:3 size (1024x1536), PNG.
+
+IMAGES:
+
+1. 01_wheel.png
+The famous carved stone chariot wheel of the Konark Sun Temple, viewed perfectly straight-on from the front, the full circular wheel visible: 8 thick spokes and 8 thin spokes, a central axle hub, a rim decorated with small carved beads, weathered reddish-brown khondalite stone with fine relief carvings.
+
+2. 02_temple.png
+The Konark Sun Temple shown as a complete standalone monument, three-quarter view, the giant stone chariot-shaped structure with carved wheels along its base and horses at the front, warm golden sandstone tones, isolated from its surroundings.
+
+3. 03_wheel_rim_closeup.png
+Extreme close-up of the rim of a carved Konark stone wheel, showing a row of small round carved beads along the edge and the joint of one thick spoke, weathered reddish-brown stone texture.
+
+4. 04_horse.png
+A carved stone war horse sculpture from the Konark Sun Temple, side view, rearing and galloping, ornate harness carvings, weathered grey-brown stone.
+
+5. 05_surya_chariot.png
+An ancient Indian temple sculpture style stone relief of the Sun God Surya standing on a chariot pulled by seven horses, carved in reddish stone.
+
+6. 06_ship.png
+A 16th-century wooden sailing ship with full sails, side view, on its own without sea or sky.
+
+7. 07_compass.png
+An antique brass ship's compass with the lid open, viewed from directly above, an aged paper compass card and a needle.
+
+8. 08_lodestone.png
+A large dark natural lodestone (magnetite) rock with a rough metallic surface and some iron filings sticking to it.
+
+If any image comes out with a background or text, please redo that image with a plain white background and no text before making the ZIP.

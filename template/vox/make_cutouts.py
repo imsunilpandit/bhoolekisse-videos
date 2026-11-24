@@ -4,10 +4,7 @@ import sys, os, numpy as np, cv2
 from PIL import Image, ImageFilter
 from rembg import remove, new_session
 
-SRC, OUT = sys.argv[1], sys.argv[2]
-os.makedirs(OUT, exist_ok=True)
-sess = new_session('isnet-general-use')
-
+sess=None
 def up(img, target_h):
     s = target_h / img.height
     return img.resize((int(img.width * s), target_h), Image.LANCZOS) if s > 1 else img
@@ -87,33 +84,38 @@ def save_set(name, rgba, border=14):
 def cut(img):
     return remove(img, session=sess, post_process_mask=True)
 
-# 1) 54 ft statue (clean sky photo)
-im = up(Image.open(f'{SRC}/03_statue_sky.jpg').convert('RGB'), 1500)
-save_set('statue54', cut(im))
 
-# 2) statue on pedestal with clock tower context (crowd photo) - statue+pedestal only, crowd cut away
-im = Image.open(f'{SRC}/04_statue_crowd.jpg').convert('RGB')
-im = up(im.crop((170, 0, 470, 405)), 1500)
-save_set('statue54_pedestal', cut(im))
-
-# 3) mandir building: crop above crowd/tent, remove sky
-im = Image.open(f'{SRC}/05_mandir.jpg').convert('RGB').crop((170, 60, 1900, 1080))
-m = np.array(cut(im))
-al = (m[..., 3] > 40).astype(np.uint8)
-n, lab, st, _ = cv2.connectedComponentsWithStats(al)
-keep = 1 + np.argmax(st[1:, cv2.CC_STAT_AREA])
-m[..., 3] = np.where(lab == keep, m[..., 3], 0)
-H = m.shape[0]; cutoff = int(H * 0.86)   # drop tent/crowd edge at the very bottom
-m[cutoff:, :, 3] = 0
-save_set('mandir', Image.fromarray(m, 'RGBA'), border=16)
-
-# 4) garbhagriha: rectangular photo card (no bg removal; it is the sanctum) + Shani close-up
-im = Image.open(f'{SRC}/02_garbhagriha.jpg').convert('RGB')
-card = up(im.crop((20, 20, 460, 640)), 1500).convert('RGBA')
-save_set('garbhagriha', card, border=18)
-# Shani (stri roop) figure at Hanuman ji's feet - close-up crop for the reveal
-shani = up(im.crop((200, 340, 320, 438)), 900).convert('RGBA')
-save_set('shani_closeup', shani, border=18)
-# Hanuman ji face/murti close-up
-murti = up(im.crop((150, 160, 340, 470)), 1300).convert('RGBA')
-save_set('murti_closeup', murti, border=18)
+if __name__=='__main__':
+    SRC, OUT = sys.argv[1], sys.argv[2]
+    os.makedirs(OUT, exist_ok=True)
+    sess = new_session('isnet-general-use')
+    # 1) 54 ft statue (clean sky photo)
+    im = up(Image.open(f'{SRC}/03_statue_sky.jpg').convert('RGB'), 1500)
+    save_set('statue54', cut(im))
+    
+    # 2) statue on pedestal with clock tower context (crowd photo) - statue+pedestal only, crowd cut away
+    im = Image.open(f'{SRC}/04_statue_crowd.jpg').convert('RGB')
+    im = up(im.crop((170, 0, 470, 405)), 1500)
+    save_set('statue54_pedestal', cut(im))
+    
+    # 3) mandir building: crop above crowd/tent, remove sky
+    im = Image.open(f'{SRC}/05_mandir.jpg').convert('RGB').crop((170, 60, 1900, 1080))
+    m = np.array(cut(im))
+    al = (m[..., 3] > 40).astype(np.uint8)
+    n, lab, st, _ = cv2.connectedComponentsWithStats(al)
+    keep = 1 + np.argmax(st[1:, cv2.CC_STAT_AREA])
+    m[..., 3] = np.where(lab == keep, m[..., 3], 0)
+    H = m.shape[0]; cutoff = int(H * 0.86)   # drop tent/crowd edge at the very bottom
+    m[cutoff:, :, 3] = 0
+    save_set('mandir', Image.fromarray(m, 'RGBA'), border=16)
+    
+    # 4) garbhagriha: rectangular photo card (no bg removal; it is the sanctum) + Shani close-up
+    im = Image.open(f'{SRC}/02_garbhagriha.jpg').convert('RGB')
+    card = up(im.crop((20, 20, 460, 640)), 1500).convert('RGBA')
+    save_set('garbhagriha', card, border=18)
+    # Shani (stri roop) figure at Hanuman ji's feet - close-up crop for the reveal
+    shani = up(im.crop((200, 340, 320, 438)), 900).convert('RGBA')
+    save_set('shani_closeup', shani, border=18)
+    # Hanuman ji face/murti close-up
+    murti = up(im.crop((150, 160, 340, 470)), 1300).convert('RGBA')
+    save_set('murti_closeup', murti, border=18)
