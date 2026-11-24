@@ -1,5 +1,5 @@
 // ---------- motion layer: makes every image "alive" (overrides img/rot/cam) ----------
-let T=0;
+let T=0,DARKBG=false;
 const _hash=s=>{let h=7;for(const c of String(s))h=(h*31+c.charCodeAt(0))%9973;return h/9973*6.283};
 const _off=document.createElement('canvas');_off.width=1700;_off.height=1700;const _ox=_off.getContext('2d');
 // handheld camera: tiny continuous drift + breathing zoom on every scene
@@ -25,7 +25,7 @@ function img(n,cx,cy,h,sp,rp,a=1){const I=IM[n],S=IM[n+'_sk']||IM[n.split('_')[0
  const bob=(isBG?6:14)*Math.sin(T*1.25+k),sh=(isBG?0:0.035)*Math.sin(T*0.7+k);
  x.save();x.globalAlpha=a*cl(ent*3);x.translate(cx,cy+bob);x.rotate(r);x.transform(1,0,sh,1,0,0);x.scale(s*(isBG?1:1+0.06*Math.sin(T*0.6+k)),s);
  const X=-w/2,Y=-h/2;
- if(rp<1&&S&&sp>0){x.save();x.beginPath();x.rect(X-10,Y-10,w+20,(h+20)*eo(sp));x.clip();x.globalAlpha=a*0.9;x.drawImage(S,X,Y,w,h);x.restore()}
+ if(rp<1&&S&&sp>0){x.save();x.beginPath();x.rect(X-10,Y-10,w+20,(h+20)*eo(sp));x.clip();x.globalAlpha=a*0.9;if(DARKBG)x.filter='invert(1) brightness(1.25)';x.drawImage(S,X,Y,w,h);x.filter='none';x.restore()}
  if(rp>0){const yy=lerp(Y+h+10,Y-10,eio(rp));x.save();x.beginPath();x.rect(X-40,yy,w+80,Y+h+60-yy);x.clip();
   x.save();x.shadowColor='rgba(40,25,10,0.38)';x.shadowBlur=30;x.shadowOffsetY=16+6*Math.sin(T*1.25+k);x.shadowOffsetX=-10*Math.sin(T*0.8+k);
   if(isBG){x.fillStyle='#FBF8F1';x.fillRect(X,Y,w,h);x.restore();_parallax(I,w,h,k,a)}else{x.drawImage(I,X,Y,w,h);x.restore()}

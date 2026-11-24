@@ -15,17 +15,17 @@ function B_notes(t){sbStained(t);cam(lerp(1.06,1.0,eo(t/0.5)),540,930);const h=9
  const I=IM.pillar_stained;const w=I?I.width*h/I.height:420;const xs=[0.24,0.4,0.6,0.76];
  NOTES.forEach(([nm,at],i)=>{const tt=t-(at-4.82);if(tt<0)return;const X=540-w/2+w*xs[i];
   x.save();x.globalAlpha=Math.max(0.25,1-tt*0.8);x.strokeStyle=GOLD;x.shadowColor=GOLD;x.shadowBlur=30;x.lineWidth=14;x.beginPath();x.moveTo(X,cy-h*0.32);x.lineTo(X,cy+h*0.3);x.stroke();x.restore();
-  ring(X,cy,tt/0.9,GOLD,2);pill(nm,X,cy-h*0.42+ (i%2)*70,tt/0.25,'#fff',RED,56)});
+  ring(X,cy,tt/0.9,GOLD,2);const side=i%2?1:-1;const PX=540+side*(w/2+95),PY=cy-300+i*170;x.save();x.strokeStyle='rgba(255,231,176,0.7)';x.lineWidth=3;x.setLineDash([8,8]);x.beginPath();x.moveTo(X,PY);x.lineTo(PX,PY);x.stroke();x.restore();pill(nm,PX,PY,tt/0.25,'#fff',RED,60)});
  headline('सा रे गा मा',540,385,(t-0.05)/0.4,104,'#FFE7B0')}
 // C 7.74-11.96: question
 function C_q(t){sbAnime(t);cam(1,540,930);img('pillar_anime',540,740,560,1,1,0.95);headline('कहाँ है?',540,385,cl(t/0.3+0.3),120,RED);
  commentBox(540,1030,(t-1.5)/0.4,'मुझे पता है...');const r=(t-2.4)/0.4;if(r>0){x.save();x.fillStyle='rgba(30,25,22,0.9)';x.fillRect(0,1190,W,220*eo(r));x.restore();headline('असली राज़',540,1345,(t-2.6)/0.45,120,'#E8C26A')}}
 // D 11.96-17.62: Hampi, Vittala temple, Vijayanagara
 function D_temple(t){sbMiniature(t);cam(lerp(1.0,1.05,cl(t/5.6)),540,930);const rise=eo(cl(t/0.6));
- x.save();x.translate(0,lerp(240,0,rise));img('temple_miniature',540,760,520,cl(t/0.6),cl((t-0.5)/0.9));x.restore();
+ x.save();x.translate(0,lerp(240,0,rise));img('temple_miniature',540,700,500,cl(t/0.6),cl((t-0.5)/0.9));x.restore();
  headline('विजय विट्ठल मंदिर',540,385,(t-2.1)/0.5,92,'#F3D58A');label('हम्पी, कर्नाटक',540,470,0.03,(t-0.6)/0.35,48);
- if(t>3.4){const p=eo(cl((t-3.5)/0.6));rot('chariot_miniature',lerp(1300,560,p),1080,420,lerp(0.2,0,p));dust(560,1260,(t-4.0)/0.8)}
- pill('विजयनगर साम्राज्य',540,1350,(t-3.6)/0.35,'#fff',BLUE,44)}
+ if(t>3.4){const p=eo(cl((t-3.5)/0.6));rot('chariot_miniature',lerp(1300,700,p),1110,330,lerp(0.2,0,p));dust(700,1270,(t-4.0)/0.8)}
+ pill('विजयनगर साम्राज्य',330,1180,(t-3.6)/0.35,'#fff',BLUE,40)}
 // E 17.62-23.02: blueprint 56 pillars + 12 ft scale
 function E_count(t){bpBG();cam(1,540,930);
  if(t<3.0){const n=Math.floor(cl((t-1.5)/1.3)*56+0.0001);
@@ -63,12 +63,12 @@ function I_inside(t){sbInk(t);cam(lerp(1.0,1.06,cl(t/2.9)),540,930);img('cutpill
  x.setTransform(1,0,0,1,0,0);const v=x.createRadialGradient(540,900,250,540,900,1100);v.addColorStop(0,'rgba(20,15,30,0)');v.addColorStop(1,`rgba(20,15,30,${0.25*eo(t/0.6)})`);x.fillStyle=v;x.fillRect(0,0,W,H);
  circ(640,860,140,300,(t-1.4)/0.8);headline('अंदर?',540,385,cl(t/0.4+0.3),120,'#1E1A18');label('बस ठोस पत्थर',540,1360,0.02,(t-1.5)/0.35,48)}
 // J 39.03-45.4: wearing away -> don't touch, just feel
-function J_care(t){sbWarli(t);cam(1,540,930);img('pillar_warli',400,860,860,1,1);
- for(let i=0;i<14;i++){const q=cl((t-0.6-i*0.08)/0.4);if(q<=0)continue;sd=31+i;const X=320+rnd()*170,Y=520+rnd()*700;x.save();x.globalAlpha=0.5*q;x.fillStyle='#f3ead8';x.beginPath();x.ellipse(X,Y,10+rnd()*16,5+rnd()*8,rnd()*3,0,7);x.fill();x.restore()}
- label('घिस रहे हैं',400,1340,-0.03,(t-1.6)/0.35,46);
+function J_care(t){sbWarli(t);cam(1,540,930);img('pillar_warli',400,800,760,1,1);
+ for(let i=0;i<14;i++){const q=cl((t-0.6-i*0.08)/0.4);if(q<=0)continue;sd=31+i;const X=330+rnd()*150,Y=500+rnd()*600;x.save();x.globalAlpha=0.6*q;x.fillStyle='#5a2414';x.beginPath();x.ellipse(X,Y,10+rnd()*16,5+rnd()*8,rnd()*3,0,7);x.fill();x.restore()}
+ label('घिस रहे हैं',400,1225,-0.03,(t-1.6)/0.35,44);
  const np=(t-3.8)/0.35;if(np>0){x.save();x.translate(790,620);x.scale(back(np),back(np));x.strokeStyle='#FAF5EB';x.lineWidth=14;x.beginPath();x.arc(0,0,110,0,7);x.stroke();x.beginPath();x.moveTo(-78,-78);x.lineTo(78,78);x.stroke();
   x.fillStyle='#FAF5EB';x.beginPath();x.roundRect(-28,-30,56,80,20);x.fill();for(let k=0;k<4;k++){x.beginPath();x.roundRect(-30+k*16,-78,12,56,6);x.fill()}x.restore();pill('छूना नहीं',790,790,np,'#fff',RED,46)}
- if(t>4.8){const p=eo(cl((t-4.8)/0.5));rot('veena_warli',790,lerp(1500,1060,p),420,-0.4);floatNotes(t-5.0,790,980,'#FAF5EB');pill('बस महसूस करना',790,1300,(t-5.0)/0.35,'#fff',BLUE,40)}
+ if(t>4.8){const p=eo(cl((t-4.8)/0.5));rot('veena_warli',790,lerp(1500,980,p),360,-0.4);floatNotes(t-5.0,790,980,'#FAF5EB');pill('बस महसूस करना',790,1225,(t-5.0)/0.35,'#fff',BLUE,38)}
  headline('बचाइए',540,385,(t-0.1)/0.4,120,'#FAF5EB')}
 // K 45.4-52.04: CTA
 function K_cta(t){cam(1,540,930);img('bg',540,720,620,1,1,0.98);floatNotes(t,540,620,'#FFF3D6');headline('पत्थर भी गाते हैं!',540,385,cl(t/0.35+0.3),92,RED);
