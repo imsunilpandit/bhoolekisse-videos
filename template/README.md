@@ -1,5 +1,7 @@
 # Bhoole Kisse templates
 
+PHOTO RULE (user decision 2026-11-24, latest): NO automation — videos are made only when the user asks in chat. Visuals are built from the user's real photos: cut out with rembg (vox/make_cutouts.py -> engraved colour cut-out with white sticker border + matching pencil sketch layer), then in the scene each photo draws as a pencil sketch and a glowing line wipes it into the real photo, with paper labels, red circles, measurement lines on top. Reference project: projects/sarangpur-hanuman-vox (vox/scene_photos.html + vox/render_photos.py serve over http so canvas is not tainted).
+
 MAIN STYLE (user decision 2026-11-24): vox/ = Vox-style editorial paper documentary. Use it for every video unless the user asks otherwise.
 - vox/: paper texture + faint grid, big Rozha One headline (deep blue #1F3A85), small paper labels (Tiro Devanagari italic) with shadow, rounded value pills, dashed measurement lines and axes/maps/charts/timelines, objects that first draw as pencil sketch then wipe into a coloured engraved cut-out with white sticker border + drop shadow, red hand-drawn circle markers, slow camera push/pull between sections. Fonts referenced from fonts/fontsource-*/package/files (npm pack @fontsource/rozha-one @fontsource/tiro-devanagari-hindi @fontsource/inter).
 

@@ -1,0 +1,191 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+html,body{margin:0;background:#000}
+@font-face{font-family:Rozha;src:url(fonts/fontsource-rozha-one-5.3.0/package/files/rozha-one-devanagari-400-normal.woff2)}
+@font-face{font-family:Rozha;src:url(fonts/fontsource-rozha-one-5.3.0/package/files/rozha-one-latin-400-normal.woff2)}
+@font-face{font-family:Tiro;src:url(fonts/fontsource-tiro-devanagari-hindi-5.3.0/package/files/tiro-devanagari-hindi-devanagari-400-normal.woff2)}
+@font-face{font-family:Tiro;src:url(fonts/fontsource-tiro-devanagari-hindi-5.3.0/package/files/tiro-devanagari-hindi-latin-400-normal.woff2)}
+@font-face{font-family:TiroI;src:url(fonts/fontsource-tiro-devanagari-hindi-5.3.0/package/files/tiro-devanagari-hindi-devanagari-400-italic.woff2)}
+@font-face{font-family:TiroI;src:url(fonts/fontsource-tiro-devanagari-hindi-5.3.0/package/files/tiro-devanagari-hindi-latin-400-italic.woff2)}
+@font-face{font-family:Inter;font-weight:700;src:url(fonts/fontsource-inter-5.3.0/package/files/inter-latin-700-normal.woff2)}
+</style></head><body><canvas id="c" width="1080" height="1920"></canvas><script>
+const c=document.getElementById('c'),x=c.getContext('2d'),W=1080,H=1920;
+const cl=v=>Math.max(0,Math.min(1,v)),eo=v=>1-Math.pow(1-cl(v),3),eio=v=>{v=cl(v);return v<.5?4*v*v*v:1-Math.pow(-2*v+2,3)/2};
+const back=v=>{v=cl(v);const s=1.7;return 1+(s+1)*Math.pow(v-1,3)+s*Math.pow(v-1,2)};const lerp=(a,b,t)=>a+(b-a)*t;
+let sd=11;const rnd=()=>{sd=(sd*16807)%2147483647;return sd/2147483647};
+const BLUE='#1F3A85',RED='#C8372D',INK='#2a2420';
+// ---------- paper ----------
+const paper=document.createElement('canvas');paper.width=W;paper.height=H;{const g=paper.getContext('2d');g.fillStyle='#EFE8DA';g.fillRect(0,0,W,H);
+ for(let i=0;i<1600;i++){const r=20+rnd()*120,X=rnd()*W,Y=rnd()*H,gr=g.createRadialGradient(X,Y,0,X,Y,r);gr.addColorStop(0,rnd()>.5?'rgba(255,252,240,0.035)':'rgba(150,120,80,0.025)');gr.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=gr;g.fillRect(X-r,Y-r,2*r,2*r)}
+ for(let i=0;i<60000;i++){g.fillStyle=`rgba(60,45,30,${rnd()*0.07})`;g.fillRect(rnd()*W,rnd()*H,1.4,1.4)}
+ g.strokeStyle='rgba(120,110,95,0.07)';g.lineWidth=1;for(let i=0;i<W;i+=36){g.beginPath();g.moveTo(i,0);g.lineTo(i,H);g.stroke()}for(let i=0;i<H;i+=36){g.beginPath();g.moveTo(0,i);g.lineTo(W,i);g.stroke()}}
+// ---------- assets ----------
+const IM={};const names=['garbhagriha','shani_closeup','murti_closeup','mandir','statue54','statue54_pedestal','logo'];
+function load(n,src){return new Promise(r=>{const i=new Image();i.onload=()=>{IM[n]=i;r()};i.onerror=()=>{console.log('missing',src);r()};i.src=src})}
+const loads=[];names.forEach(n=>{if(n==='logo'){loads.push(load(n,'logo.png'));return}loads.push(load(n,`assets/${n}.png`));loads.push(load(n+'_sk',`assets/${n}_sketch.png`))});
+let TM=null;loads.push(fetch('timing.json').then(r=>r.json()).then(j=>TM=j));
+// ---------- helpers ----------
+function label(s,X,Y,rot,p,fs=46,font='TiroI'){if(p<=0)return;const sc=back(p);x.save();x.translate(X,Y);x.rotate(rot);x.scale(sc,sc);x.font=`${fs}px ${font}`;const w=x.measureText(s).width+44,h=fs*1.55;
+ x.shadowColor='rgba(40,25,10,0.28)';x.shadowBlur=14;x.shadowOffsetY=6;x.fillStyle='#F8F4EA';x.fillRect(-w/2,-h/2,w,h);x.shadowColor='transparent';x.fillStyle='rgba(120,100,70,0.08)';x.fillRect(-w/2,h/2-6,w,6);
+ x.fillStyle=INK;x.textAlign='center';x.textBaseline='middle';x.fillText(s,0,4);x.restore()}
+function pill(s,X,Y,p,col=INK,bg='rgba(250,246,238,0.96)',fs=38){if(p<=0)return;const sc=back(p);x.save();x.translate(X,Y);x.scale(sc,sc);x.font=`${fs}px Tiro`;const w=x.measureText(s).width+44,h=fs*1.5;
+ x.shadowColor='rgba(40,25,10,0.22)';x.shadowBlur=10;x.shadowOffsetY=4;x.fillStyle=bg;x.beginPath();x.roundRect(-w/2,-h/2,w,h,h/2);x.fill();x.shadowColor='transparent';x.fillStyle=col;x.textAlign='center';x.textBaseline='middle';x.fillText(s,0,4);x.restore()}
+function headline(s,X,Y,p,fs=118,col=BLUE,align='center'){if(p<=0)return;x.save();x.font=`${fs}px Rozha`;x.textAlign=align;const w=x.measureText(s).width;const L=align==='center'?X-w/2:X;
+ x.beginPath();x.rect(L-20,Y-fs*1.1,(w+40)*eo(p),fs*1.5);x.clip();x.fillStyle=col;x.shadowColor='rgba(20,30,60,0.18)';x.shadowBlur=6;x.shadowOffsetY=4;x.fillText(s,X,Y);x.restore()}
+// image placed by centre+height; sketch draws in (top->bottom pencil reveal), then glowing line wipes upward to the real cut-out
+function img(n,cx,cy,h,sp,rp,a=1){const I=IM[n],S=IM[n+'_sk'];if(!I)return null;const w=I.width*h/I.height,X=cx-w/2,Y=cy-h/2;x.save();x.globalAlpha=a;
+ if(rp<1&&S&&sp>0){x.save();x.beginPath();x.rect(X-10,Y-10,w+20,(h+20)*eo(sp));x.clip();x.globalAlpha=a*0.9;x.drawImage(S,X,Y,w,h);x.restore()}
+ if(rp>0){const yy=lerp(Y+h+10,Y-10,eio(rp));x.save();x.beginPath();x.rect(X-40,yy,w+80,Y+h+60-yy);x.clip();x.shadowColor='rgba(40,25,10,0.35)';x.shadowBlur=26;x.shadowOffsetY=14;x.drawImage(I,X,Y,w,h);x.restore();
+  if(rp<1){x.save();x.strokeStyle='rgba(255,250,235,0.95)';x.lineWidth=4;x.shadowColor='rgba(255,210,120,1)';x.shadowBlur=24;x.beginPath();x.moveTo(X-30,yy);x.lineTo(X+w+30,yy);x.stroke();x.restore()}}
+ x.restore();return {X,Y,w,h}}
+function circ(cx,cy,rx,ry,p,col=RED){if(p<=0)return;x.save();x.strokeStyle=col;x.lineWidth=7;x.lineCap='round';x.beginPath();const N=70;for(let i=0;i<=N*cl(p);i++){const a=-1.3+i/N*6.7,r=1+Math.sin(i*0.45)*0.025+i*0.0012;const X=cx+Math.cos(a)*rx*r,Y=cy+Math.sin(a)*ry*r;i?x.lineTo(X,Y):x.moveTo(X,Y)}x.stroke();x.restore()}
+function arrow(x0,y0,x1,y1,p,col=RED){if(p<=0)return;const q=eo(p),X=lerp(x0,x1,q),Y=lerp(y0,y1,q);x.save();x.strokeStyle=col;x.fillStyle=col;x.lineWidth=7;x.lineCap='round';x.beginPath();x.moveTo(x0,y0);x.quadraticCurveTo((x0+X)/2+30,(y0+Y)/2-30,X,Y);x.stroke();
+ if(q>0.9){const a=Math.atan2(y1-y0,x1-x0);x.beginPath();x.moveTo(X,Y);x.lineTo(X-30*Math.cos(a-0.45),Y-30*Math.sin(a-0.45));x.lineTo(X-30*Math.cos(a+0.45),Y-30*Math.sin(a+0.45));x.closePath();x.fill()}x.restore()}
+function dashed(x0,y0,x1,y1,p){if(p<=0)return;x.save();x.strokeStyle='rgba(42,36,32,0.75)';x.lineWidth=3;x.setLineDash([14,10]);x.beginPath();x.moveTo(x0,y0);x.lineTo(lerp(x0,x1,eo(p)),lerp(y0,y1,eo(p)));x.stroke();x.restore()}
+function count(a,b,p){return Math.round(lerp(a,b,eo(p)))}
+const hi=n=>n.toLocaleString('en-IN');
+// ---------- scenes (start times = voice line starts) ----------
+const L=[0.0,4.88,8.79,16.19,21.07,27.66,31.73,39.23,44.72,51.15,55.37,63.21];
+function cam(s,fx,fy){x.setTransform(s,0,0,s,W/2-fx*s,H/2-fy*s)}
+const GUJ=[[68.2,23.6],[68.6,24.3],[70.0,24.6],[71.1,24.6],[72.3,24.5],[73.0,24.4],[73.4,23.9],[74.3,23.4],[74.0,22.7],[74.2,22.3],[73.6,21.7],[73.9,21.2],[73.5,20.6],[72.9,20.3],[72.8,20.9],[72.6,21.6],[72.5,22.2],[72.1,21.9],[72.2,21.2],[71.6,20.8],[70.9,20.7],[70.0,21.0],[69.2,21.7],[68.95,22.3],[69.7,22.7],[70.3,22.6],[70.5,23.0],[69.7,22.9],[68.9,23.0],[68.4,23.3]];
+const gp=(lo,la)=>[120+(lo-68)*118,1080-(la-20)*118];
+function S0(t){ // hook: sanctum, who is at his feet?
+ const z=lerp(1.0,1.12,cl(t/4.8));cam(z,540,900);
+ img('garbhagriha',540,930,960,1,cl((t-0.5)/0.9));
+ headline('पैरों के नीचे',540,330,cl(t/0.45+0.6),112);
+ headline('कौन?',540,450,(t-0.9)/0.4,112,RED);
+ // Shani figure sits at bottom-centre of the card
+ circ(568,1022,95,72,(t-2.6)/0.9);arrow(300,1300,480,1075,(t-3.2)/0.5);
+ label('एक स्त्री?',230,1340,-0.05,(t-3.6)/0.35,48)}
+function S1(t){ // punch into Shani close-up
+ const z=lerp(1.08,1.0,eo(t/0.5));cam(z,540,860);
+ img('shani_closeup',540,860,860,cl(t/0.5),cl((t-0.4)/0.8));
+ circ(800,870,175,235,(t-1.0)/0.8);
+ label('स्त्री रूप',260,470,-0.05,(t-1.3)/0.35,50);
+ if(t>2.5){headline('शनिदेव!',540,1385,(t-2.55)/0.35,130,RED)}}
+function S2(t){ // map -> mandir
+ const sw=cl((t-3.0)/0.6); // map out, mandir in
+ if(sw<1){cam(lerp(1,1.6,eio(sw)),lerp(540,gp(71.77,22.16)[0],sw),lerp(800,gp(71.77,22.16)[1],sw));x.save();x.globalAlpha=1-sw;
+  const p=cl(t/1.0);x.save();x.lineWidth=4;x.strokeStyle=INK;x.lineJoin='round';const n=GUJ.length,k=Math.floor(n*p);x.beginPath();for(let i=0;i<=k&&i<n;i++){const q=gp(...GUJ[i]);i?x.lineTo(...q):x.moveTo(...q)}if(p>=1)x.closePath();x.fillStyle='rgba(214,190,140,0.45)';if(p>=1)x.fill();x.stroke();x.restore();
+  pill('गुजरात',380,560,(t-0.6)/0.35,'#fff',BLUE,44);
+  const sp=gp(71.77,22.16);const pp=(t-1.3)/0.4;if(pp>0){x.save();x.translate(sp[0],sp[1]-60*(1-back(pp)));x.fillStyle=RED;x.beginPath();x.arc(0,-34,22,0,7);x.fill();x.beginPath();x.moveTo(-16,-22);x.lineTo(16,-22);x.lineTo(0,4);x.closePath();x.fill();x.fillStyle='#fff';x.beginPath();x.arc(0,-34,8,0,7);x.fill();x.restore()}
+  label('बोटाद ज़िला',sp[0]+150,sp[1]+70,0.04,(t-1.0)/0.35,40);label('सारंगपुर',sp[0]+30,sp[1]-120,-0.03,(t-1.6)/0.35,48);x.restore()}
+ if(sw>0){const tt=t-3.0;cam(lerp(1.0,1.06,cl(tt/4)),540,900);
+  img('mandir',540,880,560,cl(tt/0.7),cl((tt-0.6)/0.9));
+  headline('कष्टभंजन देव',540,430,(tt-0.2)/0.6,104);
+  pill('दुखों को तोड़ने वाले',540,1310,(t-5.3)/0.4,'#fff',RED,44)}}
+function S3(t){ // timeline 1905 samvat + murti
+ cam(lerp(1.0,1.05,cl(t/4.5)),540,900);
+ const p=cl(t/0.9),Y=1215;x.save();x.strokeStyle=INK;x.lineWidth=4;x.beginPath();x.moveTo(110,Y);x.lineTo(lerp(110,970,eo(p)),Y);x.stroke();
+ x.font='34px Tiro';x.fillStyle=INK;x.textAlign='center';[[1800,'1800'],[1900,'1900'],[2000,'2000']].forEach(([yr,s],i)=>{const X=lerp(110,970,(yr-1780)/250);if(p*860+110<X)return;x.beginPath();x.moveTo(X,Y-14);x.lineTo(X,Y+14);x.stroke();x.fillText(s,X,Y+56)});x.restore();
+ const mx=lerp(110,970,(1849-1780)/250);if(t>0.9){x.save();x.fillStyle=RED;x.beginPath();x.arc(mx,Y,14*back((t-0.9)/0.3),0,7);x.fill();x.restore()}
+ pill('संवत 1905',mx+40,Y-80,(t-1.0)/0.35,'#fff',BLUE,42);
+ const yrs=count(0,177,(t-2.4)/1.2);if(t>2.4)pill(`≈ ${yrs} साल पहले`,700,Y+125,(t-2.4)/0.3,INK,'rgba(250,246,238,0.96)',38);
+ img('murti_closeup',560,720,720,cl((t-0.3)/0.6),cl((t-1.1)/0.9));
+ label('संत गोपालानंद स्वामी',540,280,-0.02,(t-1.5)/0.35,50);
+ label('मूर्ति स्थापना',780,1100,0.05,(t-3.3)/0.35,40)}
+function S4(t){ // the question
+ const z=lerp(1.12,1.0,eo(t/0.6));cam(z,540,900);
+ img('murti_closeup',330,800,620,1,cl(t/0.5),1);
+ img('shani_closeup',740,900,420,1,cl((t-0.4)/0.5),1);
+ headline('शनिदेव',540,330,(t-1.3)/0.4,96);
+ label('जिनसे दुनिया डरती है',540,450,0.02,(t-2.0)/0.35,44);
+ const q=(t-3.8)/0.4;if(q>0){x.save();x.translate(540,1330);x.scale(back(q),back(q));x.font='200px Rozha';x.textAlign='center';x.fillStyle=RED;x.fillText('?',0,50);x.restore()}
+ pill('स्त्री रूप में क्यों?',540,1175,(t-4.4)/0.35,'#fff',BLUE,46)}
+function commentBox(cx,cy,p,txt){if(p<=0)return;const s=back(p);x.save();x.translate(cx,cy);x.scale(s,s);x.shadowColor='rgba(40,25,10,0.28)';x.shadowBlur=18;x.shadowOffsetY=8;x.fillStyle='#FBF8F1';x.beginPath();x.roundRect(-380,-110,760,220,28);x.fill();x.shadowColor='transparent';
+ x.fillStyle=BLUE;x.beginPath();x.arc(-290,-20,48,0,7);x.fill();x.fillStyle='#fff';x.beginPath();x.arc(-290,-36,17,0,7);x.fill();x.beginPath();x.arc(-290,10,28,Math.PI,0);x.fill();
+ x.fillStyle='rgba(42,36,32,0.25)';x.fillRect(-215,-55,260,18);x.fillStyle=INK;x.font='46px Tiro';x.textAlign='left';x.textBaseline='middle';x.fillText(txt,-215,10);
+ x.fillStyle='rgba(42,36,32,0.45)';x.font='30px Tiro';x.fillText('कमेंट',-215,72);x.restore()}
+function S5(t){ // comment + raaz
+ cam(1,540,900);
+ headline('क्या आपको',540,420,cl(t/0.35+0.4),104);headline('पता है?',540,550,(t-0.25)/0.35,118,RED);
+ commentBox(540,850,(t-0.9)/0.4,'मुझे पता है...');
+ const r=(t-1.9)/0.4;if(r>0){x.save();x.globalAlpha=cl(r);x.fillStyle='rgba(30,25,22,0.88)';x.fillRect(0,1080*1,W,420*eo(r));x.restore();
+  headline('असली राज़',540,1330,(t-2.4)/0.5,130,'#E8C26A')}}
+function shaniPlanet(cx,cy,r,p,ang=1){if(p<=0)return;x.save();x.translate(cx,cy);x.scale(back(p),back(p));
+ for(let i=0;i<14;i++){const a=i/14*6.283+ang*0.2;x.strokeStyle=`rgba(40,20,40,${0.35*ang})`;x.lineWidth=6;x.beginPath();x.moveTo(Math.cos(a)*r*1.3,Math.sin(a)*r*1.3);x.lineTo(Math.cos(a)*r*(2.0+0.2*Math.sin(i*3)),Math.sin(a)*r*(2.0+0.2*Math.sin(i*3)));x.stroke()}
+ x.shadowColor='rgba(40,25,10,0.35)';x.shadowBlur=20;x.shadowOffsetY=10;const g=x.createRadialGradient(-r*0.3,-r*0.3,r*0.1,0,0,r);g.addColorStop(0,'#8a8fa8');g.addColorStop(1,'#2d2f45');x.fillStyle=g;x.beginPath();x.arc(0,0,r,0,7);x.fill();x.shadowColor='transparent';
+ x.strokeStyle='#c9b483';x.lineWidth=12;x.beginPath();x.ellipse(0,0,r*1.7,r*0.45,-0.35,0.15*Math.PI,1.85*Math.PI,true);x.stroke();x.restore()}
+function S6(t){ // story: Shani's anger, Hanuman sets out
+ const sw=cl((t-4.0)/0.5);
+ if(sw<1){cam(lerp(1,1.05,cl(t/4)),540,900);x.save();x.globalAlpha=1-sw;
+  shaniPlanet(540,700,140,(t-0.2)/0.5,1+Math.sin(t*6)*0.15);
+  // earth arc with cracks
+  const ep=cl((t-0.8)/0.6);x.save();x.strokeStyle=INK;x.lineWidth=5;x.beginPath();x.arc(540,2100,980,Math.PI*1.25,Math.PI*1.25+Math.PI*0.5*eo(ep));x.stroke();
+  x.strokeStyle=RED;x.lineWidth=4;[[380,1160],[560,1125],[730,1150]].forEach(([X,Y],i)=>{const q=cl((t-1.6-i*0.2)/0.3);if(q<=0)return;x.beginPath();x.moveTo(X,Y);x.lineTo(X+18*q,Y+40*q);x.lineTo(X-6*q,Y+80*q);x.lineTo(X+12*q,Y+120*q);x.stroke()});x.restore();
+  headline('शनि का क्रोध',540,330,(t-0.4)/0.5,110);
+  label('धरती पर कहर',540,1380,-0.03,(t-2.0)/0.35,50);x.restore()}
+ if(sw>0){const tt=t-4.0;cam(lerp(1.0,1.08,cl(tt/3.2)),540,880);
+  img('statue54_pedestal',540,860,980,cl(tt/0.6),cl((tt-0.5)/0.9));
+  label('भक्तों की पुकार',290,420,-0.05,(tt-0.1)/0.35,46);
+  pill('दंड देने निकले',540,1390,(tt-1.8)/0.35,'#fff',RED,46)}}
+function S7(t){ // whisper: bal brahmachari
+ cam(lerp(1.0,1.1,cl(t/5)),540,880);
+ img('statue54',540,880,1000,1,1);
+ x.setTransform(1,0,0,1,0,0);const v=x.createRadialGradient(540,880,250,540,880,1100);v.addColorStop(0,'rgba(20,15,30,0)');v.addColorStop(1,`rgba(20,15,30,${0.7*eo(t/0.6)})`);x.fillStyle=v;x.fillRect(0,0,W,H);
+ shaniPlanet(870,420,60,(t-0.1)/0.4,0.6);
+ headline('बाल ब्रह्मचारी',540,300,(t-1.4)/0.6,104,'#F3E2B3');
+ label('स्त्री पर हाथ नहीं उठाएँगे',540,1380,0.02,(t-3.4)/0.35,44)}
+function S8(t){ // the trick: stri roop, kshama
+ const z=lerp(1.15,1.0,eo(t/0.5));cam(z,540,880);
+ img('garbhagriha',540,880,980,1,1);
+ circ(570,980,100,76,(t-0.6)/0.8);
+ label('शनिदेव = स्त्री रूप',300,1340,-0.04,(t-1.0)/0.35,46);
+ arrow(780,580,620,930,(t-2.4)/0.6,BLUE);label('चरणों में',820,520,0.04,(t-2.3)/0.35,46);
+ pill('क्षमा',540,300,(t-3.2)/0.35,'#fff',RED,56);pill('माफ़ी मिली',540,390,(t-4.4)/0.35,'#fff',BLUE,46)}
+function S9(t){ // belief
+ cam(lerp(1.0,1.06,cl(t/4)),540,900);
+ img('mandir',540,860,500,1,cl(t/0.5));
+ headline('मान्यता',540,380,(t-0.1)/0.5,120);
+ pill('शनि की पीड़ा कम',540,1240,(t-1.9)/0.35,'#fff',RED,46);
+ label('दर्शन से',540,1150,-0.03,(t-1.4)/0.35,42)}
+function S10(t){ // 54 ft statue scale scene
+ cam(lerp(1.02,1.0,cl(t/7.8)),540,900);
+ const top=360,bot=1300,AX=880;
+ // axis 0..60 ft
+ const ap=cl(t/1.0);x.save();x.strokeStyle='rgba(42,36,32,0.8)';x.lineWidth=3;x.beginPath();x.moveTo(AX,bot);x.lineTo(AX,lerp(bot,top-40,eo(ap)));x.stroke();
+ x.font='30px Tiro';x.fillStyle='rgba(42,36,32,0.85)';x.textAlign='right';for(let f=0;f<=60;f+=10){const y=bot-(f/54)*(bot-top);if(y<lerp(bot,top-40,eo(ap)))continue;x.beginPath();x.moveTo(AX,y);x.lineTo(AX-(f%20===0?26:14),y);x.stroke();if(f%20===0&&f>0)x.fillText(f+' फुट',AX-34,y+10)}
+ x.beginPath();x.moveTo(90,bot);x.lineTo(lerp(AX,90,eo(ap)),bot);x.stroke();x.restore();
+ const I=IM.statue54;const sh=bot-top,sw=I?I.width*sh/I.height:500;const cx=420;
+ img('statue54',cx,(top+bot)/2,sh,cl((t-0.4)/0.9),cl((t-1.3)/1.0));
+ dashed(cx+sw*0.1,top,AX-10,top,(t-1.8)/0.6);
+ const ft=count(0,54,(t-1.8)/1.0);if(t>1.8)pill(`${ft} फुट`,AX-80,top-50,(t-1.8)/0.3,'#fff',BLUE,44);
+ headline('चौवन फीट',540,250,(t-1.6)/0.5,104,BLUE);
+ // human scale 1.7 m ~ 5.6 ft
+ const hp=(t-3.0)/0.4;if(hp>0){const hh=(5.6/54)*sh,X=750;x.save();x.globalAlpha=cl(hp*2);x.fillStyle=INK;x.beginPath();x.arc(X,bot-hh+9,9,0,7);x.fill();x.fillRect(X-7,bot-hh+20,14,hh*0.45);x.fillRect(X-7,bot-hh*0.5,5,hh*0.5);x.fillRect(X+2,bot-hh*0.5,5,hh*0.5);x.restore();pill('इंसान',X,bot-hh-40,hp,INK,'rgba(250,246,238,0.96)',32)}
+ const kg=count(0,30000,(t-3.1)/1.1);if(t>3.0)pill(`${hi(kg)} किलो`,240,1358,(t-3.0)/0.3,'#fff',RED,46);
+ label('पंचधातु',260,560,-0.04,(t-4.3)/0.35,46);
+ label('गदा 27 फुट',690,1040,0.04,(t-4.9)/0.35,40);
+ // visible from 7 km
+ const kp=(t-5.8)/0.5;if(kp>0){x.save();x.strokeStyle=RED;x.lineWidth=5;x.setLineDash([3,14]);x.lineCap='round';x.beginPath();x.moveTo(cx,top+60);x.lineTo(lerp(cx,900,eo(kp)),lerp(top+60,top-140,eo(kp)));x.stroke();x.restore();pill('7 किमी दूर से दिखती है',640,1358,kp,'#fff',BLUE,38)}}
+function S11(t){ // CTA + loop back to opening framing
+ cam(lerp(1.0,1.0,1),540,900);
+ img('garbhagriha',540,800,820,1,1,0.98);
+ headline('क्या आपको पता था?',540,300,cl(t/0.4+0.3),90,BLUE);
+ commentBox(480,1080,(t-1.9)/0.4,'हाँ, पता था!');
+ const sp=(t-4.6)/0.4;if(sp>0){x.save();x.translate(480,1300);const s=back(sp)*(1+0.04*Math.sin(t*8));x.scale(s,s);x.shadowColor='rgba(120,20,20,0.35)';x.shadowBlur=20;x.shadowOffsetY=8;x.fillStyle='#D92B2B';x.beginPath();x.roundRect(-230,-58,460,116,58);x.fill();x.shadowColor='transparent';x.fillStyle='#fff';x.font='700 52px Inter';x.textAlign='center';x.textBaseline='middle';x.fillText('SUBSCRIBE',0,4);x.restore()}}
+const SCN=[S0,S1,S2,S3,S4,S5,S6,S7,S8,S9,S10,S11];
+// ---------- captions ----------
+let CH=null;function chunks(){CH=[];let cur=[];TM.words.forEach((w,i)=>{cur.push(w);const end=/[.,!?।]$/.test(w.w)||cur.length>=4||i===TM.words.length-1;if(end){CH.push(cur);cur=[]}})}
+function captions(t){if(!CH)chunks();const ch=CH.find(c=>t>=c[0].s-0.05&&t<c[c.length-1].e+0.15);if(!ch)return;x.save();x.font='50px Tiro';const txt=ch.map(w=>w.w.replace(/\.\.\.$/,'')),ws=txt.map(s=>x.measureText(s+' ').width),tw=ws.reduce((a,b)=>a+b,0);
+ const Y=1488,p=eo((t-ch[0].s+0.05)/0.15);x.globalAlpha=p;x.shadowColor='rgba(40,25,10,0.3)';x.shadowBlur=12;x.shadowOffsetY=5;x.fillStyle='rgba(248,244,234,0.97)';x.beginPath();x.roundRect(480-tw/2-26,Y-48,tw+52,90,14);x.fill();x.shadowColor='transparent';
+ let X=480-tw/2;x.textBaseline='middle';ch.forEach((w,i)=>{const on=t>=w.s;x.fillStyle=on?(t<w.e+0.05?RED:INK):'rgba(42,36,32,0.38)';x.fillText(txt[i],X,Y);X+=ws[i]});x.restore()}
+// ---------- render ----------
+const ORIG=x.setTransform.bind(x);
+function drawScene(fn,t,off){x.save();x.setTransform=(a,b,cc,d,e,f)=>ORIG(a,b,cc,d,e+off,f);try{fn(t)}finally{x.setTransform=ORIG}x.restore()}
+window.render=function(t){x.setTransform(1,0,0,1,0,0);x.drawImage(paper,0,0);
+ let i=0;for(let k=0;k<L.length;k++)if(t>=L[k])i=k;
+ const tt=t-L[i];
+ // transition: previous scene slides out with paper flash for 0.25 s
+ const TR=0.25;
+ if(i>0&&tt<TR){const q=eio(tt/TR),off=W*(1-q);
+  drawScene(SCN[i-1],L[i]-L[i-1],-W*q);
+  x.save();x.setTransform(1,0,0,1,0,0);x.beginPath();x.rect(off,0,W,H);x.clip();x.drawImage(paper,off,0);drawScene(SCN[i],tt,off);x.restore();
+  x.setTransform(1,0,0,1,0,0);x.save();x.fillStyle='#F8F4EA';x.shadowColor='rgba(40,25,10,0.3)';x.shadowBlur=14;x.beginPath();x.moveTo(off-10,0);for(let y=0;y<=H;y+=40)x.lineTo(off-10+((y*7919)%23)-6,y);x.lineTo(off+8,H);x.lineTo(off+8,0);x.closePath();x.fill();x.restore()}
+ else SCN[i](tt);
+ x.setTransform(1,0,0,1,0,0);
+ const v=x.createRadialGradient(540,960,700,540,960,1250);v.addColorStop(0,'rgba(0,0,0,0)');v.addColorStop(1,'rgba(60,40,20,0.22)');x.fillStyle=v;x.fillRect(0,0,W,H);
+ captions(t);
+ // watermark
+ if(IM.logo){x.save();x.globalAlpha=0.85;x.drawImage(IM.logo,70,236,64,64);x.restore()}x.save();x.font='34px Rozha';x.fillStyle='rgba(42,36,32,0.75)';x.textBaseline='middle';x.fillText('भूले किस्से',144,270);x.restore()};
+window.ready=Promise.all([...loads,...['118px Rozha','46px TiroI','34px Tiro','700 20px Inter'].map(f=>document.fonts.load(f,'रहस्य 1'))]);
+</script></body></html>

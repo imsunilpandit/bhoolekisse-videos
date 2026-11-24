@@ -1,6 +1,7 @@
 # Bhoole Kisse — topics log
 
->>> STYLE + UPLOAD OVERRIDE (user, 2026-11-24) — this beats any older instruction in the scheduled-task prompt or skill:
+>>> LATEST (user, 2026-11-24 10:21 UK): NO AUTOMATION — scheduled video tasks are switched off; make videos only when the user asks in chat. Visuals = user's real photos cut out + pencil sketch -> real wipe (template/vox/make_cutouts.py, scene_photos.html).
+>>> STYLE + UPLOAD OVERRIDE (user, 2026-11-24, older) — this beats any older instruction in the scheduled-task prompt or skill:
 >>> - Style = 3D + 2.5D from template3d/ (three.js 3D shots + 2.5D parallax, everything enters on the word that names it). NO Kissa Diya mascot, no Hasanamba card style. Full rules: template3d/SKILL_bhoole-kisse-shorts.md + template3d/README.md.
 >>> - Voice with emotion: eleven_v4 audio tags ([excited], [curious], [softly], [dramatically], [pause], [warmly]); tighten gently (atempo 1.03).
 >>> - Script = KNOWLEDGE FIRST: hook -> "क्या आपको पता है...? कमेंट में लिखिए... और अब सुनिए असली राज़" -> kissa -> RAAZ reveal (sourced answer) -> takeaway -> CTA "क्या आपको ये पहले से पता था?". Never end on an unanswered question.
