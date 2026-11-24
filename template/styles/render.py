@@ -3,7 +3,7 @@ from playwright.sync_api import sync_playwright
 
 mode = sys.argv[1]  # "stills" or "video"
 root = pathlib.Path(__file__).parent
-FPS, DUR = 30, 44.63
+FPS, DUR = 30, 53.2
 
 with sync_playwright() as p:
     b = p.chromium.launch(executable_path="/usr/bin/google-chrome", args=["--allow-file-access-from-files"])
@@ -18,7 +18,7 @@ with sync_playwright() as p:
     else:
         out = root / "video_tmp.mp4"
         ff = subprocess.Popen(["ffmpeg", "-y", "-v", "error", "-f", "image2pipe", "-c:v", "mjpeg", "-framerate", str(FPS), "-i", "-",
-                               "-c:v", "libx264", "-preset", "medium", "-crf", "14", "-pix_fmt", "yuv420p", str(out)], stdin=subprocess.PIPE)
+                               "-c:v", "libx264", "-preset", "veryfast", "-crf", "19", "-pix_fmt", "yuv420p", str(out)], stdin=subprocess.PIPE)
         n = int(DUR * FPS)
         for i in range(n):
             d = pg.evaluate(grab, i / FPS)

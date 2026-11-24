@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:Baloo;font-weight:800;src:url(fonts/fontsource-baloo-bhai-2-5.3.0/files/baloo-bhai-2-gujarati-800-normal.woff2)}
+@font-face{font-family:Baloo;font-weight:700;src:url(fonts/fontsource-baloo-bhai-2-5.3.0/files/baloo-bhai-2-gujarati-700-normal.woff2)}
+@font-face{font-family:Noto;font-weight:700;src:url(fonts/fontsource-noto-sans-gujarati-5.3.0/files/noto-sans-gujarati-gujarati-700-normal.woff2)}
+@font-face{font-family:Noto;font-weight:400;src:url(fonts/fontsource-noto-sans-gujarati-5.3.0/files/noto-sans-gujarati-gujarati-400-normal.woff2)}
+html,body{margin:0;background:#000}
+</style></head><body>
+<canvas id="c" width="1080" height="1920"></canvas>
+<script>
+const W=1080,H=1920,c=document.getElementById('c'),g=c.getContext('2d');
+const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)),ease=x=>{x=cl(x);return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2},eo=x=>1-Math.pow(1-cl(x),3),pr=(t,a,d)=>cl((t-a)/d);
+let seed=9;const rnd=()=>{seed=(seed*16807)%2147483647;return (seed-1)/2147483646};
+const TM=[0,7.05,10.4,15.65,19.85,23.3,30.15,33.25,37.25,43.55,53.2];
+
+// ---------- text ----------
+function T(str,x,y,size,color,t,a,b=99,o={}){const pin=eo(pr(t,a,.45)),pout=1-pr(t,b,.3),al=pin*pout;if(al<=0)return;
+  g.save();g.globalAlpha=al;g.translate(x,y+(1-pin)*30);const sc=o.pop?.8+.2*eo(pr(t,a,.5)):1;g.scale(sc,sc);g.rotate(o.rot||0);
+  g.font=`${o.w||800} ${size}px ${o.f||'Baloo'}`;g.textAlign='center';g.textBaseline='middle';
+  if(o.stroke){g.lineJoin='round';g.lineWidth=o.sw||14;g.strokeStyle=o.stroke;g.strokeText(str,0,0);}
+  if(o.shadow){g.shadowColor=o.shadow;g.shadowBlur=o.sb||20;}
+  g.fillStyle=color;g.fillText(str,0,0);g.restore();}
+function styleTag(name,t,dark){const al=eo(pr(t,.05,.3));g.save();g.globalAlpha=al*.9;g.font='700 34px Noto';const w=g.measureText(name).width+50;
+  g.fillStyle=dark?'rgba(255,255,255,.85)':'rgba(0,0,0,.6)';g.beginPath();g.roundRect(540-w/2,1800,w,60,30);g.fill();g.fillStyle=dark?'#222':'#fff';g.textAlign='center';g.textBaseline='middle';g.fillText(name,540,1832);g.restore();}
+
+// ---------- Hanuman (parametric) ----------
+function limb(pts,w,col,line,lw){g.lineCap='round';g.lineJoin='round';g.beginPath();g.moveTo(...pts[0]);for(const p of pts.slice(1))g.lineTo(...p);
+  if(lw){g.strokeStyle=line;g.lineWidth=w+lw*2;g.stroke();}g.strokeStyle=col;g.lineWidth=w;g.stroke();}
+function poly(pts,fill,line,lw){g.beginPath();g.moveTo(...pts[0]);for(const p of pts.slice(1))g.lineTo(...p);g.closePath();if(fill){g.fillStyle=fill;g.fill();}if(lw){g.strokeStyle=line;g.lineWidth=lw;g.lineJoin='round';g.stroke();}}
+function hanuman(x,y,s,st,t=0,armA=0){g.save();g.translate(x,y);g.scale(s,s);
+  const L=st.line||'#000',lw=st.lw||0,sk=st.skin,cl2=st.cloth,cr=st.crown,ga=st.gada||cr;
+  // tail
+  g.lineCap='round';g.beginPath();g.moveTo(-50,-300);g.bezierCurveTo(-300,-330,-300,-620,-180,-700);g.quadraticCurveTo(-120,-740,-140,-680);
+  if(lw){g.strokeStyle=L;g.lineWidth=30+lw*2;g.stroke();}g.strokeStyle=sk;g.lineWidth=30;g.stroke();
+  // legs
+  limb([[-80,-160],[-105,-20]],52,sk,L,lw);limb([[80,-160],[105,-20]],52,sk,L,lw);
+  poly([[-150,-25],[-70,-25],[-60,8],[-160,8]],sk,L,lw);poly([[150,-25],[70,-25],[60,8],[160,8]],sk,L,lw);
+  // dhoti
+  const dh=[[-95,-310],[95,-310],[140,-140],[35,-130],[0,-200],[-35,-130],[-140,-140]];poly(dh,cl2,L,lw);
+  if(st.dhotiDeco){g.save();poly(dh);g.clip();st.dhotiDeco();g.restore();}
+  // torso
+  const to=[[-118,-470],[118,-470],[95,-300],[-95,-300]];poly(to,sk,L,lw);
+  if(st.chest){g.strokeStyle=st.chest;g.lineWidth=5;g.beginPath();g.moveTo(-70,-420);g.quadraticCurveTo(-35,-390,0,-420);g.quadraticCurveTo(35,-390,70,-420);g.stroke();}
+  // sash / janoi + belt
+  g.fillStyle=cr;g.fillRect(-98,-322,196,22);if(lw){g.strokeStyle=L;g.lineWidth=lw;g.strokeRect(-98,-322,196,22);}
+  g.strokeStyle=st.sash||'#fff';g.lineWidth=7;g.beginPath();g.moveTo(-100,-465);g.lineTo(90,-320);g.stroke();
+  // left arm on hip
+  limb([[-115,-455],[-195,-370],[-100,-320]],44,sk,L,lw);
+  // right arm + gada (armA lifts it)
+  g.save();g.translate(115,-455);g.rotate(-armA);
+  limb([[0,0],[85,70],[45,-55]],44,sk,L,lw);
+  g.save();g.translate(45,-55);g.rotate(.45);
+  g.fillStyle=ga;g.fillRect(-9,-260,18,300);if(lw){g.strokeStyle=L;g.lineWidth=lw;g.strokeRect(-9,-260,18,300);}
+  g.beginPath();g.arc(0,-310,64,0,7);g.fillStyle=ga;g.fill();if(lw){g.stroke();}
+  if(st.gadaLine){g.strokeStyle=st.gadaLine;g.lineWidth=5;for(let i=-2;i<=2;i++){g.beginPath();g.ellipse(0,-310,Math.abs(64*Math.cos(i*.6)),64,0,0,7);g.stroke();}}
+  g.beginPath();g.moveTo(-14,-372);g.lineTo(0,-410);g.lineTo(14,-372);g.fill();
+  g.restore();g.restore();
+  // necklace
+  g.strokeStyle=cr;g.lineWidth=9;g.beginPath();g.arc(0,-480,58,.15*Math.PI,.85*Math.PI);g.stroke();
+  // head
+  g.beginPath();g.arc(0,-545,64,0,7);g.fillStyle=sk;g.fill();if(lw){g.strokeStyle=L;g.lineWidth=lw;g.stroke();}
+  g.beginPath();g.ellipse(0,-515,46,30,0,0,7);g.fillStyle=st.muzzle||sk;g.fill();if(lw)g.stroke();
+  g.fillStyle=st.eye||'#111';g.beginPath();g.ellipse(-24,-560,9,st.eyeGlow?12:9,0,0,7);g.ellipse(24,-560,9,st.eyeGlow?12:9,0,0,7);g.fill();
+  if(st.eyeGlow){g.save();g.shadowColor='#fff6b0';g.shadowBlur=30;g.fillStyle='#fffbe0';g.beginPath();g.arc(-24,-560,7,0,7);g.arc(24,-560,7,0,7);g.fill();g.restore();}
+  // moustache (handlebar)
+  g.strokeStyle=st.moustache||'#111';g.lineWidth=9;g.lineCap='round';g.beginPath();g.moveTo(0,-522);g.quadraticCurveTo(-30,-532,-48,-515);g.quadraticCurveTo(-58,-500,-46,-500);
+  g.moveTo(0,-522);g.quadraticCurveTo(30,-532,48,-515);g.quadraticCurveTo(58,-500,46,-500);g.stroke();
+  g.fillStyle=st.tilak||'#d62020';g.beginPath();g.moveTo(-7,-575);g.lineTo(7,-575);g.lineTo(0,-605);g.fill();
+  // crown
+  poly([[-58,-595],[58,-595],[48,-640],[30,-628],[0,-700],[-30,-628],[-48,-640]],cr,L,lw||3);
+  g.fillStyle=st.gem||'#d62020';g.beginPath();g.arc(0,-630,10,0,7);g.fill();
+  g.restore();}
+
+// ---------- helpers ----------
+function paperTex(col,alpha=.06){g.save();g.globalAlpha=alpha;for(let i=0;i<500;i++){g.fillStyle=i%2?'#000':'#fff';g.fillRect(rnd()*W,rnd()*H,rnd()*3+1,rnd()*3+1);}g.restore();}
+function grainFixed(){}
+function temple(x,b,s,fill,line,lw){g.save();g.translate(x,b);g.scale(s,s);
+  const D=(cx,w,h)=>{poly([[cx-w/2,0],[cx+w/2,0],[cx+w/2,-h],[cx-w/2,-h]],fill,line,lw);g.beginPath();g.moveTo(cx-w/2+5,-h);g.bezierCurveTo(cx-w/2,-h-w*.6,cx-w*.05,-h-w*.6,cx,-h-w*.85);g.bezierCurveTo(cx+w*.05,-h-w*.6,cx+w/2,-h-w*.6,cx+w/2-5,-h);g.closePath();g.fillStyle=fill;g.fill();if(lw){g.strokeStyle=line;g.lineWidth=lw;g.stroke();}
+    g.strokeStyle=line;g.lineWidth=Math.max(lw,3);g.beginPath();g.moveTo(cx,-h-w*.85);g.lineTo(cx,-h-w*1.05);g.stroke();g.fillStyle='#e8541e';g.beginPath();g.moveTo(cx,-h-w*1.05);g.lineTo(cx+w*.3,-h-w*.97);g.lineTo(cx,-h-w*.9);g.fill();};
+  D(-230,130,160);D(230,130,160);D(0,220,240);
+  poly([[-330,0],[330,0],[330,-90],[-330,-90]],fill,line,lw);
+  for(let i=-2;i<=2;i++){g.fillStyle=line;g.beginPath();g.moveTo(i*120-22,0);g.lineTo(i*120-22,-45);g.arc(i*120,-45,22,Math.PI,0);g.lineTo(i*120+22,0);g.fill();}
+  g.restore();}
+function saint(x,y,s,col,staff=true,arm=0){g.save();g.translate(x,y);g.scale(s,s);g.fillStyle=col;g.strokeStyle=col;
+  g.beginPath();g.arc(0,-330,40,0,7);g.fill();
+  g.beginPath();g.moveTo(-40,-290);g.quadraticCurveTo(-90,-150,-80,0);g.lineTo(80,0);g.quadraticCurveTo(90,-150,40,-290);g.closePath();g.fill();
+  if(staff){g.lineWidth=10;g.lineCap='round';g.save();g.translate(50,-230);g.rotate(arm);g.beginPath();g.moveTo(0,0);g.lineTo(60,10);g.stroke();g.beginPath();g.moveTo(60,-90);g.lineTo(60,240);g.stroke();g.restore();}
+  g.restore();}
+function stick(x,y,s,ang,col){g.save();g.translate(x,y);g.rotate(ang);g.scale(s,s);g.fillStyle=col;g.beginPath();g.roundRect(-10,-300,20,600,10);g.fill();g.beginPath();g.arc(0,-310,22,0,7);g.fill();g.restore();}
+
+// ================= SCENES =================
+const S=[];
+// 1 MADHUBANI
+S.push({f(u,d){g.fillStyle='#f6e7c1';g.fillRect(0,0,W,H);
+  // border
+  const bw=60;g.fillStyle='#c0262d';g.fillRect(0,0,W,bw);g.fillRect(0,H-bw,W,bw);g.fillRect(0,0,bw,H);g.fillRect(W-bw,0,bw,H);
+  g.fillStyle='#f2b51d';for(let i=0;i<W;i+=40){g.beginPath();g.moveTo(i,bw);g.lineTo(i+20,bw+26);g.lineTo(i+40,bw);g.fill();g.beginPath();g.moveTo(i,H-bw);g.lineTo(i+20,H-bw-26);g.lineTo(i+40,H-bw);g.fill();}
+  for(let j=bw;j<H-bw;j+=40){g.beginPath();g.moveTo(bw,j);g.lineTo(bw+26,j+20);g.lineTo(bw,j+40);g.fill();g.beginPath();g.moveTo(W-bw,j);g.lineTo(W-bw-26,j+20);g.lineTo(W-bw,j+40);g.fill();}
+  g.strokeStyle='#111';g.lineWidth=5;g.strokeRect(bw+30,bw+30,W-2*bw-60,H-2*bw-60);g.strokeRect(bw+42,bw+42,W-2*bw-84,H-2*bw-84);
+  // sun with face
+  g.save();g.translate(200,600);g.rotate(u*.3);for(let i=0;i<16;i++){g.rotate(Math.PI/8);g.fillStyle=i%2?'#c0262d':'#f2b51d';g.beginPath();g.moveTo(-14,70);g.lineTo(0,120);g.lineTo(14,70);g.fill();}g.restore();
+  g.fillStyle='#f2b51d';g.beginPath();g.arc(200,600,70,0,7);g.fill();g.strokeStyle='#111';g.lineWidth=5;g.stroke();
+  g.fillStyle='#111';g.beginPath();g.arc(180,590,7,0,7);g.arc(220,590,7,0,7);g.fill();g.beginPath();g.arc(200,615,18,.1*Math.PI,.9*Math.PI);g.stroke();
+  // fish pair bottom + flowers
+  for(const [fx,fl] of [[260,1],[820,-1]]){g.save();g.translate(fx,1640);g.scale(fl,1);g.fillStyle='#2a6fb5';g.beginPath();g.ellipse(0,0,110,45,0,0,7);g.fill();g.stroke();g.beginPath();g.moveTo(100,0);g.lineTo(160,-40);g.lineTo(160,40);g.closePath();g.fill();g.stroke();
+    g.fillStyle='#111';g.beginPath();g.arc(-60,-8,8,0,7);g.fill();g.strokeStyle='#111';g.lineWidth=3;for(let i=-30;i<80;i+=22){g.beginPath();g.arc(i,0,18,-Math.PI/2,Math.PI/2);g.stroke();}g.restore();}
+  for(let i=0;i<6;i++){const fx=180+i*145,fy=1480+(i%2)*40;g.fillStyle=['#c0262d','#2e8b57','#f2b51d'][i%3];for(let k=0;k<6;k++){g.beginPath();g.ellipse(fx+Math.cos(k)*22,fy+Math.sin(k)*22,16,9,k,0,7);g.fill();}g.fillStyle='#111';g.beginPath();g.arc(fx,fy,8,0,7);g.fill();}
+  const pop=eo(pr(u,.2,.8));
+  hanuman(560,1430,1.0*pop+.01,{skin:'#e8641e',cloth:'#c0262d',crown:'#f2b51d',gada:'#f2b51d',line:'#111',lw:6,muzzle:'#f6c38a',chest:'#111',sash:'#fff',
+    dhotiDeco(){g.fillStyle='#111';for(let y=-300;y<-120;y+=24)for(let x=-150;x<150;x+=24){g.beginPath();g.arc(x+(y/24%2)*12,y,4,0,7);g.fill();}},gadaLine:'#111'},u,Math.sin(u*2)*.03);
+  T('સાળંગપુરના હનુમાનજી',540,250,82,'#111',u,.3,99,{w:800});
+  T('કષ્ટભંજન દેવ',540,380,130,'#c0262d',u,4.3,99,{stroke:'#f6e7c1',sw:10,pop:1});
+  T('છેલ્લે સુધી જોજો!',540,1760,62,'#111',u,5.8,99,{w:700});
+  styleTag('Madhubani',u);}});
+// 2 MINIATURE
+S.push({f(u,d){g.fillStyle='#b2242a';g.fillRect(0,0,W,H);g.fillStyle='#e7b43f';g.fillRect(36,36,W-72,H-72);g.fillStyle='#b2242a';g.fillRect(48,48,W-96,H-96);
+  for(let i=70;i<W-60;i+=46){g.fillStyle='#e7b43f';g.beginPath();g.arc(i,66,6,0,7);g.arc(i,H-66,6,0,7);g.fill();}for(let j=70;j<H-60;j+=46){g.beginPath();g.arc(66,j,6,0,7);g.arc(W-66,j,6,0,7);g.fill();}
+  g.save();g.beginPath();g.rect(90,90,W-180,H-180);g.clip();
+  g.fillStyle='#24418f';g.fillRect(0,0,W,620);
+  g.strokeStyle='#e9e2c8';g.lineWidth=4;for(const [cx,cy] of [[250,200],[700,170],[480,330],[850,380]]){for(let k=0;k<3;k++){g.beginPath();g.arc(cx+k*34-34,cy,17,Math.PI,0);g.stroke();}g.beginPath();g.moveTo(cx-70,cy+4);g.lineTo(cx+70,cy+4);g.stroke();}
+  g.fillStyle='#efe6cc';g.beginPath();g.moveTo(0,620);for(let x=0;x<=W;x+=60)g.quadraticCurveTo(x+30,560,x+60,620);g.lineTo(W,1400);g.lineTo(0,1400);g.fill();
+  // sun
+  g.fillStyle='#e7b43f';g.beginPath();g.arc(260,760,70,0,7);g.fill();g.fillStyle='#e05a2a';g.beginPath();g.arc(260,760,52,0,7);g.fill();
+  // temple
+  temple(540,1260,1.1,'#fbf6ea','#8a6a2f',3);
+  // hills
+  for(const [hy,col] of [[1330,'#a9bf7f'],[1440,'#8eaa62'],[1560,'#6e8f4a']]){g.fillStyle=col;g.beginPath();g.moveTo(0,H);g.lineTo(0,hy);for(let x=0;x<=W;x+=270)g.quadraticCurveTo(x+135,hy-90,x+270,hy);g.lineTo(W,H);g.fill();}
+  for(let i=0;i<14;i++){const tx=130+((i*173)%820),ty=1380+((i*97)%380);g.fillStyle='#3f6b33';g.fillRect(tx-4,ty,8,30);g.beginPath();g.arc(tx,ty,28,0,7);g.fill();g.fillStyle='#cfe0a0';for(let k=0;k<6;k++){g.beginPath();g.arc(tx+Math.cos(k*1.1)*14,ty+Math.sin(k*1.1)*14,3,0,7);g.fill();}}
+  // devotees walking
+  for(let i=0;i<5;i++){const px=((u*40+i*200)%1100)-60;g.fillStyle=['#e05a2a','#24418f','#e7b43f'][i%3];g.beginPath();g.arc(px,1280,14,0,7);g.fill();g.beginPath();g.moveTo(px-18,1340);g.lineTo(px,1295);g.lineTo(px+18,1340);g.fill();}
+  g.restore();
+  T('કષ્ટભંજન એટલે...',540,300,84,'#efe6cc',u,.2,99,{w:800});
+  T('દુઃખોનો નાશ કરનાર',540,440,104,'#e7b43f',u,1.4,99,{stroke:'#5a1414',sw:12,pop:1});
+  styleTag('Miniature Painting',u);}});
+// 3 INK WASH
+S.push({f(u,d){g.fillStyle='#f1ece0';g.fillRect(0,0,W,H);
+  const mt=(y,amp,a,blur,off)=>{g.save();g.filter=`blur(${blur}px)`;g.fillStyle=`rgba(30,30,30,${a})`;g.beginPath();g.moveTo(0,H);g.lineTo(0,y);
+    for(let x=0;x<=W;x+=20)g.lineTo(x,y-Math.abs(Math.sin(x/170+off))*amp-Math.sin(x/53+off)*amp*.2);g.lineTo(W,H);g.fill();g.restore();};
+  const dr=u*6;g.save();g.translate(-dr,0);mt(900,260,.12,10,1);mt(1100,200,.2,6,3);g.restore();g.save();g.translate(-dr*2,0);mt(1300,160,.35,3,5);g.restore();
+  g.save();g.filter='blur(14px)';g.fillStyle='rgba(241,236,224,.8)';g.fillRect(0,1150,W,120);g.restore();
+  // ground stroke
+  g.fillStyle='rgba(20,20,20,.75)';g.beginPath();g.moveTo(0,1560);g.quadraticCurveTo(540,1500,W,1570);g.lineTo(W,1600);g.quadraticCurveTo(540,1540,0,1600);g.fill();
+  // walking saint in ink
+  const wx=200+u*70;saint(wx,1545,1.2,'rgba(15,15,15,.92)',true,Math.sin(u*3)*.05);
+  // red seal
+  g.fillStyle='#b8241c';g.fillRect(880,1640,110,110);g.fillStyle='#f1ece0';g.font='800 46px Baloo';g.textAlign='center';g.textBaseline='middle';g.fillText('સાળં',935,1670);g.fillText('ગપુર',935,1718);
+  T('લગભગ ૧૭૫ વર્ષ પહેલાં',540,320,84,'#1a1a1a',u,.2,99,{w:700});
+  T('ગોપાળાનંદ સ્વામી',540,460,110,'#1a1a1a',u,2.0,99,{});
+  T('અહીં સાળંગપુર આવ્યા',540,590,78,'#555',u,3.3,99,{w:700});
+  styleTag('Ink Wash',u);}});
+// 4 BLUEPRINT
+S.push({f(u,d){g.fillStyle='#14467e';g.fillRect(0,0,W,H);g.strokeStyle='rgba(255,255,255,.08)';g.lineWidth=1;for(let i=0;i<W;i+=30){g.beginPath();g.moveTo(i,0);g.lineTo(i,H);g.stroke();}for(let j=0;j<H;j+=30){g.beginPath();g.moveTo(0,j);g.lineTo(W,j);g.stroke();}
+  g.strokeStyle='rgba(255,255,255,.2)';for(let i=0;i<W;i+=150){g.beginPath();g.moveTo(i,0);g.lineTo(i,H);g.stroke();}for(let j=0;j<H;j+=150){g.beginPath();g.moveTo(0,j);g.lineTo(W,j);g.stroke();}
+  // draw-on line hanuman via dash
+  const p=ease(pr(u,.2,d*.75));const scanY=1520-p*1050;g.save();g.beginPath();g.rect(0,scanY,W,H);g.clip();
+  hanuman(540,1480,1.15,{skin:'#14467e',cloth:'#14467e',crown:'#14467e',gada:'#14467e',line:'#e8f2ff',lw:4,muzzle:'#14467e',eye:'#e8f2ff',moustache:'#e8f2ff',tilak:'#e8f2ff',gem:'#e8f2ff',sash:'rgba(232,242,255,.6)',gadaLine:'rgba(232,242,255,.5)'},u);
+  g.restore();if(p<1){g.save();g.shadowColor='#9fd0ff';g.shadowBlur=20;g.fillStyle='#bfe2ff';g.fillRect(150,scanY-2,780,4);g.restore();}
+  // dimension lines
+  const da=pr(u,1.2,.8);g.save();g.globalAlpha=da;g.strokeStyle='#9fd0ff';g.fillStyle='#9fd0ff';g.lineWidth=3;
+  g.beginPath();g.moveTo(130,1490);g.lineTo(130,600);g.stroke();for(const yy of [1490,600]){g.beginPath();g.moveTo(110,yy);g.lineTo(150,yy);g.stroke();}
+  g.font='700 34px Noto';g.save();g.translate(100,1050);g.rotate(-Math.PI/2);g.textAlign='center';g.fillText('મૂર્તિ — ડિઝાઇન: ગોપાળાનંદ સ્વામી',0,0);g.restore();
+  g.beginPath();g.arc(890,780,70,0,7);g.stroke();g.beginPath();g.moveTo(820,780);g.lineTo(960,780);g.moveTo(890,710);g.lineTo(890,850);g.stroke();g.font='400 30px Noto';g.textAlign='center';g.fillText('ગદા',890,890);
+  g.restore();
+  // title block
+  g.strokeStyle='#e8f2ff';g.lineWidth=3;g.strokeRect(620,1600,380,150);g.beginPath();g.moveTo(620,1650);g.lineTo(1000,1650);g.stroke();g.fillStyle='#e8f2ff';g.font='700 30px Noto';g.textAlign='left';g.fillText('કષ્ટભંજન દેવ',640,1635);g.font='400 26px Noto';g.fillText('SHEET 01 · SARANGPUR',640,1690);g.fillText('SCALE 1:1',640,1730);
+  T('સ્વામીએ પોતાની ડિઝાઇનથી',540,280,78,'#ffffff',u,.15,99,{w:700});T('મૂર્તિ ઘડાવી',540,410,120,'#ffd66b',u,1.0,99,{});
+  styleTag('Blueprint',u);}});
+// 5 PAPER CUT-OUT
+S.push({f(u,d){g.fillStyle='#f3d9b1';g.fillRect(0,0,W,H);
+  const layer=(fn,delay,sh=14)=>{const a=eo(pr(u,delay,.5));if(a<=0)return;g.save();g.translate(0,(1-a)*300);g.shadowColor='rgba(70,30,0,.35)';g.shadowBlur=sh;g.shadowOffsetY=8;fn();g.restore();};
+  layer(()=>{g.fillStyle='#f6b04a';g.beginPath();g.arc(540,700,260,0,7);g.fill();},0);
+  layer(()=>{g.fillStyle='#e58b3a';g.beginPath();g.moveTo(0,H);g.lineTo(0,1200);for(let x=0;x<=W;x+=180)g.quadraticCurveTo(x+90,1080,x+180,1200);g.lineTo(W,H);g.fill();},.1);
+  layer(()=>temple(540,1350,1.15,'#fff4e0','rgba(0,0,0,0)',0),.25,18);
+  layer(()=>{g.fillStyle='#c4502a';g.beginPath();g.moveTo(0,H);g.lineTo(0,1380);for(let x=0;x<=W;x+=120)g.quadraticCurveTo(x+60,1310,x+120,1380);g.lineTo(W,H);g.fill();},.4);
+  layer(()=>{g.fillStyle='#8f2e1c';g.beginPath();g.moveTo(0,H);g.lineTo(0,1560);for(let x=0;x<=W;x+=90)g.quadraticCurveTo(x+45,1500,x+90,1560);g.lineTo(W,H);g.fill();},.55);
+  // flags on strings
+  layer(()=>{g.strokeStyle='#7a3b12';g.lineWidth=3;g.beginPath();g.moveTo(0,880);g.quadraticCurveTo(540,980,W,880);g.stroke();for(let i=0;i<12;i++){const x=45+i*90,y=880+Math.sin(i/11*Math.PI)*95;g.fillStyle=['#e8541e','#ffcf3d','#2e8b57'][i%3];g.beginPath();g.moveTo(x-22,y);g.lineTo(x+22,y);g.lineTo(x,y+48+Math.sin(u*4+i)*4);g.fill();}},.7);
+  // banner
+  const ba=eo(pr(u,.3,.5));if(ba>0){g.save();g.translate(540,420);g.rotate(-.04);g.scale(ba,ba);g.shadowColor='rgba(70,30,0,.4)';g.shadowBlur=16;g.shadowOffsetY=8;
+    g.fillStyle='#b8241c';g.beginPath();g.moveTo(-380,-90);g.lineTo(380,-90);g.lineTo(340,0);g.lineTo(380,90);g.lineTo(-380,90);g.lineTo(-340,0);g.closePath();g.fill();g.shadowBlur=0;
+    g.fillStyle='#fff4e0';g.font='800 120px Baloo';g.textAlign='center';g.textBaseline='middle';g.fillText('સંવત ૧૯૦૫',0,8);g.restore();}
+  T('મૂર્તિની પ્રતિષ્ઠા થઈ',540,600,92,'#5a2208',u,1.6,99,{});
+  styleTag('Paper Cut-out',u);}});
+// 6 ANIME
+S.push({f(u,d){const hit=4.2;const flash=Math.exp(-Math.max(0,u-hit)*3)*(u>hit?1:0);
+  const sg=g.createLinearGradient(0,0,0,H);sg.addColorStop(0,'#1b2f6b');sg.addColorStop(.6,'#e8735a');sg.addColorStop(1,'#ffd08a');g.fillStyle=sg;g.fillRect(0,0,W,H);
+  // speed lines
+  g.save();g.translate(540,1000);for(let i=0;i<90;i++){const a=i/90*Math.PI*2+Math.sin(i*7.3);const r0=260+((i*53)%200),r1=1400;g.strokeStyle=`rgba(255,255,255,${.12+.5*flash})`;g.lineWidth=2+((i*13)%6);
+    g.beginPath();g.moveTo(Math.cos(a)*r0,Math.sin(a)*r0);g.lineTo(Math.cos(a)*r1,Math.sin(a)*r1);g.stroke();}g.restore();
+  const shake=flash*14*Math.sin(u*80);g.save();g.translate(shake,0);
+  // glow aura after hit
+  if(u>hit){const ag=g.createRadialGradient(560,1050,50,560,1050,600);ag.addColorStop(0,`rgba(255,240,170,${.8*Math.min(1,u-hit)})`);ag.addColorStop(1,'rgba(255,200,80,0)');g.fillStyle=ag;g.fillRect(0,0,W,H);}
+  hanuman(620,1600,1.02,{skin:'#ef6b2a',cloth:'#c8202a',crown:'#ffd23f',gada:'#ffd23f',line:'#1a1020',lw:7,muzzle:'#ffc89a',eyeGlow:u>hit,chest:'#1a1020'},u,u>hit?Math.min(.5,(u-hit)*.8):0);
+  g.restore();
+  // saint arm with stick coming from left
+  const reach=ease(pr(u,2.0,1.3));g.save();g.translate(-220+reach*260,1200);g.rotate(-.35);g.fillStyle='#f0c9a0';g.strokeStyle='#1a1020';g.lineWidth=7;g.beginPath();g.roundRect(-300,-40,320,80,40);g.fill();g.stroke();
+  g.fillStyle='#f4f1ea';g.beginPath();g.roundRect(-320,-55,180,110,30);g.fill();g.stroke();g.fillStyle='#8a5a22';g.beginPath();g.roundRect(0,-14,380,28,14);g.fill();g.stroke();g.restore();
+  // impact star
+  if(flash>.02){g.save();g.translate(330,1130);g.fillStyle=`rgba(255,255,255,${flash})`;g.beginPath();for(let i=0;i<16;i++){const r=i%2?60:200*flash+80;g.lineTo(Math.cos(i/16*Math.PI*2)*r,Math.sin(i/16*Math.PI*2)*r);}g.fill();g.restore();
+    g.fillStyle=`rgba(255,255,255,${flash*.7})`;g.fillRect(0,0,W,H);}
+  T('કહેવાય છે...',540,260,80,'#fff',u,.1,99,{w:700,stroke:'#1a1020',sw:10});
+  T('લાકડીનો સ્પર્શ',540,380,104,'#fff',u,1.2,99,{stroke:'#1a1020',sw:12});
+  T('સજીવન!',540,560,190,'#ffe14d',u,hit+.1,99,{stroke:'#1a1020',sw:18,pop:1,rot:-.06});
+  styleTag('Anime',u);}});
+// 7 SHADOW PUPPET
+S.push({f(u,d){const lg=g.createRadialGradient(540,950,50,540,950,1100);lg.addColorStop(0,'#ffd27a');lg.addColorStop(.5,'#e8892e');lg.addColorStop(1,'#5a1e08');g.fillStyle=lg;g.fillRect(0,0,W,H);
+  g.fillStyle='#1a0c05';g.fillRect(0,0,W,120);g.fillRect(0,H-160,W,160);g.beginPath();g.moveTo(0,120);g.quadraticCurveTo(120,300,0,700);g.fill();g.beginPath();g.moveTo(W,120);g.quadraticCurveTo(W-120,300,W,700);g.fill();
+  // ornate stick silhouette with filigree
+  const ang=Math.sin(u*1.2)*.12;g.save();g.translate(540,1050);g.rotate(ang);g.fillStyle='#120804';
+  g.beginPath();g.roundRect(-34,-560,68,1050,30);g.fill();g.beginPath();g.arc(0,-590,70,0,7);g.fill();
+  g.globalCompositeOperation='destination-out';for(let i=0;i<14;i++){g.beginPath();g.ellipse(0,-480+i*70,14,26,0,0,7);g.fill();}g.beginPath();g.arc(0,-590,30,0,7);g.fill();
+  for(let k=0;k<8;k++){g.beginPath();g.arc(Math.cos(k*Math.PI/4)*50,-590+Math.sin(k*Math.PI/4)*50,9,0,7);g.fill();}
+  g.globalCompositeOperation='source-over';
+  // silver sheen sweep
+  const sw=pr(u,.9,1.4);if(sw>0&&sw<1){g.save();g.beginPath();g.roundRect(-34,-560,68,1050,30);g.arc(0,-590,70,0,7);g.clip();const y=-700+sw*1300;const sg=g.createLinearGradient(0,y-120,0,y+120);sg.addColorStop(0,'rgba(230,235,245,0)');sg.addColorStop(.5,'rgba(230,235,245,.9)');sg.addColorStop(1,'rgba(230,235,245,0)');g.fillStyle=sg;g.fillRect(-100,y-120,200,240);g.restore();}
+  if(sw>=1){g.save();g.globalAlpha=.35;g.beginPath();g.roundRect(-34,-560,68,1050,30);g.arc(0,-590,70,0,7);g.fillStyle='#c9cfda';g.fill();g.restore();}
+  g.restore();
+  // puppet rods
+  g.strokeStyle='#120804';g.lineWidth=5;g.beginPath();g.moveTo(540+Math.sin(ang)*400,1050+400);g.lineTo(480,H);g.moveTo(540,1050);g.lineTo(620,H);g.stroke();
+  T('એ લાકડી આજે પણ',540,250,88,'#1a0c05',u,.15,99,{w:800});
+  T('ચાંદીથી મઢેલી છે',540,380,108,'#fff8ec',u,1.2,99,{stroke:'#1a0c05',sw:12});
+  styleTag('Shadow Puppet',u);}});
+// 8 STAINED GLASS
+const shards=[];{seed=21;for(let i=0;i<70;i++)shards.push([rnd()*W,rnd()*H]);}
+S.push({f(u,d){g.fillStyle='#111';g.fillRect(0,0,W,H);
+  // voronoi-ish shards: draw grid of triangles with jewel colors
+  const cols=['#1f4fa8','#2a8c6a','#b8241c','#e3a21a','#6a2c8c','#1b6ea8','#c74a1a'];seed=33;
+  const P=[];for(let y=0;y<=12;y++){for(let x=0;x<=6;x++){P.push([x*180+(y%2?90:0)+(x&&x<6?(rnd()-.5)*70:0),y*160+(y&&y<12?(rnd()-.5)*60:0)]);}}
+  const at=(x,y)=>P[y*7+x];
+  for(let y=0;y<12;y++)for(let x=0;x<6;x++){const a=at(x,y),b=at(x+1,y),c2=at(x,y+1),d2=at(x+1,y+1);
+    for(const tri of [[a,b,c2],[b,d2,c2]]){const k=Math.floor(rnd()*7);const tw=.75+.25*Math.sin(u*2+x*1.3+y);g.fillStyle=cols[k];g.globalAlpha=tw;g.beginPath();g.moveTo(...tri[0]);g.lineTo(...tri[1]);g.lineTo(...tri[2]);g.closePath();g.fill();g.globalAlpha=1;g.strokeStyle='#141414';g.lineWidth=9;g.stroke();}}
+  // light glow
+  const lg=g.createRadialGradient(540,1000,50,540,1000,800);lg.addColorStop(0,'rgba(255,240,200,.45)');lg.addColorStop(1,'rgba(0,0,0,.25)');g.fillStyle=lg;g.fillRect(0,0,W,H);
+  // arch window with Hanuman + Shani dev (feminine) at feet
+  g.save();g.beginPath();g.moveTo(190,1700);g.lineTo(190,800);g.arc(540,800,350,Math.PI,0);g.lineTo(890,1700);g.closePath();g.fillStyle='#f4e3b0';g.fill();g.lineWidth=18;g.strokeStyle='#141414';g.stroke();g.clip();
+  const rg=g.createRadialGradient(540,900,30,540,900,500);rg.addColorStop(0,'#fff5cf');rg.addColorStop(1,'#e3a21a');g.fillStyle=rg;g.fillRect(0,0,W,H);
+  hanuman(540,1500,1.0,{skin:'#e2571c',cloth:'#b8241c',crown:'#ffd23f',gada:'#ffd23f',line:'#141414',lw:9,muzzle:'#f6b98a'},u);
+  // Shani Dev in feminine form under feet
+  const sa=eo(pr(u,1.4,.6));g.save();g.globalAlpha=sa;g.translate(540,1620);
+  g.fillStyle='#2b2b55';g.strokeStyle='#141414';g.lineWidth=8;g.beginPath();g.ellipse(0,0,220,55,0,0,7);g.fill();g.stroke();
+  g.fillStyle='#1f4fa8';g.beginPath();g.arc(-150,-20,40,0,7);g.fill();g.stroke();g.fillStyle='#141414';g.beginPath();g.arc(-150,-40,40,Math.PI,0);g.fill();
+  g.fillStyle='#e3a21a';g.beginPath();g.arc(-150,-62,10,0,7);g.fill();g.restore();
+  g.restore();
+  T('હનુમાનજીના ચરણોમાં',540,240,86,'#fff',u,.15,99,{stroke:'#141414',sw:12});
+  T('સ્ત્રી સ્વરૂપે શનિદેવ',540,1820-60,84,'#ffe08a',u,1.5,99,{stroke:'#141414',sw:12});
+  styleTag('Stained Glass',u);}});
+// 9 UKIYO-E
+S.push({f(u,d){const sg=g.createLinearGradient(0,0,0,1300);sg.addColorStop(0,'#e9b9a0');sg.addColorStop(.5,'#f3e3c7');sg.addColorStop(1,'#efe1c4');g.fillStyle=sg;g.fillRect(0,0,W,H);
+  g.fillStyle='#1e3f6e';g.fillRect(0,0,W,90);const tg=g.createLinearGradient(0,90,0,260);tg.addColorStop(0,'#1e3f6e');tg.addColorStop(1,'rgba(30,63,110,0)');g.fillStyle=tg;g.fillRect(0,90,W,170);
+  // cloud bands
+  g.fillStyle='rgba(255,250,240,.85)';for(const [y,x0] of [[520,-100],[640,300]]){const xo=(x0+u*25)%1300-200;g.beginPath();g.roundRect(xo,y,620,36,18);g.fill();g.beginPath();g.roundRect(xo+120,y-26,360,30,15);g.fill();}
+  // statue on horizon (big), zoom out reveal distance
+  const z=1.1-.2*ease(pr(u,0,d));g.save();g.translate(540,1230);g.scale(z,z);
+  g.fillStyle='#d9c9a3';g.fillRect(-170,-40,340,40);g.fillRect(-120,-70,240,30);
+  hanuman(0,-70,.78,{skin:'#c6662c',cloth:'#9e2a22',crown:'#d8a63a',gada:'#d8a63a',line:'#2a1f1a',lw:5,muzzle:'#e6a87a'},u);
+  g.restore();
+  // waves / fields in Prussian blue
+  g.fillStyle='#24507f';g.beginPath();g.moveTo(0,H);g.lineTo(0,1260);for(let x=0;x<=W;x+=60)g.lineTo(x,1260+Math.sin(x/60+u*2)*10);g.lineTo(W,H);g.fill();
+  g.strokeStyle='#e9f1f5';g.lineWidth=4;for(let r=0;r<6;r++){const y=1320+r*90;g.beginPath();for(let x=-60;x<=W+60;x+=120){const xx=x+((u*30*(r%2?1:-1))%120);g.moveTo(xx,y);g.quadraticCurveTo(xx+30,y-30,xx+60,y);}g.stroke();}
+  // distance marker
+  const dm=eo(pr(u,3.2,.6));if(dm>0){g.save();g.globalAlpha=dm;g.strokeStyle='#9e2a22';g.lineWidth=6;g.setLineDash([18,14]);g.beginPath();g.moveTo(120,1720);g.lineTo(960,1720);g.stroke();g.setLineDash([]);
+    g.fillStyle='#9e2a22';g.beginPath();g.moveTo(960,1695);g.lineTo(1000,1720);g.lineTo(960,1745);g.fill();g.restore();
+    T('૭ કિલોમીટર દૂરથી દેખાય',540,1650,66,'#fff',u,3.3,99,{w:700,stroke:'#1e3f6e',sw:10});}
+  // red cartouche
+  g.fillStyle='#b8241c';g.fillRect(860,640,130,330);g.fillStyle='#fff4e0';g.font='800 64px Baloo';g.textAlign='center';g.font='800 90px Baloo';g.fillText('૫',925,730);g.fillText('૪',925,830);g.font='800 52px Baloo';g.fillText('ફૂટ',925,920);
+  T('અને હવે...',540,250,74,'#1e3f6e',u,.1,99,{w:700});T('૫૪ ફૂટ ઊંચી',540,380,120,'#9e2a22',u,1.1,99,{pop:1});T('પંચધાતુની મૂર્તિ',540,500,86,'#1e3f6e',u,2.1,99,{w:700});
+  styleTag('Ukiyo-e',u);}});
+// 10 WARLI
+S.push({f(u,d){g.fillStyle='#8a3f21';g.fillRect(0,0,W,H);paperTex();
+  g.strokeStyle='#f4ead8';g.fillStyle='#f4ead8';g.lineWidth=5;g.lineCap='round';
+  // sun, temple triangle-hut
+  g.beginPath();g.arc(160,240,50,0,7);g.fill();for(let i=0;i<12;i++){const a=i/12*Math.PI*2;g.beginPath();g.moveTo(160+Math.cos(a)*65,240+Math.sin(a)*65);g.lineTo(160+Math.cos(a)*90,240+Math.sin(a)*90);g.stroke();}
+  // temple outline
+  g.save();g.translate(540,1080);g.beginPath();g.moveTo(-90,0);g.lineTo(-90,-120);g.quadraticCurveTo(-60,-280,0,-320);g.quadraticCurveTo(60,-280,90,-120);g.lineTo(90,0);g.stroke();g.beginPath();g.moveTo(0,-320);g.lineTo(0,-380);g.stroke();g.beginPath();g.moveTo(0,-380);g.lineTo(50,-365);g.lineTo(0,-350);g.fill();
+  g.beginPath();g.arc(0,-60,40,Math.PI,0);g.lineTo(40,0);g.moveTo(-40,0);g.lineTo(-40,-60);g.stroke();g.restore();
+  // warli figure
+  const fig=(x,y,s,ph,arms)=>{g.save();g.translate(x,y);g.scale(s,s);const b=Math.sin(ph)*6;g.beginPath();g.arc(0,-92+b,12,0,7);g.fill();
+    g.beginPath();g.moveTo(-18,-78+b);g.lineTo(18,-78+b);g.lineTo(0,-50+b);g.closePath();g.fill();g.beginPath();g.moveTo(0,-50+b);g.lineTo(-18,-22+b);g.lineTo(18,-22+b);g.closePath();g.fill();
+    g.beginPath();g.moveTo(-6,-22+b);g.lineTo(-16+Math.sin(ph)*6,0);g.moveTo(6,-22+b);g.lineTo(16-Math.sin(ph)*6,0);g.stroke();
+    g.beginPath();g.moveTo(-16,-74+b);g.lineTo(-34,-60+arms*Math.sin(ph)*16);g.moveTo(16,-74+b);g.lineTo(34,-60-arms*Math.sin(ph)*16);g.stroke();g.restore();};
+  // circle dance (tarpa) around temple
+  const N=16;for(let i=0;i<N;i++){const a=i/N*Math.PI*2+u*.4;const x=540+Math.cos(a)*360,y=1000+Math.sin(a)*130;if(Math.sin(a)<0)fig(x,y,1.1,u*6+i,1);}
+  for(let i=0;i<N;i++){const a=i/N*Math.PI*2+u*.4;const x=540+Math.cos(a)*360,y=1000+Math.sin(a)*130;if(Math.sin(a)>=0)fig(x,y,1.3,u*6+i,1);}
+  // trees
+  for(const tx of [120,960]){g.beginPath();g.moveTo(tx,1250);g.lineTo(tx,1000);g.stroke();for(let k=0;k<7;k++){g.beginPath();g.moveTo(tx,1220-k*32);g.lineTo(tx-40+k*3,1190-k*32);g.moveTo(tx,1220-k*32);g.lineTo(tx+40-k*3,1190-k*32);g.stroke();}}
+  T('તમે સાળંગપુર',540,330,96,'#f4ead8',u,.1,99,{});T('દર્શને ગયા છો?',540,450,96,'#f4ead8',u,.6,99,{});
+  // comment box typing
+  const ca=eo(pr(u,2.6,.5));if(ca>0){g.save();g.globalAlpha=ca;g.translate(540,1440+(1-ca)*60);g.fillStyle='#ffffff';g.shadowColor='rgba(0,0,0,.35)';g.shadowBlur=24;g.beginPath();g.roundRect(-430,-80,860,160,80);g.fill();g.shadowBlur=0;
+    g.fillStyle='#e8541e';g.beginPath();g.arc(-350,0,46,0,7);g.fill();g.fillStyle='#fff';g.font='800 44px Baloo';g.textAlign='center';g.textBaseline='middle';g.fillText('🙏'.length?'જ':'',-350,4);
+    const full='જય કષ્ટભંજન દેવ';const n=Math.floor(cl((u-2.9)/1.6)*full.length);const s=[...full].slice(0,n).join('');
+    g.fillStyle='#222';g.font='700 56px Noto';g.textAlign='left';g.fillText(s+((u*2%1)<.5?'|':''),-280,4);
+    g.fillStyle='#e8541e';g.font='800 40px Noto';g.textAlign='right';g.fillText('Post',400,4);g.restore();}
+  // heart + tag
+  const ta=eo(pr(u,5.6,.5));if(ta>0){g.save();g.globalAlpha=ta;g.translate(540,1660);g.fillStyle='#ffd23f';g.beginPath();g.roundRect(-300,-55,600,110,55);g.fill();g.fillStyle='#3a1a0a';g.font='800 56px Baloo';g.textAlign='center';g.textBaseline='middle';g.fillText('@ મિત્રને ટેગ કરો',0,6);g.restore();}
+  styleTag('Warli',u,true);
+  const fo=pr(u,d-.5,.5);if(fo>0){g.fillStyle=`rgba(0,0,0,${fo})`;g.fillRect(0,0,W,H);}}});
+
+const X=.3;const B=document.createElement('canvas');B.width=W;B.height=H;const bc=B.getContext('2d');
+function drawScene(i,t){seed=9+i*100;g.setTransform(1,0,0,1,0,0);g.globalAlpha=1;g.filter='none';g.globalCompositeOperation='source-over';g.shadowBlur=0;g.setLineDash([]);
+  const a=TM[i],b=TM[i+1];S[i].f(t-a,b-a);}
+function render(t){let i=0;while(i<S.length-1&&t>=TM[i+1])i++;
+  if(i<S.length-1&&t>TM[i+1]-X){drawScene(i+1,t);bc.clearRect(0,0,W,H);bc.drawImage(c,0,0);drawScene(i,t);
+    // diagonal wipe reveal of next style
+    const p=(t-(TM[i+1]-X))/X;g.save();g.beginPath();g.moveTo(0,0);g.lineTo(W*2*p,0);g.lineTo(W*2*p-W,H);g.lineTo(0,H);g.closePath();g.clip();g.drawImage(B,0,0);g.restore();}
+  else drawScene(i,t);}
+window.ready=Promise.all(['800 40px Baloo','700 40px Baloo','700 40px Noto','400 40px Noto'].map(f=>document.fonts.load(f,'કષ્ટભંજન'))).then(()=>true);
+</script></body></html>
