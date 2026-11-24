@@ -3,6 +3,7 @@
 >>> STYLE + UPLOAD OVERRIDE (user, 2026-11-24) — this beats any older instruction in the scheduled-task prompt or skill:
 >>> - Style = 3D + 2.5D from template3d/ (three.js 3D shots + 2.5D parallax, everything enters on the word that names it). NO Kissa Diya mascot, no Hasanamba card style. Full rules: template3d/SKILL_bhoole-kisse-shorts.md + template3d/README.md.
 >>> - Voice with emotion: eleven_v4 audio tags ([excited], [curious], [softly], [dramatically], [pause], [warmly]); tighten gently (atempo 1.03).
+>>> - Script = KNOWLEDGE FIRST: hook -> "क्या आपको पता है...? कमेंट में लिखिए... और अब सुनिए असली राज़" -> kissa -> RAAZ reveal (sourced answer) -> takeaway -> CTA "क्या आपको ये पहले से पता था?". Never end on an unanswered question.
 >>> - User will NOT upload manually. If Zapier fails, try Windsor once; else mark "pending upload" here (never send files for manual upload). Upload pending videos first at the next free slot; never two videos in one slot. Use the commit-SHA raw URL.
 
 UPLOAD METHOD: Zapier YouTube upload_video (selected_api YouTubeV4CLIAPI, video = GitHub raw URL, privacy private + publish_at works). Windsor upload was rate-limited on 2026-11-23; use it only as the one fallback try after a Zapier failure (see override above).

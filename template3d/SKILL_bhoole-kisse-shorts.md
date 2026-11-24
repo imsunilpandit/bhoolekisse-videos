@@ -32,22 +32,30 @@ Per video, edit only the TOPIC CONTENT block of scene3d_src.html: HEAD (headline
 - The old paper cut-out style (Kailasa) and the Hasanamba card+mascot style are retired.
 
 ## 0b. Topic research like viral channels
-Before writing: check vidIQ pages (vidiq.com/youtube-stats/channel/@<handle>/videos/index.md) of niche channels like @mysterioushindu and @dailydecoding, find high outlier-score titles, and copy the FORMULA, not the content: weird specific number + "क्यों/कैसे" question + once-a-year/hidden mystery, "99% लोग नहीं जानते" style curiosity. Prefer timely topics (festival or event that just happened). Structure every script as hook -> problem/explain -> twist question -> CTA.
+Before writing: check vidIQ pages (vidiq.com/youtube-stats/channel/@<handle>/videos/index.md) of niche channels like @mysterioushindu and @dailydecoding, find high outlier-score titles, and copy the FORMULA, not the content: weird specific number + "क्यों/कैसे" question + once-a-year/hidden mystery, "99% लोग नहीं जानते" style curiosity. Prefer timely topics (festival or event that just happened). Only pick a topic whose "raaz" (the answer/explanation) can be told from sources - the video must answer its own hook. Structure: see section 2 (hook -> kya aapko pata hai? comment -> kissa -> RAAZ reveal -> takeaway -> CTA).
 
 ## 1. Topic & facts
 - Random pan-India mix; first frame must be a strong curiosity hook. Check analytics (Windsor youtube connector) when available and lean toward what retained best.
 - Research with web search; every fact needs a source. Legends phrased "कहते हैं". Avoid unverifiable claims, politics, communal angles, gore, medical claims.
 
-## 2. Script (Hindi, Devanagari, target 30-45 s spoken)
-- Line 1 = shock hook, no slow intro. Add an open loop mid-way ("पर ऐसा क्यों?...") and a twist question near the end.
-- End: "आपको क्या लगता है? कमेंट में बताइए... और ऐसे ही भूले किस्सों के लिए, अभी सब्सक्राइब करें!"
-- Numbers in words for TTS. Blank line between script lines.
+## 2. Script (Hindi, Devanagari, target 35-50 s spoken) - KNOWLEDGE FIRST
+User rule 2026-11-24: the channel is "Bhoole Kisse", so every video must TELL the forgotten story and REVEAL the secret, so the viewer learns something. Never end on an unanswered question (the Bali Jatra video did that - wrong).
+Fixed structure (one script line each, blank line between lines):
+1. Hook (line 1): the weird specific fact/number, no slow intro. "35 मिनट में 22,000 नावें!"
+2. Engagement question (line 2-3, early, drives comments): "क्या आपको पता है ऐसा क्यों होता है? / क्या आप ये जानते थे? अपना जवाब कमेंट में लिखिए... और अब सुनिए असली राज़।"
+3. The kissa (2-3 lines): place, era, who, what happened - the forgotten story with sourced facts.
+4. RAAZ reveal (2-3 lines): "राज़ ये है कि..." - the actual answer/explanation (history, science, engineering, tradition) from sources. Legends stay "कहते हैं", but always also give the sourced explanation; if experts disagree, say so in one line ("इतिहासकार मानते हैं...").
+5. Takeaway (1 line): the one knowledge nugget to remember / share.
+6. CTA: "क्या आपको ये पहले से पता था? कमेंट में बताइए... और ऐसे ही भूले किस्सों के लिए, अभी सब्सक्राइब करें!"
+- Visuals: the RAAZ lines get the strongest explainer shots (3D diagram/cutaway/route/mechanism showing HOW), headline "राज़: ..." style.
+- Description: include the raaz in 1-2 lines too, with sources.
+- Numbers: normal written form is fine for eleven_v4; use words where Hindi reading could be ambiguous.
 
 ## 3. Voice (with tone)
 - Voice "Vikas - Cinematic Documentary Narrator" (voice_id RKDbtFhfwlGmWOOvIXyK), model eleven_v4, generations_count 1, never retry.
-- Write the script WITH eleven_v4 audio tags so the delivery has emotion. A tag holds until the next one, so change tags only where the mood changes (3-6 tags per script): hook [excited] or [surprised]; facts [curious] or [warmly]; legend lines [softly] or [whispers]; reveal [dramatically]; twist question [cautiously] + [pause]; CTA [warmly]. Use ... and — for pauses and CAPITALS sparingly for one key word. Tags describe how it is spoken, never actions. Remove the tags from the caption texts in tighten.py.
+- Write the script WITH eleven_v4 audio tags so the delivery has emotion. A tag holds until the next one, so change tags only where the mood changes (3-6 tags per script): hook [excited] or [surprised]; facts [curious] or [warmly]; legend lines [softly] or [whispers]; engagement question [curious] + [pause]; kissa [softly] or [warmly]; RAAZ reveal [dramatically]; takeaway [warmly]; CTA [warmly]. Use ... and — for pauses and CAPITALS sparingly for one key word. Tags describe how it is spoken, never actions. Remove the tags from the caption texts in tighten.py.
 - Wait ~25 s, one creative_get_flow_run_status call (poll again only if still generating), curl the content_url.
-- Tighten gently so the tone survives: silencedetect (noise -38dB, d 0.3), cut segments (+-0.06 s pad), rejoin with 0.22 s gaps inside a line and 0.42 s between lines, atempo 1.03 (template3d/tighten.py). Keep a deliberate [pause] before the twist question. Record each line's start time; these drive the shots.
+- Tighten gently so the tone survives: silencedetect (noise -38dB, d 0.3), cut segments (+-0.06 s pad), rejoin with 0.22 s gaps inside a line and 0.42 s between lines, atempo 1.03 (template3d/tighten.py). Keep a deliberate [pause] after the engagement question and before "राज़ ये है". Record each line's start time; these drive the shots.
 
 ## 4. Visuals
 See section 0 (3D + 2.5D, template3d/). General rules that still apply:
