@@ -1,0 +1,176 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+html,body{margin:0;background:#000}
+@font-face{font-family:Rozha;src:url(fonts/fontsource-rozha-one-5.3.0/package/files/rozha-one-devanagari-400-normal.woff2)}
+@font-face{font-family:Rozha;src:url(fonts/fontsource-rozha-one-5.3.0/package/files/rozha-one-latin-400-normal.woff2)}
+@font-face{font-family:Tiro;src:url(fonts/fontsource-tiro-devanagari-hindi-5.3.0/package/files/tiro-devanagari-hindi-devanagari-400-normal.woff2)}
+@font-face{font-family:Tiro;src:url(fonts/fontsource-tiro-devanagari-hindi-5.3.0/package/files/tiro-devanagari-hindi-latin-400-normal.woff2)}
+@font-face{font-family:TiroI;src:url(fonts/fontsource-tiro-devanagari-hindi-5.3.0/package/files/tiro-devanagari-hindi-devanagari-400-italic.woff2)}
+@font-face{font-family:TiroI;src:url(fonts/fontsource-tiro-devanagari-hindi-5.3.0/package/files/tiro-devanagari-hindi-latin-400-italic.woff2)}
+@font-face{font-family:Inter;font-weight:700;src:url(fonts/fontsource-inter-5.3.0/package/files/inter-latin-700-normal.woff2)}
+</style></head><body><canvas id="c" width="1080" height="1920"></canvas><script>
+const c=document.getElementById('c'),x=c.getContext('2d'),W=1080,H=1920;
+const cl=v=>Math.max(0,Math.min(1,v)),eo=v=>1-Math.pow(1-cl(v),3),eio=v=>{v=cl(v);return v<.5?4*v*v*v:1-Math.pow(-2*v+2,3)/2};
+const back=v=>{v=cl(v);const s=1.7;return 1+(s+1)*Math.pow(v-1,3)+s*Math.pow(v-1,2)};const lerp=(a,b,t)=>a+(b-a)*t;
+let sd=11;const rnd=()=>{sd=(sd*16807)%2147483647;return sd/2147483647};
+const BLUE='#1F3A85',RED='#C8372D',INK='#2a2420';
+// ---------- paper ----------
+const paper=document.createElement('canvas');paper.width=W;paper.height=H;{const g=paper.getContext('2d');g.fillStyle='#EFE8DA';g.fillRect(0,0,W,H);
+ for(let i=0;i<1600;i++){const r=20+rnd()*120,X=rnd()*W,Y=rnd()*H,gr=g.createRadialGradient(X,Y,0,X,Y,r);gr.addColorStop(0,rnd()>.5?'rgba(255,252,240,0.035)':'rgba(150,120,80,0.025)');gr.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=gr;g.fillRect(X-r,Y-r,2*r,2*r)}
+ for(let i=0;i<60000;i++){g.fillStyle=`rgba(60,45,30,${rnd()*0.07})`;g.fillRect(rnd()*W,rnd()*H,1.4,1.4)}
+ g.strokeStyle='rgba(120,110,95,0.07)';g.lineWidth=1;for(let i=0;i<W;i+=36){g.beginPath();g.moveTo(i,0);g.lineTo(i,H);g.stroke()}for(let i=0;i<H;i+=36){g.beginPath();g.moveTo(0,i);g.lineTo(W,i);g.stroke()}}
+// ---------- assets ----------
+const IM={};const names=['wheel','temple','rim','horse','surya','ship','compass','lodestone'];
+function load(n,src){return new Promise(r=>{const i=new Image();i.onload=()=>{IM[n]=i;r()};i.onerror=()=>r();i.src=src})}
+const loads=[load('logo','logo.png')];names.forEach(n=>{loads.push(load(n,`assets/${n}.png`));loads.push(load(n+'_sk',`assets/${n}_sketch.png`))});
+// ---------- helpers ----------
+function label(s,X,Y,rot,p,fs=46,font='TiroI'){if(p<=0)return;const sc=back(p);x.save();x.translate(X,Y);x.rotate(rot);x.scale(sc,sc);x.font=`${fs}px ${font}`;const w=x.measureText(s).width+44,h=fs*1.55;
+ x.shadowColor='rgba(40,25,10,0.28)';x.shadowBlur=14;x.shadowOffsetY=6;x.fillStyle='#F8F4EA';x.fillRect(-w/2,-h/2,w,h);x.shadowColor='transparent';x.fillStyle='rgba(120,100,70,0.08)';x.fillRect(-w/2,h/2-6,w,6);
+ x.fillStyle=INK;x.textAlign='center';x.textBaseline='middle';x.fillText(s,0,4);x.restore()}
+function pill(s,X,Y,p,col=INK,bg='rgba(250,246,238,0.96)',fs=38){if(p<=0)return;const sc=back(p);x.save();x.translate(X,Y);x.scale(sc,sc);x.font=`${fs}px Tiro`;const w=x.measureText(s).width+44,h=fs*1.5;
+ x.shadowColor='rgba(40,25,10,0.22)';x.shadowBlur=10;x.shadowOffsetY=4;x.fillStyle=bg;x.beginPath();x.roundRect(-w/2,-h/2,w,h,h/2);x.fill();x.shadowColor='transparent';x.fillStyle=col;x.textAlign='center';x.textBaseline='middle';x.fillText(s,0,4);x.restore()}
+function headline(s,X,Y,p,fs=118,col=BLUE,align='center'){if(p<=0)return;x.save();x.font=`${fs}px Rozha`;x.textAlign=align;const w=x.measureText(s).width;const L=align==='center'?X-w/2:X;
+ x.beginPath();x.rect(L-20,Y-fs*1.1,(w+40)*eo(p),fs*1.5);x.clip();x.fillStyle=col;x.shadowColor='rgba(20,30,60,0.18)';x.shadowBlur=6;x.shadowOffsetY=4;x.fillText(s,X,Y);x.restore()}
+// image placed by centre+height; sketch draws in (top->bottom pencil reveal), then glowing line wipes upward to the real cut-out
+function img(n,cx,cy,h,sp,rp,a=1){const I=IM[n],S=IM[n+'_sk'];if(!I)return null;const w=I.width*h/I.height,X=cx-w/2,Y=cy-h/2;x.save();x.globalAlpha=a;
+ if(rp<1&&S&&sp>0){x.save();x.beginPath();x.rect(X-10,Y-10,w+20,(h+20)*eo(sp));x.clip();x.globalAlpha=a*0.9;x.drawImage(S,X,Y,w,h);x.restore()}
+ if(rp>0){const yy=lerp(Y+h+10,Y-10,eio(rp));x.save();x.beginPath();x.rect(X-40,yy,w+80,Y+h+60-yy);x.clip();x.shadowColor='rgba(40,25,10,0.35)';x.shadowBlur=26;x.shadowOffsetY=14;x.drawImage(I,X,Y,w,h);x.restore();
+  if(rp<1){x.save();x.strokeStyle='rgba(255,250,235,0.95)';x.lineWidth=4;x.shadowColor='rgba(255,210,120,1)';x.shadowBlur=24;x.beginPath();x.moveTo(X-30,yy);x.lineTo(X+w+30,yy);x.stroke();x.restore()}}
+ x.restore();return {X,Y,w,h}}
+function circ(cx,cy,rx,ry,p,col=RED){if(p<=0)return;x.save();x.strokeStyle=col;x.lineWidth=7;x.lineCap='round';x.beginPath();const N=70;for(let i=0;i<=N*cl(p);i++){const a=-1.3+i/N*6.7,r=1+Math.sin(i*0.45)*0.025+i*0.0012;const X=cx+Math.cos(a)*rx*r,Y=cy+Math.sin(a)*ry*r;i?x.lineTo(X,Y):x.moveTo(X,Y)}x.stroke();x.restore()}
+function arrow(x0,y0,x1,y1,p,col=RED){if(p<=0)return;const q=eo(p),X=lerp(x0,x1,q),Y=lerp(y0,y1,q);x.save();x.strokeStyle=col;x.fillStyle=col;x.lineWidth=7;x.lineCap='round';x.beginPath();x.moveTo(x0,y0);x.quadraticCurveTo((x0+X)/2+30,(y0+Y)/2-30,X,Y);x.stroke();
+ if(q>0.9){const a=Math.atan2(y1-y0,x1-x0);x.beginPath();x.moveTo(X,Y);x.lineTo(X-30*Math.cos(a-0.45),Y-30*Math.sin(a-0.45));x.lineTo(X-30*Math.cos(a+0.45),Y-30*Math.sin(a+0.45));x.closePath();x.fill()}x.restore()}
+function dashed(x0,y0,x1,y1,p){if(p<=0)return;x.save();x.strokeStyle='rgba(42,36,32,0.75)';x.lineWidth=3;x.setLineDash([14,10]);x.beginPath();x.moveTo(x0,y0);x.lineTo(lerp(x0,x1,eo(p)),lerp(y0,y1,eo(p)));x.stroke();x.restore()}
+function count(a,b,p){return Math.round(lerp(a,b,eo(p)))}
+const hi=n=>n.toLocaleString('en-IN');
+// ---------- Konark: wheel = clock (final, synced to voice) ----------
+const ORIG=x.setTransform.bind(x);let TM=null;loads.push(fetch('timing.json').then(r=>r.json()).then(j=>TM=j));
+function cam(s,fx,fy){x.setTransform(s,0,0,s,W/2-fx*s,H/2-fy*s)}
+function rot(n,cx,cy,h,ang=0,a=1,sx=1,sy=1){const I=IM[n];if(!I)return;const w=I.width*h/I.height;x.save();x.globalAlpha=a;x.translate(cx,cy);x.rotate(ang);x.scale(sx,sy);
+ x.shadowColor='rgba(40,25,10,0.35)';x.shadowBlur=24;x.shadowOffsetY=14;x.drawImage(I,-w/2,-h/2,w,h);x.restore()}
+function ground(y,p){if(p<=0)return;x.save();x.strokeStyle='rgba(42,36,32,0.55)';x.lineWidth=3;x.setLineDash([16,10]);x.beginPath();x.moveTo(60,y);x.lineTo(lerp(60,1020,eo(p)),y);x.stroke();x.restore()}
+function dust(cx,cy,t,n=14){if(t<0||t>1)return;sd=7;for(let i=0;i<n;i++){const a=Math.PI+rnd()*Math.PI,v=80+rnd()*160,r=6+rnd()*14;const X=cx+Math.cos(a)*v*eo(t)*(i%2?1:-1),Y=cy-Math.abs(Math.sin(a))*v*0.5*eo(t);x.fillStyle=`rgba(150,120,85,${0.45*(1-t)})`;x.beginPath();x.arc(X,Y,r*(1+t),0,7);x.fill()}}
+function stamp(s,X,Y,p,rotA=-0.18){if(p<=0)return;const sc=lerp(1.8,1,eo(p/0.6));x.save();x.globalAlpha=cl(p*3);x.translate(X,Y);x.rotate(rotA);x.scale(sc,sc);x.strokeStyle=RED;x.lineWidth=10;x.font='130px Rozha';const w=x.measureText(s).width+60;x.strokeRect(-w/2,-95,w,160);x.fillStyle=RED;x.textAlign='center';x.textBaseline='middle';x.fillText(s,0,-8);x.restore()}
+function waves(t,Y){x.save();x.strokeStyle='rgba(31,58,133,0.55)';x.lineWidth=4;for(let k=0;k<4;k++){x.beginPath();for(let X=40;X<=1040;X+=10){const yy=Y+k*34+Math.sin(X*0.02+t*3+k)*10;X===40?x.moveTo(X,yy):x.lineTo(X,yy)}x.stroke()}x.restore()}
+function bpBG(){x.save();x.setTransform(1,0,0,1,0,0);x.fillStyle='#123466';x.fillRect(0,0,W,H);x.lineWidth=1;for(let i=0;i<W;i+=30){x.strokeStyle=i%150?'rgba(120,170,230,0.16)':'rgba(140,190,245,0.32)';x.beginPath();x.moveTo(i,0);x.lineTo(i,H);x.stroke()}for(let i=0;i<H;i+=30){x.strokeStyle=i%150?'rgba(120,170,230,0.16)':'rgba(140,190,245,0.32)';x.beginPath();x.moveTo(0,i);x.lineTo(W,i);x.stroke()}x.restore()}
+const BPW='#EAF2FF',GOLD='#FFD65A',SKY='#96D7FF';
+// blueprint wheel: sketch inverted to white lines; spokes measured from the image (thick at 2°+45k)
+function bpWheel(cx,cy,h,ang,o){const S=IM.wheel_sk;if(!S)return 0;const w=S.width*h/S.height;x.save();x.translate(cx,cy);x.rotate(ang);x.globalAlpha=o;x.filter='invert(1) brightness(1.15)';x.drawImage(S,-w/2,-h/2,w,h);x.filter='none';x.restore();return h*0.458}
+function spoke(cx,cy,R,k,ang,q,glow=1){const thick=k%2===0,a=(k*22.5+2)*Math.PI/180+ang;x.save();x.strokeStyle=thick?GOLD:SKY;x.lineWidth=thick?7:3.5;x.shadowColor=x.strokeStyle;x.shadowBlur=16*glow;x.lineCap='round';x.beginPath();x.moveTo(cx,cy);x.lineTo(cx+Math.cos(a)*R*0.9*q,cy+Math.sin(a)*R*0.9*q);x.stroke();x.restore()}
+function note10(cx,cy,s,ang,p){if(p<=0)return;x.save();x.translate(cx,cy);x.rotate(ang);x.scale(s,s);x.globalAlpha=cl(p*2);
+ x.shadowColor='rgba(40,25,10,0.35)';x.shadowBlur=26;x.shadowOffsetY=14;x.fillStyle='#8B5A3C';x.beginPath();x.roundRect(-380,-195,760,390,22);x.fill();x.shadowColor='transparent';
+ const g=x.createLinearGradient(-380,0,380,0);g.addColorStop(0,'rgba(255,220,180,0.18)');g.addColorStop(0.5,'rgba(255,255,255,0.0)');g.addColorStop(1,'rgba(60,30,10,0.25)');x.fillStyle=g;x.beginPath();x.roundRect(-380,-195,760,390,22);x.fill();
+ x.strokeStyle='rgba(255,230,200,0.45)';x.lineWidth=3;x.strokeRect(-350,-165,700,330);
+ for(let i=0;i<14;i++){x.strokeStyle=`rgba(255,225,190,${0.08+0.02*(i%3)})`;x.beginPath();x.arc(-380,-195,60+i*28,0,1.6);x.stroke()}
+ x.fillStyle='#FCE9D2';x.font='700 96px Inter';x.textAlign='left';x.textBaseline='middle';x.fillText('₹10',-330,-95);x.font='70px Rozha';x.textAlign='right';x.fillText('१०',335,120);
+ x.restore()}
+function commentBox(cx,cy,p,txt){if(p<=0)return;const s=back(p);x.save();x.translate(cx,cy);x.scale(s,s);x.shadowColor='rgba(40,25,10,0.28)';x.shadowBlur=18;x.shadowOffsetY=8;x.fillStyle='#FBF8F1';x.beginPath();x.roundRect(-380,-110,760,220,28);x.fill();x.shadowColor='transparent';
+ x.fillStyle=BLUE;x.beginPath();x.arc(-290,-20,48,0,7);x.fill();x.fillStyle='#fff';x.beginPath();x.arc(-290,-36,17,0,7);x.fill();x.beginPath();x.arc(-290,10,28,Math.PI,0);x.fill();
+ x.fillStyle='rgba(42,36,32,0.25)';x.fillRect(-215,-55,260,18);x.fillStyle=INK;x.font='46px Tiro';x.textAlign='left';x.textBaseline='middle';x.fillText(txt,-215,10);x.fillStyle='rgba(42,36,32,0.45)';x.font='30px Tiro';x.fillText('कमेंट',-215,72);x.restore()}
+function subscribeBtn(X,Y,p,t){if(p<=0)return;x.save();x.translate(X,Y);const s=back(p)*(1+0.04*Math.sin(t*8));x.scale(s,s);x.shadowColor='rgba(120,20,20,0.35)';x.shadowBlur=20;x.shadowOffsetY=8;x.fillStyle='#D92B2B';x.beginPath();x.roundRect(-230,-58,460,116,58);x.fill();x.shadowColor='transparent';x.fillStyle='#fff';x.font='700 52px Inter';x.textAlign='center';x.textBaseline='middle';x.fillText('SUBSCRIBE',0,4);x.restore()}
+// ---------------- scenes (absolute times from timing.json lines) ----------------
+// L: 0 0.06 | 1 4.24 | 2 7.13 | 3 10.95 | 4 17.6 | 5 22.93 | 6 28.0 | 7 36.19 | 8 40.31 | 9 47.41 | 10 51.82
+function A_hook(t){ // 0-4.24: ₹10 note, then wheel rolls in on "पहिया"
+ cam(lerp(1.0,1.04,cl(t/4.2)),540,900);
+ headline('₹10 के नोट पर...',540,360,cl(t/0.35+0.7),100);
+ const np=cl(t/0.4),out=eo(cl((t-2.75)/0.5));note10(540,lerp(1000,820,out),lerp(1.12,0.62,out),lerp(-0.05,-0.12,out),np);
+ const Y=1130,h=560,R=h*0.458,rp=eo(cl((t-2.75)/1.0)),X=lerp(-360,540,rp),ang=(X-540)/R;
+ if(t>2.75){ground(Y+h*0.47,(t-2.75)/0.4);const land=t-3.75,sq=land>0&&land<0.3?Math.sin(land/0.3*Math.PI)*0.06:0;rot('wheel',X,Y-sq*h*0.5,h,ang,1,1+sq,1-sq);dust(540,Y+h*0.46,(t-3.7)/0.8)}
+ if(t>3.0)arrow(760,880,640,1010,(t-3.2)/0.4)}
+function B_clock(t){ // 4.24-7.13: "सिर्फ़ पहिया नहीं... घड़ी है!" wheel spins, clock hand appears
+ const z=lerp(1.1,1.0,eo(t/0.5));cam(z,540,860);const h=700,cx=540,cy=830;
+ const spin=t<1.6?t*1.2:1.6*1.2;rot('wheel',cx,cy,h,spin*0.4);
+ headline('सिर्फ़ पहिया?',540,330,(t-0.25)/0.4,104);
+ if(t>1.9){const R=h*0.458;const a=-Math.PI/2+(t-1.9)*3.2;x.save();x.strokeStyle=INK;x.lineWidth=14;x.lineCap='round';x.shadowColor='rgba(0,0,0,0.3)';x.shadowBlur=10;x.beginPath();x.moveTo(cx,cy);x.lineTo(cx+Math.cos(a)*R*0.82,cy+Math.sin(a)*R*0.82);x.stroke();x.lineWidth=18;x.beginPath();x.moveTo(cx,cy);x.lineTo(cx+Math.cos(a*0.25-1)*R*0.5,cy+Math.sin(a*0.25-1)*R*0.5);x.stroke();x.fillStyle=RED;x.beginPath();x.arc(cx,cy,20,0,7);x.fill();x.restore();
+  circ(cx,cy,R*1.06,R*1.06,(t-1.95)/0.7)}
+ if(t>1.95)headline('ये एक घड़ी है!',540,1330,(t-1.95)/0.35,96,RED)}
+function C_question(t){ // 7.13-10.95: comment + raaz
+ cam(1,540,900);rot('wheel',540,740,480,0.05*Math.sin(t*2),0.95);
+ headline('कैसे?',540,380,cl(t/0.3+0.3),130,RED);
+ commentBox(540,1030,(t-1.1)/0.4,'मुझे पता है...');
+ const r=(t-2.0)/0.4;if(r>0){x.save();x.fillStyle='rgba(30,25,22,0.9)';x.fillRect(0,1190,W,220*eo(r));x.restore();headline('असली राज़',540,1345,(t-2.3)/0.45,120,'#E8C26A')}}
+function D_temple(t){ // 10.95-17.6: Konark temple, ~1250, Narasimhadeva I
+ cam(lerp(1.0,1.06,cl(t/6.6)),540,900);const rise=eo(cl(t/0.6));
+ x.save();x.translate(0,lerp(260,0,rise));img('temple',540,880,820,cl(t/0.6),cl((t-0.5)/0.9));x.restore();
+ headline('कोणार्क सूर्य मंदिर',540,330,(t-0.6)/0.5,92);label('ओडिशा',820,470,0.05,(t-0.3)/0.35,46);
+ pill('लगभग 1250 ई.',290,1300,(t-3.0)/0.35,'#fff',BLUE,44);label('राजा नरसिंहदेव प्रथम',600,1375,-0.03,(t-4.4)/0.35,46)}
+function E_chariot(t){ // 17.6-22.93: Surya's chariot -> horse gallops -> blueprint plan 24 wheels
+ if(t<2.2){cam(lerp(1.0,1.05,cl(t/2.2)),540,900);img('surya',540,880,900,cl(t/0.5),cl((t-0.35)/0.8));headline('सूर्य देव का रथ',540,330,(t-0.2)/0.45,96);return}
+ if(t<3.4){const tt=t-2.2;cam(1,540,900);ground(1290,1);const p=eo(cl(tt/0.9)),X=lerp(1350,560,p),ph=tt*13;rot('horse',X,960-Math.abs(Math.sin(ph))*40,760,Math.sin(ph)*0.07);dust(X+120,1280,((tt%0.35)/0.35),6);
+  headline('सात घोड़े',540,330,(tt-0.2)/0.4,110);const c=count(0,7,(tt-0.3)/0.7);pill(`${c} / 7`,540,1365,(tt-0.3)/0.3,'#fff',RED,48);return}
+ const tt=t-3.4;bpBG();cam(1,540,900);
+ // top view chariot: body + 12 wheels each side + 7 horses
+ const bx=300,by=520,bw=480,bh=760,p=eo(cl(tt/0.5));x.save();x.strokeStyle=BPW;x.lineWidth=3;x.setLineDash([]);x.strokeRect(bx,by,bw,bh*p);x.setLineDash([8,8]);x.strokeRect(bx+60,by+80,bw-120,(bh-160)*p);x.restore();
+ const n=Math.floor(cl((tt-0.3)/1.1)*24+0.0001);
+ for(let i=0;i<24;i++){if(i>=n)break;const side=i<12?-1:1,j=i%12,X=side<0?bx-26:bx+bw+26,Y=by+40+j*(bh-80)/11;x.save();x.strokeStyle=GOLD;x.lineWidth=4;x.beginPath();x.ellipse(X,Y,16,26,0,0,7);x.stroke();x.restore()}
+ for(let k=0;k<7;k++){const q=cl((tt-0.2-k*0.08)/0.3);if(q<=0)continue;const X=bx+30+k*(bw-60)/6,Y=by-70;x.save();x.strokeStyle=SKY;x.lineWidth=3;x.beginPath();x.ellipse(X,Y,18*q,46*q,0,0,7);x.stroke();x.restore()}
+ headline('24 पहिए',540,330,(tt-0.1)/0.4,110,BPW);pill(`${n} / 24`,540,1365,(tt-0.3)/0.3,'#123466',GOLD,48)}
+function F_spokes(t){ // 22.93-28.0: blueprint wheel, 8 thick + 8 thin
+ bpBG();cam(lerp(1.06,1.0,eo(t/0.6)),540,920);const cx=540,cy=930,h=780,ang=(1-eo(cl(t/1.3)))*-3;
+ const R=bpWheel(cx,cy,h,ang,cl(t/0.4)*0.85);
+ x.save();x.strokeStyle=BPW;x.lineWidth=3;x.beginPath();x.arc(cx,cy,R*0.98,0,6.283*eo(cl((t-0.4)/0.6)));x.stroke();x.restore();
+ const tk=2.47,tn=4.05;let nk=0,nn=0;
+ for(let k=0;k<16;k+=2){const q=cl((t-tk-k*0.05)/0.2);if(q>0){spoke(cx,cy,R,k,ang,q);nk++}}
+ for(let k=1;k<16;k+=2){const q=cl((t-tn-k*0.04)/0.2);if(q>0){spoke(cx,cy,R,k,ang,q);nn++}}
+ x.fillStyle=BPW;x.beginPath();x.arc(cx,cy,14,0,7);x.fill();
+ headline('पहिए को देखिए',540,330,(t-0.2)/0.45,96,BPW);
+ if(t>tk)pill(`${nk} मोटी`,310,1365,(t-tk)/0.3,'#123466',GOLD,46);if(t>tn)pill(`${nn} पतली`,720,1365,(t-tn)/0.3,'#123466',SKY,46)}
+function G_time(t){ // 28.0-36.19: 3 hours / 1.5 hours / beads -> minutes
+ if(t<4.7){bpBG();cam(1,540,920);const cx=540,cy=930,R=bpWheel(cx,cy,780,0,0.85);for(let k=0;k<16;k++)spoke(cx,cy,R,k,0,1,0.5);
+  // highlight sector between two thick spokes (k=14 -> k=0 i.e. -43°..2°)
+  const a0=(-43)*Math.PI/180,a1=(2)*Math.PI/180,q=eo(cl((t-1.5)/0.5));if(q>0){x.save();x.fillStyle='rgba(255,214,90,0.28)';x.beginPath();x.moveTo(cx,cy);x.arc(cx,cy,R*0.9,a0,a0+(a1-a0)*q);x.closePath();x.fill();x.strokeStyle=GOLD;x.lineWidth=5;x.beginPath();x.arc(cx,cy,R*1.08,a0,a0+(a1-a0)*q);x.stroke();x.restore()}
+  if(t>1.6)pill('३ घंटे',310,1365,(t-1.6)/0.3,'#123466',GOLD,48);
+  const tp=2.5;if(t>tp){spoke(cx,cy,R,15,0,1,2.2);pill('डेढ़ घंटा',720,1365,(t-tp)/0.3,'#123466',SKY,48)}
+  x.fillStyle=BPW;x.beginPath();x.arc(cx,cy,14,0,7);x.fill();headline('तीलियाँ = घंटे',540,300,cl(t/0.4+0.4),96,BPW);return}
+ const tt=t-4.7;cam(lerp(1.0,1.08,cl(tt/3.5)),540,880);
+ img('rim',540,860,1040,cl(tt/0.4),cl((tt-0.3)/0.6));
+ [[638,554],[691,685],[722,816],[735,946],[735,1077]].forEach(([bx,by],i)=>circ(bx,by,44,40,(tt-1.6-i*0.12)/0.4));
+ headline('छोटे मोती',540,280,(tt-0.2)/0.4,104);pill('हर मोती ≈ 3 मिनट',540,1270,(tt-1.7)/0.35,'#fff',RED,46)}
+function H_shadow(t){ // 36.19-40.31: shadow of axle on spoke = time
+ bpBG();cam(1,540,920);const cx=540,cy=980,R=bpWheel(cx,cy,760,0,0.85);for(let k=0;k<16;k++)spoke(cx,cy,R,k,0,1,0.4);
+ // sun moves across top
+ const sp=cl(t/3.2),sa=lerp(Math.PI*1.1,Math.PI*1.9,sp),sx=cx+Math.cos(sa)*R*1.35,sy=cy+Math.sin(sa)*R*1.25;
+ x.save();x.fillStyle=GOLD;x.shadowColor=GOLD;x.shadowBlur=40;x.beginPath();x.arc(sx,sy,38,0,7);x.fill();x.restore();
+ x.save();x.strokeStyle='rgba(255,214,90,0.35)';x.setLineDash([10,10]);x.lineWidth=3;x.beginPath();x.moveTo(sx,sy);x.lineTo(cx,cy);x.stroke();x.restore();
+ const ha=sa+Math.PI;x.save();x.strokeStyle='rgba(8,10,22,0.92)';x.lineWidth=16;x.lineCap='round';x.beginPath();x.moveTo(cx,cy);x.lineTo(cx+Math.cos(ha)*R*0.92,cy+Math.sin(ha)*R*0.92);x.stroke();x.restore();
+ x.fillStyle=BPW;x.beginPath();x.arc(cx,cy,16,0,7);x.fill();
+ headline('परछाई',540,300,cl(t/0.4+0.4),110,BPW);if(t>2.5)pill('परछाई = समय',540,1370,(t-2.5)/0.35,'#123466',GOLD,48)}
+function I_legend(t){ // 40.31-47.41: 52-ton magnet legend, ship, compass
+ if(t<4.1){const tt=t-1.3;const shake=tt>0.25&&tt<0.7?Math.sin(tt*90)*14*(0.7-tt):0;cam(1,540+shake,900+shake*0.6);
+  headline('एक कहानी...',540,330,cl(t/0.4+0.3),100);
+  if(tt>0){const p=cl(tt/0.28),s=lerp(2.6,1,eo(p));rot('lodestone',540,900,560*s,0,cl(p*3));dust(540,1150,(tt-0.25)/0.8,18);
+   pill('52 टन चुंबक?',540,1330,(tt-1.2)/0.3,'#fff',RED,50);label('कहते हैं...',540,470,-0.03,(tt-0.1)/0.3,46)}return}
+ const tt=t-4.1;
+ if(tt<1.3){cam(1,540,900);waves(t,1180);const p=eo(cl(tt/1.1)),X=lerp(-450,520,p);rot('ship',X,940+Math.sin(t*3)*14,680,Math.sin(t*2.6)*0.05);headline('जहाज़ों के कम्पास',540,330,(tt-0.1)/0.4,92);return}
+ const tc=tt-1.3;cam(1,540,900);const Y=lerp(-300,860,back(cl(tc/0.5))),h=720;rot('compass',540,Y,h,0);
+ const I=IM.compass;if(I&&tc>0.3){const w=I.width*h/I.height,fx=540,fy=Y-h/2+h*0.615,r=w*0.30;const spin=tc*30+Math.sin(tc*9)*2;
+  x.save();x.translate(fx,fy);x.rotate(spin);x.fillStyle=RED;x.beginPath();x.moveTo(0,-r);x.lineTo(14,0);x.lineTo(-14,0);x.closePath();x.fill();x.fillStyle='#F8F4EA';x.beginPath();x.moveTo(0,r);x.lineTo(14,0);x.lineTo(-14,0);x.closePath();x.fill();x.fillStyle=INK;x.beginPath();x.arc(0,0,10,0,7);x.fill();x.restore()}
+ headline('बिगड़ जाते थे?',540,330,(tc-0.2)/0.4,100)}
+function J_truth(t){ // 47.41-51.82: whisper - no record -> MYTH
+ cam(lerp(1.0,1.06,cl(t/4.4)),540,900);rot('lodestone',540,900,560,0,1);
+ x.setTransform(1,0,0,1,0,0);const v=x.createRadialGradient(540,900,200,540,900,1100);v.addColorStop(0,'rgba(20,15,30,0)');v.addColorStop(1,`rgba(20,15,30,${0.72*eo(t/0.6)})`);x.fillStyle=v;x.fillRect(0,0,W,H);
+ headline('सच?',540,330,cl(t/0.4+0.2),130,'#F3E2B3');
+ stamp('MYTH',540,900,(t-2.8)/0.6);label('कोई ऐतिहासिक रिकॉर्ड नहीं',540,1380,0.02,(t-2.9)/0.35,46)}
+function K_cta(t){ // 51.82-59.6: back to ₹10 note + wheel (loop), comment, subscribe
+ cam(1,540,900);note10(540,720,0.66,-0.08,cl(t/0.3));rot('wheel',540,760,300,t*0.6,cl((t-0.2)/0.3));
+ headline('₹10 = घड़ी!',540,330,cl(t/0.35+0.3),110,RED);
+ commentBox(480,1080,(t-3.3)/0.4,'हाँ, पता था!');subscribeBtn(480,1300,(t-6.1)/0.4,t)}
+const SC=[[0,A_hook],[4.24,B_clock],[7.13,C_question],[10.95,D_temple],[17.6,E_chariot],[22.93,F_spokes],[28.0,G_time],[36.19,H_shadow],[40.31,I_legend],[47.41,J_truth],[51.82,K_cta]];
+const BPS=new Set([F_spokes,H_shadow]);
+// captions
+let CH=null;function chunks(){CH=[];let cur=[];TM.words.forEach((w,i)=>{cur.push(w);const end=/[.,!?।]$/.test(w.w)||cur.length>=4||i===TM.words.length-1;if(end){CH.push(cur);cur=[]}})}
+function captions(t){if(!TM)return;if(!CH)chunks();const ch=CH.find(c=>t>=c[0].s-0.05&&t<c[c.length-1].e+0.15);if(!ch)return;x.save();x.font='50px Tiro';const txt=ch.map(w=>w.w.replace(/\.\.\.$/,'')),ws=txt.map(s=>x.measureText(s+' ').width),tw=ws.reduce((a,b)=>a+b,0);
+ const Y=1500,p=eo((t-ch[0].s+0.05)/0.15);x.globalAlpha=p;x.shadowColor='rgba(40,25,10,0.3)';x.shadowBlur=12;x.shadowOffsetY=5;x.fillStyle='rgba(248,244,234,0.97)';x.beginPath();x.roundRect(480-tw/2-26,Y-46,tw+52,88,14);x.fill();x.shadowColor='transparent';
+ let X=480-tw/2;x.textBaseline='middle';ch.forEach((w,i)=>{const on=t>=w.s;x.fillStyle=on?(t<w.e+0.05?RED:INK):'rgba(42,36,32,0.38)';x.fillText(txt[i],X,Y);X+=ws[i]});x.restore()}
+function drawScene(fn,t,off){x.save();x.setTransform=(a,b,cc,d,e,f)=>ORIG(a,b,cc,d,e+off,f);try{fn(t)}finally{x.setTransform=ORIG}x.restore()}
+window.render=function(t){x.setTransform(1,0,0,1,0,0);x.drawImage(paper,0,0);
+ let i=0;for(let k=0;k<SC.length;k++)if(t>=SC[k][0])i=k;const tt=t-SC[i][0],TR=0.25;
+ if(i>0&&tt<TR){const q=eio(tt/TR),off=W*(1-q);drawScene(SC[i-1][1],SC[i][0]-SC[i-1][0],-W*q);
+  x.save();x.setTransform(1,0,0,1,0,0);x.beginPath();x.rect(off,0,W,H);x.clip();x.drawImage(paper,off,0);drawScene(SC[i][1],tt,off);x.restore();
+  x.setTransform(1,0,0,1,0,0);x.save();x.fillStyle='#F8F4EA';x.shadowColor='rgba(40,25,10,0.3)';x.shadowBlur=14;x.beginPath();x.moveTo(off-10,0);for(let y=0;y<=H;y+=40)x.lineTo(off-10+((y*7919)%23)-6,y);x.lineTo(off+8,H);x.lineTo(off+8,0);x.closePath();x.fill();x.restore()}
+ else SC[i][1](tt);
+ x.setTransform(1,0,0,1,0,0);const v=x.createRadialGradient(540,960,700,540,960,1250);v.addColorStop(0,'rgba(0,0,0,0)');v.addColorStop(1,'rgba(60,40,20,0.22)');x.fillStyle=v;x.fillRect(0,0,W,H);
+ captions(t);
+ const bp=BPS.has(SC[i][1])||(SC[i][1]===G_time&&tt<4.7)||(SC[i][1]===E_chariot&&tt>3.4);
+ if(IM.logo){x.save();x.globalAlpha=0.85;x.drawImage(IM.logo,70,236,64,64);x.restore()}x.save();x.font='34px Rozha';x.fillStyle=bp?'rgba(234,242,255,0.85)':'rgba(42,36,32,0.75)';x.textBaseline='middle';x.fillText('भूले किस्से',144,270);x.restore()};
+window.ready=Promise.all([...loads,...['118px Rozha','46px TiroI','34px Tiro','700 20px Inter'].map(f=>document.fonts.load(f,'रहस्य 1'))]);
+</script></body></html>
