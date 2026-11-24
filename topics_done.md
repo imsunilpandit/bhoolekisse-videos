@@ -5,7 +5,7 @@
 >>> - Voice with emotion: eleven_v4 audio tags ([excited], [curious], [softly], [dramatically], [pause], [warmly]); tighten gently (atempo 1.03).
 >>> - User will NOT upload manually. If Zapier fails, try Windsor once; else mark "pending upload" here (never send files for manual upload). Upload pending videos first at the next free slot; never two videos in one slot. Use the commit-SHA raw URL.
 
-UPLOAD METHOD: Zapier YouTube upload_video (selected_api YouTubeV4CLIAPI, video = GitHub raw URL, privacy private + publish_at works). Windsor upload is rate-limited, do not use.
+UPLOAD METHOD: Zapier YouTube upload_video (selected_api YouTubeV4CLIAPI, video = GitHub raw URL, privacy private + publish_at works). Windsor upload was rate-limited on 2026-11-23; use it only as the one fallback try after a Zapier failure (see override above).
 
 Hosting: push final mp4 to videos/ in imsunilpandit/bhoolekisse-videos (main); public URL = https://raw.githubusercontent.com/imsunilpandit/bhoolekisse-videos/main/videos/<file>
 Slots: 12:30 IST and 19:30 IST daily.
