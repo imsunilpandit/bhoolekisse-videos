@@ -13,3 +13,4 @@ Slots: 12:30 IST and 19:30 IST daily.
 
 Note: Kailasa video rejected by user (boring, music too loud) - do not upload it.
 | 2026-11-24 | Pushkar Brahma Mandir (Savitri shrap, Kartik Purnima) — new style | 12:30 IST | (not uploaded: Zapier 429) | file videos/2026-11-24_pushkar-brahma-mandir.mp4 sent to user for manual upload; 693 credits |
+| 2026-11-24 | Bali Jatra, Cuttack (22,000 paper boats / sadhabas / Boita Bandana) — new style, epic mood | 19:30 IST planned (12:30 already taken by Pushkar) | (not uploaded: Zapier 429) | file videos/2026-11-24_bali-jatra-cuttack.mp4 sent to user for manual upload; 605 credits; voice -16.0 / music -38.1 LUFS |
