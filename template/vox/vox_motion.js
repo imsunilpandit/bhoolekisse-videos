@@ -18,7 +18,7 @@ function _parallax(I,w,h,k,a){const z=1.06+0.05*Math.sin(T*0.45+k),dx=16*Math.si
  _ox.globalCompositeOperation='destination-in';const g=_ox.createLinearGradient(0,hh*0.45,0,hh*0.75);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,1)');_ox.fillStyle=g;_ox.fillRect(0,0,ww,hh);_ox.globalCompositeOperation='source-over';
  x.drawImage(_off,0,0,ww,hh,-w/2,-h/2,w,h);x.restore()}
 // image placed by centre+height: entry pop + settle, idle breathing/sway/tilt, sketch->real wipe, periodic shine
-function img(n,cx,cy,h,sp,rp,a=1){const I=IM[n],S=IM[n+'_sk'];if(!I)return null;const w=I.width*h/I.height,k=_hash(n);
+function img(n,cx,cy,h,sp,rp,a=1){const I=IM[n],S=IM[n+'_sk']||IM[n.split('_')[0]+'_sk'];if(!I)return null;const w=I.width*h/I.height,k=_hash(n.split('_')[0]);
  const isBG=n==='bg'||n.startsWith('bg');const ent=cl(sp);
  const s=(ent<1?lerp(0.86,1,back(ent)):1)*(1+0.018*Math.sin(T*1.1+k));
  const r=(1-eo(ent))*0.07*(k>3?1:-1)+(isBG?0.004:0.013)*Math.sin(T*0.8+k);
