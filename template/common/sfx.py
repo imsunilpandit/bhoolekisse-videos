@@ -53,6 +53,11 @@ for c in cues.split(';'):
         while tt<t+a[1]:add(tick(),tt,0.6);tt+=0.05+0.12*(tt-t)/a[1]
     elif k=='boom':add(boom(),t,1.0)
     elif k=='stamp':add(thud(90,0.35),t,0.9)
+    elif k=='note':
+        f=a[1];n=int(1.6*SR);tt=np.arange(n)/SR
+        tone=sum((0.6/h)*np.sin(2*np.pi*f*h*tt+h)*np.exp(-tt*(1.8+h*0.9)) for h in (1,2,3,4.2,5.4))
+        tone+=0.25*np.sin(2*np.pi*f*0.5*tt)*np.exp(-tt*3)
+        add(tone*np.minimum(1,tt/0.004),t,0.8)
     elif k=='ticks':
         tt=t
         while tt<t+a[1]:add(tick(),tt,0.7);tt+=0.5
