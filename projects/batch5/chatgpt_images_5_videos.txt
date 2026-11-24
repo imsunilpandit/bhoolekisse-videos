@@ -1,0 +1,95 @@
+I am making 5 short documentary videos about Indian history. Please create ALL the images listed below (34 images in total), then put them in ONE ZIP file named bhoole_kisse_batch5.zip, organised in 5 folders exactly like this:
+
+bhoole_kisse_batch5/
+  v1_rani_ki_vav/
+  v2_hampi_musical_pillars/
+  v3_iron_pillar/
+  v4_modhera_sun_temple/
+  v5_jantar_mantar/
+
+Use EXACTLY the folder names and file names given below. If you cannot make all 37 in one reply, make them in parts and keep going until all 34 are done, then make the ZIP with every image inside.
+
+=====================================================
+RULES FOR EVERY IMAGE (very important)
+=====================================================
+- Photorealistic documentary photo style, historically accurate look.
+- NO text, NO letters, NO numbers, NO watermark, NO logo anywhere in the image.
+- NO people, NO faces.
+- Very sharp detail, portrait 2:3 size (1024x1536), PNG.
+
+There are 2 kinds of image:
+
+TYPE A, CUT-OUT (every file whose name does NOT start with 00_):
+- One single subject, centered and fully visible, with some empty margin around it.
+- Plain pure white background (#FFFFFF) only: no scenery, no sky, no ground, no shadow on the background.
+- Soft, even daylight.
+
+TYPE B, FULL SCENE (only the files whose name starts with 00_):
+- A full atmospheric photo that fills the whole frame (no white background), cinematic light, vertical composition.
+
+=====================================================
+VIDEO 1: folder v1_rani_ki_vav
+(Rani ki Vav, the 11th-century Queen's Stepwell in Patan, Gujarat)
+=====================================================
+00_bg_stepwell_view.png: TYPE B. Looking down the long stepwell of Rani ki Vav from the top: many levels of carved stone pillared galleries going deep underground, warm golden morning light, no people.
+01_stepwell_structure.png: TYPE A. The whole Rani ki Vav stepwell shown as a single architectural model, three-quarter aerial cut-away view, seven levels of stairs and pillared pavilions going down into the ground, light sandstone.
+02_sculpture_wall_panel.png: TYPE A. A rectangular section of a carved stone wall with rows of intricate Hindu deity sculptures in niches, 11th-century Maru-Gurjara style, light brown sandstone.
+03_vishnu_sculpture.png: TYPE A. A single finely carved stone sculpture of Lord Vishnu from the stepwell walls, standing pose, ornate crown and jewellery, sandstone.
+04_carved_pillar.png: TYPE A. A single tall ornate carved stone pillar from the stepwell galleries, full height visible.
+05_river_silt_pile.png: TYPE A. A large heap of wet brown river silt and mud with some small stones.
+06_archaeology_tools.png: TYPE A. An archaeologist's trowel, a soft brush and a small measuring scale bar lying together, seen from above.
+
+=====================================================
+VIDEO 2: folder v2_hampi_musical_pillars
+(Vijaya Vittala Temple, Hampi, Karnataka, famous musical "SaReGaMa" stone pillars)
+=====================================================
+00_bg_vittala_mandapa.png: TYPE B. Inside the ruined stone pillared hall (Ranga Mantapa) of the Vittala Temple in Hampi, rows of carved granite pillars, soft evening light, no people.
+01_musical_pillar_cluster.png: TYPE A. One carved granite musical pillar of the Vittala Temple: a thick central pillar surrounded by a cluster of slender carved colonnettes, full height visible.
+02_stone_chariot.png: TYPE A. The famous stone chariot (Garuda shrine) of Hampi's Vittala Temple, three-quarter view, carved granite wheels.
+03_vittala_temple.png: TYPE A. The Vittala Temple of Hampi as a complete standalone monument, three-quarter view, carved granite mandapa.
+04_cut_pillar_section.png: TYPE A. A broken, cut-open section of a carved granite pillar showing that the inside is completely solid grey stone.
+05_hammer_chisel.png: TYPE A. An old 19th-century iron hammer and a stone chisel lying crossed.
+06_veena.png: TYPE A. A traditional Indian veena musical instrument, wooden with a round resonator, full length.
+
+=====================================================
+VIDEO 3: folder v3_iron_pillar
+(The 1600-year-old rust-free Iron Pillar of Delhi in the Qutub complex)
+=====================================================
+00_bg_iron_pillar_scene.png: TYPE B. The ancient iron pillar of Delhi standing in a stone courtyard with old sandstone arches behind it, clear blue morning sky, no people.
+01_iron_pillar.png: TYPE A. The Delhi Iron Pillar, full height visible from base to the decorative bell-shaped top capital, dark smooth iron surface with a slight metallic sheen.
+02_rusty_iron_rod.png: TYPE A. A modern iron rod badly covered in orange flaky rust.
+03_pillar_surface_closeup.png: TYPE A. Extreme close-up of a smooth dark ancient iron surface with faint hammer marks and a thin dark protective patina, no rust.
+04_vintage_microscope.png: TYPE A. A brass laboratory microscope, side view.
+05_forge_anvil.png: TYPE A. A blacksmith's anvil with a glowing red-hot piece of iron on it and a hammer resting beside it.
+06_rain_cloud.png: TYPE A. A single dark grey rain cloud with rain falling from it.
+
+=====================================================
+VIDEO 4: folder v4_modhera_sun_temple
+(Modhera Sun Temple, Mehsana, Gujarat, 11th century, built facing east)
+=====================================================
+00_bg_modhera_sunrise.png: TYPE B. The Modhera Sun Temple at sunrise, golden sun rays coming through the temple entrance, the stepped Surya Kund tank in the foreground reflecting the sky, no people.
+01_modhera_temple.png: TYPE A. The Modhera Sun Temple shrine and pillared hall as a complete standalone monument, three-quarter view, intricately carved sandstone.
+02_surya_kund.png: TYPE A. The Surya Kund stepped water tank seen from above at an angle, geometric stone steps going down on all sides with many small shrines on the steps, a little water at the bottom.
+03_carved_pillar.png: TYPE A. One ornate carved sandstone pillar from the Modhera temple hall, full height visible.
+04_surya_sculpture.png: TYPE A. A carved stone sculpture of the Sun God Surya, standing, holding lotus flowers, Maru-Gurjara style.
+05_toran_gateway.png: TYPE A. The carved stone toran (ceremonial arch gateway) in front of the Modhera temple, front view.
+
+=====================================================
+VIDEO 5: folder v5_jantar_mantar
+(Jantar Mantar, Jaipur, 18th-century observatory with the giant Samrat Yantra sundial)
+=====================================================
+00_bg_jantar_mantar.png: TYPE B. The giant Samrat Yantra sundial of Jantar Mantar, Jaipur, its huge triangular wall rising into a bright blue sky, long shadows on the curved stone scale, no people.
+01_samrat_yantra.png: TYPE A. The Samrat Yantra of Jantar Mantar, Jaipur as a complete standalone structure, side three-quarter view: the tall triangular gnomon wall with the staircase and small cupola on top, and the curved quadrant scales on both sides, yellow sandstone.
+02_scale_closeup.png: TYPE A. Close-up of a curved marble sundial scale with fine engraved lines and a sharp shadow edge falling across it (no numbers, no text).
+03_jai_prakash_yantra.png: TYPE A. The Jai Prakash Yantra of Jantar Mantar: a large bowl-shaped hemispherical marble instrument with a crosswire above it.
+04_brass_astrolabe.png: TYPE A. An ornate antique brass astrolabe, front view.
+05_pocket_watch.png: TYPE A. An open antique pocket watch showing its gears and mechanical parts inside.
+06_sun_disc.png: TYPE A. A bright glowing sun disc with soft rays.
+
+=====================================================
+FINAL CHECK BEFORE MAKING THE ZIP
+=====================================================
+- Every TYPE A image must have a plain white background. If one does not, redo that image.
+- No image may contain any text, letters or numbers. If one does, redo it.
+- All 34 files must be in the right folders with the exact names above.
+Then give me the download link for bhoole_kisse_batch5.zip.
