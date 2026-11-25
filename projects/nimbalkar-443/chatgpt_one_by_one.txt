@@ -1,0 +1,26 @@
+Har prompt ALAG message mein bhejiye (ek message = ek image). Sab images ek zip mein bhej dena.
+File names: 01_modern_bat.png ... 08_stumps.png
+
+--- 1 ---
+Create ONE image: 01_modern_bat.png. A modern English-willow cricket bat standing upright with a new white cricket ball beside it, photorealistic studio product shot, centered, pure white background (#FFFFFF), soft shadow, no people, no logos, no text, no brand stickers. Portrait 1024x1536.
+
+--- 2 ---
+Create ONE image: 02_vintage_bat.png. A 1940s vintage cricket bat, worn dark wood, cloth-wrapped handle, scuffed face, with an old red leather cricket ball beside it, photorealistic, centered, pure white background (#FFFFFF), soft shadow, no people, no logos, no text. Portrait 1024x1536.
+
+--- 3 ---
+Create ONE image: 03_scoreboard.png. An old 1940s wooden manual cricket scoreboard with empty black number slots (all slots EMPTY, no numbers, no letters, no words), painted cream frame, front view, photorealistic, isolated on pure white background (#FFFFFF), no people. Portrait 1024x1536.
+
+--- 4 ---
+Create ONE image: 04_tea_set.png. A vintage 1940s porcelain teapot with two tea cups and saucers on a small silver tray, steam rising from one cup, photorealistic, centered, pure white background (#FFFFFF), soft shadow, no people, no text. Portrait 1024x1536.
+
+--- 5 ---
+Create ONE image: 05_kit_bag.png. An old 1940s brown leather cricket kit bag / suitcase with buckles, packed and closed, two pads strapped on top, photorealistic, centered, pure white background (#FFFFFF), soft shadow, no people, no logos, no text. Portrait 1024x1536.
+
+--- 6 ---
+Create ONE image: 06_steam_train.png. A vintage 1940s Indian steam locomotive with one coach, side view, black engine with red details, white smoke puffing, photorealistic, isolated on pure white background (#FFFFFF), no people, no text, no numbers. Landscape 1536x1024.
+
+--- 7 ---
+Create ONE image: 07_pavilion.png. An old colonial-era cricket club pavilion building in India, cream walls, wooden balcony, sloping tiled roof, small clock on top, front view, photorealistic, isolated on pure white background (#FFFFFF), no people, no text, no signboards. Landscape 1536x1024.
+
+--- 8 ---
+Create ONE image: 08_stumps.png. Three wooden cricket stumps with two bails on top, slightly old and weathered, standing upright, front view, photorealistic, centered, pure white background (#FFFFFF), soft shadow, no people, no logos, no text. Portrait 1024x1536.

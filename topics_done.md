@@ -44,3 +44,5 @@ Plan (user, 2026-11-24 21:53 UK): when the upload limit resets, upload Loktak (2
 Uploads 2026-11-25 15:28-15:31 UK via Zapier (private + scheduled): Loktak cuJd18XLrgM 27 Nov 19:30 IST; Modhera 9I8MElCsV6s 28 Nov 12:30; Jantar Mantar QAx1kYO6r9E 28 Nov 19:30; Lonar SCBLkcsmEGg 29 Nov 12:30. Magnetic Hill PENDING (Zapier throttled, Windsor rate-limited) — planned 29 Nov 19:30, reminder 25 Nov 21:30 UK. Channel now 12 videos. Hampi made but not uploaded (user to decide).
 
 - 2026-11-25 | Sarangpur part 2 (छड़ी) | videos/2026-11-25_sarangpur-chhadi.mp4 | credits 966 | PENDING UPLOAD — target 30 Nov 12:30 IST; 25 Nov 18:35 UK Zapier throttled + Windsor rate-limited (daily cap; 4 uploads done today 15:28-15:31 UK)
+
+- 2026-11-25 | Vaibhav Suryavanshi 204(53) + childhood struggle + 4 List A records vs old international holders | videos/2026-11-25_vaibhav-records.mp4 | credits 1,199 | not uploaded yet (channel daily cap hit today)

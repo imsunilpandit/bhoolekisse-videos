@@ -1,0 +1,33 @@
+Har prompt ALAG message mein bhejiye (ek message = ek image). Sab 10 images ek zip mein bhej dena.
+File names: 01_modern_bat.png ... 10_trophy.png
+(Kisi bhi image mein koi insaan, chehra, logo ya text nahi hona chahiye.)
+
+--- 1 ---
+Create ONE image: 01_modern_bat.png. A modern English-willow cricket bat standing upright, photorealistic studio product shot, centered, pure white background (#FFFFFF), soft shadow, no people, no logos, no text, no stickers. Portrait 1024x1536.
+
+--- 2 ---
+Create ONE image: 02_white_ball.png. A single new white cricket ball with dark stitched seam, close-up, photorealistic, centered, pure white background (#FFFFFF), soft shadow, no logos, no text. Square 1024x1024.
+
+--- 3 ---
+Create ONE image: 03_stopwatch.png. A classic silver sports stopwatch with a white dial and black hands, front view, photorealistic, centered, pure white background (#FFFFFF), soft shadow, no brand, no text except plain dial ticks. Square 1024x1024.
+
+--- 4 ---
+Create ONE image: 04_scoreboard.png. A modern stadium LED scoreboard panel, black screen completely EMPTY (no numbers, no letters), metal frame on two legs, front view, photorealistic, isolated on pure white background (#FFFFFF), no people. Landscape 1536x1024.
+
+--- 5 ---
+Create ONE image: 05_village_train.png. An Indian passenger train (blue coaches, one locomotive) side view, slightly old and dusty, photorealistic, isolated on pure white background (#FFFFFF), no people, no text, no numbers, no logos. Landscape 1536x1024.
+
+--- 6 ---
+Create ONE image: 06_tiffin.png. A traditional Indian stainless-steel tiffin box (3 tiers, stacked, with handle) next to a steel water bottle, photorealistic, centered, pure white background (#FFFFFF), soft shadow, no people, no text. Portrait 1024x1536.
+
+--- 7 ---
+Create ONE image: 07_village_field.png. A small patch of green farmland with a simple village house with tiled roof and a tree in rural Bihar, warm morning light, photorealistic, isolated as a cut-out on pure white background (#FFFFFF), no people, no animals, no text. Landscape 1536x1024.
+
+--- 8 ---
+Create ONE image: 08_backyard_net.png. A simple homemade cricket practice net in a village backyard: bamboo poles, green net, a worn small kid-size cricket bat leaning against it and an old red tennis-ball, photorealistic, isolated on pure white background (#FFFFFF), no people, no text. Portrait 1024x1536.
+
+--- 9 ---
+Create ONE image: 09_floodlight.png. A tall cricket stadium floodlight tower with a grid of bright lamps at the top, glowing, photorealistic, isolated on pure white background (#FFFFFF), no people, no text. Portrait 1024x1536.
+
+--- 10 ---
+Create ONE image: 10_trophy.png. A shiny generic gold trophy cup with two handles on a black base, no engraving, photorealistic, centered, pure white background (#FFFFFF), soft shadow, no text, no logos. Portrait 1024x1536.

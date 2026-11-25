@@ -1,0 +1,32 @@
+IMPORTANT: Har prompt ALAG message mein bhejiye. Ek message = sirf EK image.
+Sab 5 images ban jaane ke baad ek zip mein bhej dena.
+
+--- 1 ---
+Make ONE individual image only (not a grid, not a collage, not multiple images in one picture).
+File name: 07_village_field.png
+Size: 1536x1024 (landscape).
+A small patch of green farmland with a simple village house with a tiled roof and a big tree, rural Bihar, warm morning light. The scene must FILL the frame (about 90% of the image width). Photorealistic, isolated on pure white background (#FFFFFF), no people, no animals, no text.
+
+--- 2 ---
+Make ONE individual image only (not a grid, not a collage, not multiple images in one picture).
+File name: 08_backyard_net.png
+Size: 1024x1536 (portrait).
+A simple homemade cricket practice net in a village backyard: bamboo poles, green net, a worn small kid-size cricket bat leaning on it and an old red tennis ball on the ground. The net must FILL the frame (about 90% of the image height). Photorealistic, pure white background (#FFFFFF), no people, no text.
+
+--- 3 ---
+Make ONE individual image only (not a grid, not a collage, not multiple images in one picture).
+File name: 09_floodlight.png
+Size: 1024x1536 (portrait).
+A tall cricket stadium floodlight tower with a big grid of bright glowing lamps at the top. The tower must FILL the full height of the image (top lamps near the top edge, base near the bottom edge) and the lamp panel should be wide (about 60% of the image width). Photorealistic, pure white background (#FFFFFF), no people, no text.
+
+--- 4 ---
+Make ONE individual image only (not a grid, not a collage, not multiple images in one picture).
+File name: 10_trophy.png
+Size: 1024x1536 (portrait).
+A shiny generic gold trophy cup with two handles on a black base, no engraving. The trophy must FILL the frame (about 90% of the image height). Photorealistic, pure white background (#FFFFFF), soft shadow, no text, no logos.
+
+--- 5 ---
+Make ONE individual image only (not a grid, not a collage, not multiple images in one picture).
+File name: 11_batter_shot.png
+Size: 1024x1536 (portrait).
+A cricket batter in mid-swing playing a big lofted six, seen from behind at a three-quarter angle so the FACE IS NOT VISIBLE, wearing a helmet, plain blue cricket kit with NO name, NO number, NO logos, white pads and gloves. Full body, the batter must FILL the frame (about 90% of the image height). Photorealistic, isolated on pure white background (#FFFFFF), no text.

@@ -1,0 +1,43 @@
+IMPORTANT: Har prompt ALAG message mein bhejiye. Ek message = sirf EK image.
+Pehle message mein ye STYLE RULES paste kijiye, phir ek-ek karke prompts:
+
+=== STYLE RULES (pehle message mein bhejein) ===
+I will send you 6 prompts one by one. For EVERY image follow these rules exactly:
+- Make ONE individual image only (not a grid, not a collage, not multiple images in one picture).
+- Photorealistic studio cut-out look, exactly like a product photo: pure white background (#FFFFFF), no floor, no scenery, only a very soft shadow under the feet.
+- Same lighting in all images: soft light from the top-left, sharp focus, NO motion blur, clean crisp edges (the image will be cut out and animated).
+- Full body, nothing cropped (head, bat tip and feet fully inside the frame), the person fills about 90% of the image height.
+- Faces must NEVER be visible (seen from behind or face turned away / covered by helmet).
+- No names, no numbers, no logos, no text, no watermark anywhere.
+- Batter kit for ALL batter images: plain royal-blue shirt and trousers, navy helmet, white pads and white gloves, light wooden bat (same kit every time).
+Reply "OK" and wait for my prompts.
+
+--- 1 ---
+File name: 16_batter_backlift.png  Size: 1024x1536 (portrait)
+The SAME batter (plain royal-blue kit, navy helmet, white pads and gloves) seen from behind at a three-quarter angle, in the BACKLIFT position just before a big shot: bat raised high behind the shoulder, weight on the back foot, eyes on the bowler. Follow the style rules.
+(Edit use: ye frame + 11_batter_shot = shot ka animation; bat ghoomega aur gend udegi.)
+
+--- 2 ---
+File name: 14_batter_celebrate.png  Size: 1024x1536 (portrait)
+The SAME batter (plain royal-blue kit, navy helmet, white pads and gloves) seen from BEHIND, both arms up, raising the bat high to the sky in celebration after a double century. Follow the style rules.
+(Edit use: 204 counter poora hone par pop-in + golden glow, end mein trophy ke saath.)
+
+--- 3 ---
+File name: 15_bowler_release.png  Size: 1024x1536 (portrait)
+A fast bowler in delivery stride, arm high just about to release a white ball, side view with the head turned away so the face is NOT visible, plain green cricket kit (green shirt, green trousers), white shoes. Follow the style rules.
+(Edit use: left se slide-in, gend chhootegi -> batter ka six.)
+
+--- 4 ---
+File name: 12_boy_backlift.png  Size: 1024x1536 (portrait)
+A young village boy (about 9 years old) in a simple faded red t-shirt and grey shorts, barefoot, holding an old small worn cricket bat in the BACKLIFT position, seen from BEHIND so the face is NOT visible. Follow the style rules.
+(Edit use: practice net ke andar, frame 1 of 2.)
+
+--- 5 ---
+File name: 12b_boy_drive.png  Size: 1024x1536 (portrait)
+The SAME young boy (faded red t-shirt, grey shorts, barefoot, old small bat) seen from BEHIND, finishing a straight drive with the bat follow-through high in front, face NOT visible. Follow the style rules.
+(Edit use: frame 2 of 2 -> bachpan ki practice ka shot animation.)
+
+--- 6 ---
+File name: 13_father_son_walk.png  Size: 1024x1536 (portrait)
+A father and the SAME young boy (faded red t-shirt, grey shorts, now wearing simple sandals) walking side by side, seen from BEHIND (faces NOT visible). The boy carries a cricket kit bag on his shoulder, the father wears a simple white kurta-pyjama and holds a steel tiffin box. Follow the style rules.
+(Edit use: train scene ke saath walk cycle bob, Ukiyo-e style background par.)
