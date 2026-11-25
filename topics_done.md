@@ -47,3 +47,5 @@ Uploads 2026-11-25 15:28-15:31 UK via Zapier (private + scheduled): Loktak cuJd1
 
 - 2026-11-25 | Vaibhav Suryavanshi 204(53) + childhood struggle + 4 List A records vs old international holders | videos/2026-11-25_vaibhav-records.mp4 | credits 1,199 | not uploaded yet (channel daily cap hit today)
 Change 2026-11-25 20:22 UK: Konark d6PgDc0Nfbk moved from 26 Nov 12:30 IST to 30 Nov 19:30 IST (14:00Z). 26 Nov 12:30 IST slot freed for Vaibhav video (user uploads manually via Studio). API upload of Vaibhav throttled 20:20 UK.
+Upload try 2026-11-25 21:31 UK (reminder): Magnetic Hill — Zapier "throttled", Windsor "rate-limited", Chrome not connected → stopped; Hampi not tried. Both still PENDING (Magnetic 29 Nov 19:30, Hampi 30 Nov 12:30 IST).
+SLOT CLASH found: "25 November 2026" (doTh6-XQjUQ, Vaibhav Suryavanshi cricket video, uploaded 20:28 UTC 25 Nov, not by this session) is scheduled 26 Nov 07:00Z = 12:30 IST, same slot as Konark (d6PgDc0Nfbk). Asked the user what to do.
