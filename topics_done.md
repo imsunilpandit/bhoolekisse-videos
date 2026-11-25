@@ -46,3 +46,4 @@ Uploads 2026-11-25 15:28-15:31 UK via Zapier (private + scheduled): Loktak cuJd1
 - 2026-11-25 | Sarangpur part 2 (छड़ी) | videos/2026-11-25_sarangpur-chhadi.mp4 | credits 966 | PENDING UPLOAD — target 30 Nov 12:30 IST; 25 Nov 18:35 UK Zapier throttled + Windsor rate-limited (daily cap; 4 uploads done today 15:28-15:31 UK)
 
 - 2026-11-25 | Vaibhav Suryavanshi 204(53) + childhood struggle + 4 List A records vs old international holders | videos/2026-11-25_vaibhav-records.mp4 | credits 1,199 | not uploaded yet (channel daily cap hit today)
+Change 2026-11-25 20:22 UK: Konark d6PgDc0Nfbk moved from 26 Nov 12:30 IST to 30 Nov 19:30 IST (14:00Z). 26 Nov 12:30 IST slot freed for Vaibhav video (user uploads manually via Studio). API upload of Vaibhav throttled 20:20 UK.
