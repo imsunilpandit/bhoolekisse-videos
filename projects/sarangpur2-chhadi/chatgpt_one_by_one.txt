@@ -1,0 +1,19 @@
+HOW TO USE (ChatGPT, ONE image per message):
+1. Open a new ChatGPT chat.
+2. Paste ONE prompt, wait for the image, download it. Then paste the next one.
+3. Send all 5 images to Claude in this order (names don't matter).
+
+--- 01_saint_staff.png ---
+An old wooden saint's walking staff (danda) standing perfectly vertical, polished dark wood with a small engraved silver cap on top and a brass ring near the bottom, full length visible. Photorealistic documentary photo, one single subject centered and fully visible with empty margin around it, on a plain pure white background (#FFFFFF), no scenery, no shadow on the background, soft even daylight. No text, no letters, no numbers, no watermark, no people. Very sharp detail. Vertical portrait 2:3, 1024x1536, PNG.
+
+--- 02_industrial_3d_printer.png ---
+A large industrial 3D printer printing a detailed golden-bronze sculpture piece of an ornate crown, side three-quarter view, the whole machine visible. Photorealistic documentary photo, one single subject centered and fully visible with empty margin around it, on a plain pure white background (#FFFFFF), no scenery, no shadow on the background, soft even daylight. No text, no letters, no numbers, no logos, no watermark, no people. Very sharp detail. Vertical portrait 2:3, 1024x1536, PNG.
+
+--- 03_cnc_machine.png ---
+A CNC router machine carving a large decorative metal panel with a spinning cutting head and small metal shavings, three-quarter view, the whole machine visible. Photorealistic documentary photo, one single subject centered and fully visible with empty margin around it, on a plain pure white background (#FFFFFF), no scenery, no shadow on the background, soft even daylight. No text, no letters, no numbers, no logos, no watermark, no people. Very sharp detail. Vertical portrait 2:3, 1024x1536, PNG.
+
+--- 04_seismograph.png ---
+A classic seismograph with a rotating paper drum and a pen drawing a sharp zig-zag earthquake line, three-quarter view. Photorealistic documentary photo, one single subject centered and fully visible with empty margin around it, on a plain pure white background (#FFFFFF), no scenery, no shadow on the background, soft even daylight. No text, no letters, no numbers, no logos, no watermark, no people. Very sharp detail. Vertical portrait 2:3, 1024x1536, PNG.
+
+--- 05_old_oil_lamp.png ---
+A traditional brass temple oil lamp (diya stand) with a small lit flame, front view. Photorealistic documentary photo, one single subject centered and fully visible with empty margin around it, on a plain pure white background (#FFFFFF), no scenery, no shadow on the background, soft even daylight. No text, no letters, no numbers, no watermark, no people. Very sharp detail. Vertical portrait 2:3, 1024x1536, PNG.
