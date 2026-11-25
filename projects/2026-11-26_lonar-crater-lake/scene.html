@@ -1,0 +1,161 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+html,body{margin:0;background:#000}
+@font-face{font-family:Baloo;font-weight:800;src:url(fonts/fontsource-baloo-2-5.3.0/package/files/baloo-2-devanagari-800-normal.woff2)}
+@font-face{font-family:Baloo;font-weight:800;src:url(fonts/fontsource-baloo-2-5.3.0/package/files/baloo-2-latin-800-normal.woff2)}
+@font-face{font-family:Baloo;font-weight:700;src:url(fonts/fontsource-baloo-2-5.3.0/package/files/baloo-2-devanagari-700-normal.woff2)}
+@font-face{font-family:Baloo;font-weight:700;src:url(fonts/fontsource-baloo-2-5.3.0/package/files/baloo-2-latin-700-normal.woff2)}
+@font-face{font-family:Rozha;src:url(fonts/fontsource-rozha-one-5.3.0/package/files/rozha-one-devanagari-400-normal.woff2)}
+@font-face{font-family:Inter;font-weight:700;src:url(fonts/fontsource-inter-5.3.0/package/files/inter-latin-700-normal.woff2)}
+</style>
+<script type="importmap">{"imports":{"three":"./three/build/three.module.js"}}</script>
+</head><body><canvas id="c" width="1080" height="1920"></canvas>
+<script type="module">
+import * as THREE from 'three';
+const c=document.getElementById('c'),x=c.getContext('2d'),W=1080,H=1920;
+const cl=v=>Math.max(0,Math.min(1,v)),eo=v=>1-Math.pow(1-cl(v),3),eio=v=>{v=cl(v);return v<.5?4*v*v*v:1-Math.pow(-2*v+2,3)/2};
+const back=v=>{v=cl(v);const s=1.7;return 1+(s+1)*Math.pow(v-1,3)+s*Math.pow(v-1,2)};const lerp=(a,b,t)=>a+(b-a)*t;
+let sd=11;const rnd=()=>{sd=(sd*16807)%2147483647;return sd/2147483647};
+// ---------- recipe: NIGHT SKY / SPACE ----------
+const WHITE='#F4F7FF',CYAN='#5CE1FF',PINK='#FF5FA2',VIOLET='#8B6CFF',INK='#0B1030',AMBER='#FFB648',GREEN='#3FCF8E';
+let TM=null;const IM={};const loads=[fetch('timing.json').then(r=>r.json()).then(j=>TM=j),new Promise(r=>{const i=new Image();i.onload=()=>{IM.logo=i;r()};i.onerror=r;i.src='logo.png'})];
+const grain=document.createElement('canvas');grain.width=540;grain.height=960;{const g=grain.getContext('2d'),d=g.createImageData(540,960);for(let i=0;i<d.data.length;i+=4){const v=128+(rnd()-0.5)*80;d.data[i]=d.data[i+1]=d.data[i+2]=v;d.data[i+3]=16}g.putImageData(d,0,0)}
+// star field (precomputed)
+const STARS=[];sd=3;for(let i=0;i<420;i++)STARS.push([rnd()*W,rnd()*H*0.75,rnd()*1.8+0.3,rnd()*6.28,rnd()*0.6+0.4]);
+function sky(t,glow=0.5,ground=true,gy=1450){x.save();x.setTransform(1,0,0,1,0,0);
+ const g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,'#05061a');g.addColorStop(0.45,'#141a4a');g.addColorStop(0.75,'#2b2160');g.addColorStop(1,'#3a1f4e');x.fillStyle=g;x.fillRect(0,0,W,H);
+ // nebula haze
+ x.globalCompositeOperation='screen';[[300,500,520,'rgba(139,108,255,'],[820,820,460,'rgba(255,95,162,'],[540,260,380,'rgba(92,225,255,']].forEach(([X,Y,R,col],k)=>{const rg=x.createRadialGradient(X+Math.sin(t*0.1+k)*30,Y,0,X,Y,R);rg.addColorStop(0,col+(0.16*glow)+')');rg.addColorStop(1,col+'0)');x.fillStyle=rg;x.fillRect(0,0,W,H)});
+ STARS.forEach(([X,Y,r,ph,b])=>{x.globalAlpha=b*(0.55+0.45*Math.sin(t*2+ph));x.fillStyle='#fff';x.beginPath();x.arc((X+t*4*r)%W,Y,r,0,7);x.fill()});x.globalAlpha=1;x.globalCompositeOperation='source-over';
+ if(ground){// basalt plateau, dark blue-grey with rim light (never pure black)
+  x.fillStyle='#232a4d';x.beginPath();x.moveTo(0,gy);for(let X=0;X<=W;X+=30)x.lineTo(X,gy-18*Math.sin(X*0.006+1)-10*Math.sin(X*0.017));x.lineTo(W,H);x.lineTo(0,H);x.closePath();x.fill();
+  x.strokeStyle='rgba(92,225,255,0.35)';x.lineWidth=3;x.beginPath();for(let X=0;X<=W;X+=30){const y=gy-18*Math.sin(X*0.006+1)-10*Math.sin(X*0.017);X?x.lineTo(X,y):x.moveTo(X,y)}x.stroke();
+  const gg=x.createLinearGradient(0,gy,0,H);gg.addColorStop(0,'rgba(40,48,90,0)');gg.addColorStop(1,'rgba(10,12,30,0.6)');x.fillStyle=gg;x.fillRect(0,gy,W,H-gy)}
+ x.restore()}
+// ---------- text (neon) ----------
+function headline(s,X,Y,p,fs=110,col=WHITE,glow=CYAN){if(p<=0)return;const q=eo(p);x.save();x.font=`800 ${fs}px Baloo`;x.textAlign='center';x.textBaseline='alphabetic';x.globalAlpha=cl(p*2.5);
+ const sc=lerp(0.85,1,q);x.translate(X,Y+80);x.scale(sc,sc);x.lineJoin='round';x.lineWidth=12;x.strokeStyle='rgba(5,6,26,0.8)';x.strokeText(s,0,0);
+ x.shadowColor=glow;x.shadowBlur=34;x.fillStyle=col;x.fillText(s,0,0);x.shadowBlur=10;x.fillText(s,0,0);x.restore()}
+function neonTag(s,X,Y,p,fs=44,col=CYAN){if(p<=0)return;const sc=back(p);x.save();x.translate(X,Y);x.scale(sc,sc);x.font=`700 ${fs}px Baloo`;const w=x.measureText(s).width+52,h=fs*1.5;
+ x.fillStyle='rgba(8,10,40,0.7)';x.beginPath();x.roundRect(-w/2,-h/2,w,h,h/2);x.fill();x.shadowColor=col;x.shadowBlur=18;x.strokeStyle=col;x.lineWidth=3;x.stroke();x.shadowBlur=0;x.fillStyle=WHITE;x.textAlign='center';x.textBaseline='middle';x.fillText(s,0,4);x.restore()}
+function pill(s,X,Y,p,fs=54,bg=PINK,col='#fff'){if(p<=0)return;const sc=back(p);x.save();x.translate(X,Y);x.scale(sc,sc);x.font=`800 ${fs}px Baloo`;const w=x.measureText(s).width+60,h=fs*1.5;x.shadowColor=bg;x.shadowBlur=26;x.fillStyle=bg;x.beginPath();x.roundRect(-w/2,-h/2,w,h,h/2);x.fill();x.shadowBlur=0;x.fillStyle=col;x.textAlign='center';x.textBaseline='middle';x.fillText(s,0,5);x.restore()}
+function count(a,b,p){return lerp(a,b,eo(p))}
+function dashed(x0,y0,x1,y1,p,col=CYAN){if(p<=0)return;x.save();x.strokeStyle=col;x.lineWidth=4;x.setLineDash([14,10]);x.shadowColor=col;x.shadowBlur=10;x.beginPath();x.moveTo(x0,y0);x.lineTo(lerp(x0,x1,eo(p)),lerp(y0,y1,eo(p)));x.stroke();x.restore()}
+function flash(p,col='255,255,255'){if(p<0||p>1)return;x.save();x.setTransform(1,0,0,1,0,0);x.fillStyle=`rgba(${col},${0.9*(1-p)*(1-p)})`;x.fillRect(0,0,W,H);x.restore()}
+function shock(cx,cy,p,col='255,182,72'){if(p<0||p>1)return;x.save();for(let k=0;k<3;k++){const q=p-k*0.12;if(q<0)continue;x.strokeStyle=`rgba(${col},${0.85*(1-q)})`;x.lineWidth=14*(1-q)+2;x.beginPath();x.ellipse(cx,cy,40+q*620,(40+q*620)*0.32,0,0,7);x.stroke()}x.restore()}
+function streak(x0,y0,x1,y1,p,len=0.35){if(p<=0||p>1.2)return;const q=cl(p),h=Math.max(0,q-len);x.save();const g=x.createLinearGradient(lerp(x0,x1,h),lerp(y0,y1,h),lerp(x0,x1,q),lerp(y0,y1,q));g.addColorStop(0,'rgba(255,182,72,0)');g.addColorStop(1,'rgba(255,240,200,0.95)');x.strokeStyle=g;x.lineWidth=12;x.lineCap='round';x.shadowColor=AMBER;x.shadowBlur=30;x.beginPath();x.moveTo(lerp(x0,x1,h),lerp(y0,y1,h));x.lineTo(lerp(x0,x1,q),lerp(y0,y1,q));x.stroke();x.restore()}
+function commentBox(cx,cy,p,txt){if(p<=0)return;const s=back(p);x.save();x.translate(cx,cy);x.scale(s,s);x.shadowColor='rgba(92,225,255,0.5)';x.shadowBlur=30;x.fillStyle='rgba(16,20,60,0.92)';x.beginPath();x.roundRect(-380,-105,760,210,30);x.fill();x.strokeStyle=CYAN;x.lineWidth=3;x.stroke();x.shadowBlur=0;
+ x.fillStyle=PINK;x.beginPath();x.arc(-290,-20,46,0,7);x.fill();x.fillStyle='#fff';x.font='800 46px Baloo';x.textAlign='center';x.textBaseline='middle';x.fillText('आप',-290,-14);
+ x.textAlign='left';x.fillStyle='rgba(244,247,255,0.6)';x.font='700 30px Baloo';x.fillText('कमेंट करें',-220,-52);x.fillStyle=WHITE;x.font='800 54px Baloo';x.fillText(txt,-220,8);x.restore()}
+function subscribeBtn(X,Y,p,t){if(p<=0)return;x.save();x.translate(X,Y);const s=back(p)*(1+0.04*Math.sin(t*8));x.scale(s,s);x.shadowColor='rgba(255,40,40,0.6)';x.shadowBlur=30;x.fillStyle='#D92B2B';x.beginPath();x.roundRect(-230,-58,460,116,58);x.fill();x.shadowBlur=0;x.fillStyle='#fff';x.font='700 52px Inter';x.textAlign='center';x.textBaseline='middle';x.fillText('SUBSCRIBE',0,4);x.restore()}
+function sunIcon(X,Y,s,a,t){if(a<=0)return;x.save();x.globalAlpha=cl(a);x.translate(X,Y);x.scale(s,s);x.rotate(t*0.6);x.fillStyle=AMBER;x.shadowColor=AMBER;x.shadowBlur=30;x.beginPath();x.arc(0,0,34,0,7);x.fill();x.strokeStyle=AMBER;x.lineWidth=7;x.lineCap='round';for(let k=0;k<8;k++){const a2=k*Math.PI/4;x.beginPath();x.moveTo(Math.cos(a2)*46,Math.sin(a2)*46);x.lineTo(Math.cos(a2)*64,Math.sin(a2)*64);x.stroke()}x.restore()}
+function meter(X,Y,lbl,v,p,col){if(p<=0)return;x.save();x.globalAlpha=cl(p*2);x.fillStyle='rgba(8,10,40,0.7)';x.strokeStyle=col;x.lineWidth=3;x.beginPath();x.roundRect(X-45,Y-200,90,260,20);x.fill();x.stroke();x.fillStyle=col;x.shadowColor=col;x.shadowBlur=16;const h=220*cl(v);x.beginPath();x.roundRect(X-30,Y+40-h,60,h,12);x.fill();x.shadowBlur=0;x.fillStyle=WHITE;x.font='800 40px Baloo';x.textAlign='center';x.fillText(lbl,X,Y+110);x.restore()}
+function lens(cx,cy,R,p,draw){if(p<=0)return;const r=R*eo(p);x.save();x.beginPath();x.arc(cx,cy,r,0,7);x.clip();x.fillStyle='rgba(30,10,40,0.95)';x.fillRect(cx-r,cy-r,2*r,2*r);draw(r);x.restore();x.save();x.strokeStyle=CYAN;x.lineWidth=10;x.shadowColor=CYAN;x.shadowBlur=24;x.beginPath();x.arc(cx,cy,r,0,7);x.stroke();x.restore()}
+function hexBasalt(X,Y,w,h,p){if(p<=0)return;x.save();x.beginPath();x.rect(X,Y+h*(1-eo(p)),w,h*eo(p));x.clip();const s=46;for(let r=0;r*s*0.86<h+s;r++)for(let k=0;k*s*1.5<w+s;k++){const cx=X+k*s*1.5,cy=Y+r*s*1.72+(k%2)*s*0.86;sd=r*31+k;const v=40+rnd()*25;x.fillStyle=`rgb(${v},${v+6},${v+28})`;x.strokeStyle='rgba(92,225,255,0.35)';x.lineWidth=2;x.beginPath();for(let a=0;a<6;a++){const an=a*Math.PI/3;x.lineTo(cx+Math.cos(an)*s*0.95,cy+Math.sin(an)*s*0.95)}x.closePath();x.fill();x.stroke()}x.restore()}
+function craterIcon(X,Y,s,p,lbl,hi){if(p<=0)return;const sc=back(p)*s;x.save();x.translate(X,Y);x.scale(sc,sc);const g=x.createRadialGradient(0,0,10,0,0,80);g.addColorStop(0,hi?'#3fcf8e':'#6b5a8a');g.addColorStop(0.7,'#2b2f5a');g.addColorStop(1,'#4a4f86');x.fillStyle=g;x.beginPath();x.ellipse(0,0,90,46,0,0,7);x.fill();x.strokeStyle=hi?PINK:CYAN;x.lineWidth=6;x.shadowColor=x.strokeStyle;x.shadowBlur=18;x.stroke();x.restore();neonTag(lbl,X,Y+90,p,36,hi?PINK:CYAN)}
+
+// ================= THREE.JS =================
+const R3=new THREE.WebGLRenderer({antialias:true,alpha:true,preserveDrawingBuffer:true});R3.setSize(1080,1080,false);R3.setClearColor(0,0);R3.outputColorSpace=THREE.SRGBColorSpace;
+const S3=new THREE.Scene();const C3=new THREE.PerspectiveCamera(32,1,0.1,100);
+S3.add(new THREE.HemisphereLight(0xb8c4ff,0x2a1840,1.3));const moon=new THREE.DirectionalLight(0xdfe6ff,2.0);moon.position.set(-4,6,5);S3.add(moon);const warm=new THREE.PointLight(0xffb648,0,20);warm.position.set(0,1,0);S3.add(warm);
+function canvasTex(w,h,fn){const cv=document.createElement('canvas');cv.width=w;cv.height=h;fn(cv.getContext('2d'),w,h);const t=new THREE.CanvasTexture(cv);t.colorSpace=THREE.SRGBColorSpace;t.wrapS=t.wrapT=THREE.RepeatWrapping;return t}
+// crater: lathe bowl with raised rim, forest ring, lake disk
+const CR=new THREE.Group();S3.add(CR);
+const rockTex=canvasTex(512,256,(g,w,h)=>{g.fillStyle='#5b5f7e';g.fillRect(0,0,w,h);sd=8;for(let i=0;i<5000;i++){const v=70+rnd()*60;g.fillStyle=`rgba(${v},${v+4},${v+24},0.5)`;g.fillRect(rnd()*w,rnd()*h,2+rnd()*4,2+rnd()*4)}for(let i=0;i<1600;i++){g.fillStyle=`rgba(${40+rnd()*40|0},${90+rnd()*60|0},${50+rnd()*30|0},0.6)`;g.beginPath();g.arc(rnd()*w,h*0.35+rnd()*h*0.45,2+rnd()*5,0,7);g.fill()}});
+const prof=[[0.01,-0.9],[0.9,-0.88],[1.5,-0.7],[1.85,-0.3],[2.05,0.12],[2.2,0.22],[2.45,0.1],[2.9,0.0],[3.4,-0.02]].map(([a,b])=>new THREE.Vector2(a,b));
+const bowl=new THREE.Mesh(new THREE.LatheGeometry(prof,96),new THREE.MeshStandardMaterial({map:rockTex,roughness:1,side:THREE.DoubleSide}));CR.add(bowl);
+const lakeMat=new THREE.MeshStandardMaterial({color:0x2f8f6a,roughness:0.25,metalness:0.1,emissive:0x0a2a20,emissiveIntensity:0.6,transparent:true,opacity:0.96});
+const lake=new THREE.Mesh(new THREE.CircleGeometry(1.55,80),lakeMat);lake.rotation.x=-Math.PI/2;lake.position.y=-0.62;CR.add(lake);
+const salt=new THREE.Points(new THREE.BufferGeometry().setAttribute('position',new THREE.Float32BufferAttribute((()=>{const a=[];sd=44;for(let i=0;i<400;i++){const r=Math.sqrt(rnd())*1.5,an=rnd()*6.28;a.push(Math.cos(an)*r,-0.6,Math.sin(an)*r)}return a})(),3)),new THREE.PointsMaterial({color:0xffffff,size:0.05,transparent:true,opacity:0}));CR.add(salt);
+// meteor
+const MET=new THREE.Group();S3.add(MET);
+{const g=new THREE.IcosahedronGeometry(0.5,3);const p=g.attributes.position;sd=12;for(let i=0;i<p.count;i++){const v=new THREE.Vector3().fromBufferAttribute(p,i);v.multiplyScalar(0.8+0.35*Math.abs(Math.sin(v.x*7+1)*Math.cos(v.y*5)*Math.sin(v.z*6)));p.setXYZ(i,v.x,v.y,v.z)}g.computeVertexNormals();
+ MET.add(new THREE.Mesh(g,new THREE.MeshStandardMaterial({color:0x6b5a4a,roughness:0.9,emissive:0xff6a1a,emissiveIntensity:0.55})));
+ const halo=new THREE.Mesh(new THREE.SphereGeometry(0.75,24,16),new THREE.MeshBasicMaterial({color:0xffb648,transparent:true,opacity:0.25}));MET.add(halo)}
+// microbes
+const MB=new THREE.Group();S3.add(MB);const microbes=[];{sd=71;for(let i=0;i<60;i++){const m=new THREE.Mesh(new THREE.SphereGeometry(0.16,20,14),new THREE.MeshStandardMaterial({color:0xff5fa2,emissive:0x8a1a50,emissiveIntensity:0.6,roughness:0.4}));m.scale.set(1.5,0.9,0.9);m.position.set((rnd()-0.5)*4,(rnd()-0.5)*4,(rnd()-0.5)*1.5);m.userData={ph:rnd()*6.28,k:i};MB.add(m);microbes.push(m)}}
+function only(...g){[CR,MET,MB].forEach(o=>o.visible=g.includes(o))}
+function draw3(dx,dy,dw,dh,a=1){R3.render(S3,C3);x.save();x.setTransform(1,0,0,1,0,0);x.globalAlpha=a;x.drawImage(R3.domElement,dx,dy,dw,dh);x.restore()}
+function proj(v,dx,dy,dw,dh){const p=v.clone().project(C3);return [dx+(p.x+1)/2*dw,dy+(1-p.y)/2*dh]}
+const GREENC=new THREE.Color(0x2f8f6a),PINKC=new THREE.Color(0xff5fa2);
+function lakeColor(k){lakeMat.color.copy(GREENC).lerp(PINKC,k);lakeMat.emissive.setRGB(lerp(0.04,0.4,k),lerp(0.16,0.06,k),lerp(0.12,0.2,k))}
+function crater(t,depthK=1,rotY=0,camY=3.2,camZ=6.6,lakeY=-0.62){only(CR);CR.scale.set(1,depthK,1);CR.rotation.y=rotY+t*0.08;lake.position.y=lakeY;C3.position.set(0,camY*1.3,camZ*1.3);C3.lookAt(0,-0.4,0)}
+
+// ================= SCENES =================
+// A 0-5.42 hook: crater lake at frame 0 + headline; meteor streaks down and hits at 4.3
+function A(t){sky(t,0.6);crater(t,1,0.2,lerp(3.6,3.2,eio(t/5)),lerp(7.8,6.9,eio(t/5)));lakeColor(0);const imp=4.3;
+ if(t>imp){warm.intensity=lerp(30,0,cl((t-imp)/1.2))}else warm.intensity=0;draw3(0,640,1080,1080);
+ streak(1150,-80,560,1080,(t-2.6)/1.7,0.5);if(t>2.6&&t<imp){only(MET);const q=cl((t-2.6)/1.7);MET.position.set(0,0,0);MET.rotation.set(t*3,t*2,0);C3.position.set(0,0,3.2);C3.lookAt(0,0,0);const s=lerp(0.3,0.75,q);draw3(lerp(1040,560,q)-300*s,lerp(-40,1060,q)-300*s,600*s,600*s)}
+ flash((t-imp)/0.5);shock(540,1180,(t-imp)/1.1);
+ headline('आसमान से बनी',540,300,cl(t/0.3+0.7),104);headline('झील!',540,440,cl(t/0.3+0.6),140,PINK,PINK);
+ neonTag('महाराष्ट्र',540,650,(t-0.7)/0.3,44)}
+// B 5.42-9.28 the lake turns pink in 2020
+function B(t){sky(t+5,0.7);crater(t+5,1,0.6,3.6,6.8);const k=eio(cl((t-1.6)/1.2));lakeColor(k);draw3(0,600,1080,1080);
+ headline('2020',540,330,cl(t/0.25+0.3),140,WHITE,VIOLET);
+ if(t>1.5){headline('गुलाबी!',540,470,(t-1.5)/0.35,130,PINK,PINK);x.save();x.setTransform(1,0,0,1,0,0);x.globalCompositeOperation='screen';x.fillStyle=`rgba(255,95,162,${0.12*k})`;x.fillRect(0,0,W,H);x.restore()}
+ neonTag('कुछ ही दिनों में',540,1420,(t-1.9)/0.3,44,PINK)}
+// C 9.28-13.79 question -> raaz
+function C(t){sky(t+9,0.5);crater(t+9,1,1.0,3.6,7.2);lakeColor(1-eio(cl((t-2.6)/1)));draw3(0,640,1080,1080,0.85);
+ headline('कौन सी झील?',540,330,cl(t/0.3+0.3),116);commentBox(540,700,(t-1.8)/0.4,'मुझे पता है...');
+ if(t>2.7){flash((t-2.72)/0.6,'92,225,255');headline('असली राज़',540,1360,(t-2.76)/0.35,124,WHITE,CYAN)}}
+// D 13.79-23.47 Lonar, Buldhana; meteor impact, ~2 km crater
+function D(t){sky(t+13,0.6);const T=t+13.79;
+ if(T<16.2){crater(t,1,1.4,3.0,6.4);lakeColor(0);draw3(0,560,1080,1080);headline('लोनार झील',540,330,cl(t/0.3),124,WHITE,CYAN);neonTag('बुलढाणा, महाराष्ट्र',540,560,(t-0.4)/0.3,44);return}
+ const u=T-16.2;const imp=2.65;// slow meteor then impact forms crater
+ const form=eio(cl((u-imp)/1.2));crater(t,lerp(0.05,1,form),1.4,3.0,6.4);lakeColor(0);lake.visible=u>imp+1.0;salt.material.opacity=0;
+ warm.intensity=u>imp?lerp(35,0,cl((u-imp)/1.5)):0;draw3(0,560,1080,1080);lake.visible=true;
+ if(u<imp){only(MET);const q=cl(u/imp);MET.position.set(0,0,0);MET.rotation.set(u*2,u*1.5,0);C3.position.set(0,0,3.2);C3.lookAt(0,0,0);const ms=lerp(260,420,q);draw3(lerp(900,540,eio(q))-ms/2,lerp(80,1000,eio(q))-ms/2,ms,ms);streak(1150,-120,560,1020,q,0.45);
+  pill('तेज़ रफ़्तार',300,700,(u-0.6)/0.3,46,AMBER,INK)}
+ flash((u-imp)/0.5);shock(540,1120,(u-imp)/1.2);
+ headline('उल्कापिंड!',540,330,cl(u/0.3),124,AMBER,AMBER);
+ if(u>3.9){const [lx]=proj(new THREE.Vector3(-2.2,0.22,0),0,560,1080,1080),[rx,ry]=proj(new THREE.Vector3(2.2,0.22,0),0,560,1080,1080);dashed(lx,ry-160,rx,ry-160,(u-3.9)/0.6);
+  pill(`≈ ${count(0,1.8,(u-4.0)/0.9).toFixed(1)} किमी`,540,ry-240,(u-4.0)/0.3,58,CYAN,INK);neonTag('चौड़ा गड्ढा',540,1420,(u-4.3)/0.3,44);pill('राष्ट्रीय भू-विरासत स्मारक',540,590,(u-5.4)/0.35,42,VIOLET)}}
+// E 23.47-33.07 basalt rock; only 4 such craters, 3 in Brazil
+function E(t){sky(t+23,0.4,false);const T=t+23.47;
+ if(T<28.4){x.save();const zz=1+t*0.02;x.translate(540,1000);x.scale(zz,zz);x.translate(-540,-1000);hexBasalt(60,640,960,720,cl((t-0.2)/0.9));x.restore();{const sx=lerp(-200,1300,((t-0.8)/3.2)%1);const lg=x.createLinearGradient(sx-160,0,sx+160,0);lg.addColorStop(0,'rgba(255,120,40,0)');lg.addColorStop(0.5,'rgba(255,120,40,0.35)');lg.addColorStop(1,'rgba(255,120,40,0)');x.save();x.globalCompositeOperation='screen';x.fillStyle=lg;x.fillRect(60,640,960,720);x.restore()}pill('करीब 6.5 करोड़ साल पुराना लावा',540,1000,(T-26.8)/0.35,42,AMBER,INK);headline('सबसे अजीब बात...',540,330,cl(t/0.3),104,WHITE,VIOLET);
+  if(T>24.8){headline('बेसाल्ट चट्टान',540,470,(T-24.85)/0.35,112,CYAN,CYAN);neonTag('ज्वालामुखी लावा से बनी',540,1430,(T-25.7)/0.3,44,AMBER)}return}
+ const u=T-28.4;headline('दुनिया में सिर्फ़',540,330,cl(u/0.3),104);headline('4',540,520,(u-0.4)/0.3,170,PINK,PINK);
+ craterIcon(540,800,1.25,(u-0.5)/0.4,'भारत: लोनार',true);
+ [[260,1110],[540,1170],[820,1110]].forEach(([X,Y],k)=>craterIcon(X,Y,0.9,(u-2.65-k*0.25)/0.35,'ब्राज़ील',false))}
+// F 33.07-46.48 raaz: heat, water drops, salt rises, haloarchaea multiply -> pink
+function F(t){sky(t+33,0.6);const T=t+33.07;
+ if(T<38.9){const lv=lerp(-0.62,-0.82,eio(cl((T-35.6)/2.0)));crater(t,1,2.0,3.2,6.0,lv);lakeColor(0);salt.material.opacity=0.9*cl((T-36.8)/1.0);draw3(0,600,1080,1080);
+  headline('गुलाबी रंग का राज़',540,330,cl(t/0.3),100,PINK,PINK);sunIcon(540,560,1,(T-34.9)/0.3,T);
+  meter(170,1150,'पानी',lerp(0.8,0.3,eio(cl((T-35.6)/2))),(T-35.5)/0.3,CYAN);meter(910,1150,'नमक',lerp(0.3,0.9,eio(cl((T-37.3)/1.4))),(T-37.2)/0.3,WHITE);
+  if(T>35.7)pill('जून 2020',540,1420,(T-35.0)/0.3,48,AMBER,INK);return}
+ const u=T-38.9;sky(t+33,0.8);
+ if(T<42.9){lens(540,960,430,u/0.5,r=>{only(MB);const n=Math.round(lerp(4,60,eio(cl((u-1.6)/1.8))));microbes.forEach((m,i)=>{m.visible=i<n;const ph=m.userData.ph;m.position.x+=0;m.rotation.set(0,0,ph+T*0.5);m.scale.set(1.5+0.15*Math.sin(T*3+ph),0.9,0.9)});MB.rotation.z=T*0.1;C3.position.set(0,0,6.5);C3.lookAt(0,0,0);R3.render(S3,C3);x.drawImage(R3.domElement,540-r,960-r,2*r,2*r)});
+  headline('नन्हे जीव',540,330,cl(u/0.3),116,PINK,PINK);if(T>41.0)pill('हैलोआर्किया',540,1440,(T-41.05)/0.3,56,PINK);neonTag('नमक पसंद',820,600,(u-0.6)/0.3,40,CYAN);return}
+ const v=T-42.9;crater(t,1,2.3,3.4,6.6);const k=eio(cl((v-0.5)/1.3));lakeColor(k);salt.material.opacity=0.4;draw3(0,600,1080,1080);
+ x.save();x.setTransform(1,0,0,1,0,0);x.globalCompositeOperation='screen';x.fillStyle=`rgba(255,95,162,${0.14*k})`;x.fillRect(0,0,W,H);x.restore();
+ headline('पूरी झील',540,330,cl(v/0.3),112);headline('गुलाबी!',540,470,(v-0.6)/0.35,140,PINK,PINK)}
+// G 46.48-49.70 microbes fade, lake turns green again
+function G(t){sky(t+46,0.5);crater(t,1,2.6,3.4,6.6);const k=1-eio(cl((t-1.4)/1.4));lakeColor(k);draw3(0,600,1080,1080);
+ headline('जीव कम हुए...',540,330,cl(t/0.3),104);if(t>1.6)headline('फिर हरी!',540,470,(t-1.6)/0.35,130,GREEN,GREEN);neonTag('रंग अस्थायी था',540,1430,(t-2.2)/0.3,44,GREEN)}
+// H 49.70-end CTA
+function Hc(t){sky(t+49,0.7);crater(t,1,3.0,3.6,7.4);lakeColor(0.04+0.04*Math.sin(t*1.5));draw3(0,700,1080,1080,0.95);streak(1150,-80,760,700,((t*0.5)%1.4),0.4);
+ headline('पत्थर + नन्हे जीव',540,320,cl(t/0.3+0.2),100,WHITE,VIOLET);headline('= अजूबा!',540,460,cl(t/0.3),130,PINK,PINK);
+ commentBox(540,760,(t-3.6)/0.4,'हाँ, पता था!');subscribeBtn(540,1320,(t-6.5)/0.4,t)}
+const SC=[[0,A,'cut'],[5.42,B,'shock'],[9.28,C,'streak'],[13.79,D,'shock'],[23.47,E,'streak'],[33.07,F,'shock'],[46.48,G,'streak'],[49.70,Hc,'shock']];
+// ---------- captions: highlight box karaoke ----------
+let CH=null;function chunks(){CH=[];let cur=[];TM.words.forEach((w,i)=>{cur.push(w);const end=/[.,!?।]$/.test(w.w)||cur.length>=3||i===TM.words.length-1;if(end){CH.push(cur);cur=[]}})}
+function captions(t){if(!TM)return;if(!CH)chunks();const ch=CH.find(c=>t>=c[0].s-0.05&&t<c[c.length-1].e+0.12);if(!ch)return;x.save();x.setTransform(1,0,0,1,0,0);x.font='800 62px Baloo';
+ const GAP=30,txt=ch.map(w=>w.w.replace(/\.\.\.$/,'').replace(/[,।"]/g,'')),ws=txt.map(s=>x.measureText(s).width+GAP),tw=ws.reduce((a,b)=>a+b,0)-GAP;const Y=1550,p=eo((t-ch[0].s+0.05)/0.12);
+ let X=540-tw/2;x.textBaseline='middle';x.lineJoin='round';ch.forEach((w,i)=>{const on=t>=w.s,act=on&&t<w.e+0.05,wd=ws[i]-GAP;x.save();x.globalAlpha=p*(on?1:0.6);
+  if(act){x.fillStyle=PINK;x.shadowColor=PINK;x.shadowBlur=20;x.beginPath();x.roundRect(X-12,Y-44,wd+24,88,16);x.fill();x.shadowBlur=0}
+  x.textAlign='left';x.lineWidth=9;x.strokeStyle='rgba(5,6,26,0.9)';if(!act)x.strokeText(txt[i],X,Y+2);x.fillStyle=WHITE;x.fillText(txt[i],X,Y+2);x.restore();X+=ws[i]});x.restore()}
+// ---------- transitions ----------
+function drawScene(fn,t){x.save();try{fn(t)}finally{x.restore()}}
+function trans(kind,prev,pt,cur,tt,q){
+ if(kind==='shock'){drawScene(prev,pt);x.save();x.setTransform(1,0,0,1,0,0);const R=eio(q)*1250;x.beginPath();x.arc(540,960,R,0,7);x.clip();drawScene(cur,tt);x.restore();x.save();x.setTransform(1,0,0,1,0,0);x.strokeStyle=`rgba(255,182,72,${0.9*(1-q)})`;x.lineWidth=18*(1-q)+2;x.shadowColor=AMBER;x.shadowBlur=30;x.beginPath();x.arc(540,960,R,0,7);x.stroke();x.restore()}
+ else if(kind==='streak'){drawScene(prev,pt);const d=lerp(-700,2900,eio(q));x.save();x.setTransform(1,0,0,1,0,0);x.beginPath();x.moveTo(0,0);x.lineTo(d,0);x.lineTo(d-1200,H);x.lineTo(0,H);x.closePath();x.clip();drawScene(cur,tt);x.restore();
+  x.save();x.setTransform(1,0,0,1,0,0);x.strokeStyle=`rgba(255,240,200,${1-q*0.6})`;x.lineWidth=14;x.shadowColor=AMBER;x.shadowBlur=40;x.beginPath();x.moveTo(d,0);x.lineTo(d-1200,H);x.stroke();x.restore()}
+ else drawScene(cur,tt)}
+window.render=function(t){x.setTransform(1,0,0,1,0,0);x.fillStyle='#05061a';x.fillRect(0,0,W,H);
+ let i=0;for(let k=0;k<SC.length;k++)if(t>=SC[k][0])i=k;const tt=t-SC[i][0],TR=0.5;
+ if(i>0&&tt<TR)trans(SC[i][2],SC[i-1][1],SC[i][0]-SC[i-1][0]+tt,SC[i][1],tt,tt/TR);else drawScene(SC[i][1],tt);
+ x.setTransform(1,0,0,1,0,0);const v=x.createRadialGradient(540,900,560,540,960,1300);v.addColorStop(0,'rgba(0,0,0,0)');v.addColorStop(1,'rgba(3,4,18,0.5)');x.fillStyle=v;x.fillRect(0,0,W,H);
+ x.save();x.globalCompositeOperation='overlay';x.drawImage(grain,((t*37)|0)%60-30,((t*53)|0)%60-30,W+60,H+60);x.restore();
+ captions(t);
+ if(IM.logo){x.save();x.globalAlpha=0.9;x.drawImage(IM.logo,70,236,64,64);x.restore()}x.save();x.font='38px Rozha';x.fillStyle='rgba(244,247,255,0.9)';x.shadowColor='rgba(0,0,0,0.6)';x.shadowBlur=8;x.textBaseline='middle';x.fillText('भूले किस्से',144,270);x.restore()};
+window.ready=Promise.all([...loads,...['800 64px Baloo','700 46px Baloo','38px Rozha','700 52px Inter'].map(f=>document.fonts.load(f,'रहस्य 1'))]);
+</script></body></html>

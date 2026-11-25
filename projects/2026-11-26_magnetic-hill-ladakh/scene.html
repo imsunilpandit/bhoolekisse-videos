@@ -1,0 +1,159 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+html,body{margin:0;background:#000}
+@font-face{font-family:Baloo;font-weight:800;src:url(fonts/fontsource-baloo-2-5.3.0/package/files/baloo-2-devanagari-800-normal.woff2)}
+@font-face{font-family:Baloo;font-weight:800;src:url(fonts/fontsource-baloo-2-5.3.0/package/files/baloo-2-latin-800-normal.woff2)}
+@font-face{font-family:Baloo;font-weight:700;src:url(fonts/fontsource-baloo-2-5.3.0/package/files/baloo-2-devanagari-700-normal.woff2)}
+@font-face{font-family:Baloo;font-weight:700;src:url(fonts/fontsource-baloo-2-5.3.0/package/files/baloo-2-latin-700-normal.woff2)}
+@font-face{font-family:Rozha;src:url(fonts/fontsource-rozha-one-5.3.0/package/files/rozha-one-devanagari-400-normal.woff2)}
+@font-face{font-family:Inter;font-weight:700;src:url(fonts/fontsource-inter-5.3.0/package/files/inter-latin-700-normal.woff2)}
+</style>
+<script type="importmap">{"imports":{"three":"./three/build/three.module.js"}}</script>
+</head><body><canvas id="c" width="1080" height="1920"></canvas>
+<script type="module">
+import * as THREE from 'three';
+const c=document.getElementById('c'),x=c.getContext('2d'),W=1080,H=1920;
+const cl=v=>Math.max(0,Math.min(1,v)),eo=v=>1-Math.pow(1-cl(v),3),eio=v=>{v=cl(v);return v<.5?4*v*v*v:1-Math.pow(-2*v+2,3)/2};
+const back=v=>{v=cl(v);const s=1.9;return 1+(s+1)*Math.pow(v-1,3)+s*Math.pow(v-1,2)};const lerp=(a,b,t)=>a+(b-a)*t;
+let sd=11;const rnd=()=>{sd=(sd*16807)%2147483647;return sd/2147483647};
+// ---------- recipe: KINETIC POP ----------
+const YEL='#FFD23F',TEAL='#1EB8A6',CORAL='#FF6B4A',PURP='#6C4AB6',BLUE='#2F6BFF',INK='#111111',WH='#FFFFFF',SKY='#8FD3FF';
+let TM=null;const IM={};const loads=[fetch('timing.json').then(r=>r.json()).then(j=>TM=j),new Promise(r=>{const i=new Image();i.onload=()=>{IM.logo=i;r()};i.onerror=r;i.src='logo.png'})];
+function popBG(t,col,col2){x.save();x.setTransform(1,0,0,1,0,0);x.fillStyle=col;x.fillRect(0,0,W,H);
+ // moving diagonal stripes
+ x.save();x.globalAlpha=0.12;x.fillStyle=col2;const off=(t*80)%160;for(let k=-20;k<30;k++){x.beginPath();x.moveTo(k*160+off,0);x.lineTo(k*160+off+60,0);x.lineTo(k*160+off+60-1200,H);x.lineTo(k*160+off-1200,H);x.closePath();x.fill()}x.restore();
+ // halftone dots corners
+ x.fillStyle='rgba(17,17,17,0.10)';for(let yy=0;yy<H;yy+=34)for(let xx=0;xx<W;xx+=34){const d=Math.hypot(xx-W,yy-0)/1400,d2=Math.hypot(xx,yy-H)/1400;const r=Math.max(0,7*(1-Math.min(d,d2)*1.6));if(r>0.6){x.beginPath();x.arc(xx+(yy/34%2)*17,yy,r,0,7);x.fill()}}
+ x.restore()}
+function slam(s,X,Y,p,fs=118,col=WH){if(p<=0)return;const sc=lerp(1.9,1,back(cl(p*1.4)));x.save();x.font=`800 ${fs}px Baloo`;x.textAlign='center';x.textBaseline='alphabetic';x.globalAlpha=cl(p*4);x.translate(X,Y+80);x.scale(sc,sc);x.rotate(-0.02);
+ x.lineJoin='round';x.fillStyle=INK;x.fillText(s,8,8);x.lineWidth=12;x.strokeStyle=INK;x.strokeText(s,0,0);x.fillStyle=col;x.fillText(s,0,0);x.restore()}
+function sticker(s,X,Y,p,fs=46,rot=-0.05,bg=WH,col=INK){if(p<=0)return;const sc=back(p);x.save();x.translate(X,Y);x.rotate(rot);x.scale(sc,sc);x.font=`800 ${fs}px Baloo`;const w=x.measureText(s).width+56,h=fs*1.5;
+ x.fillStyle=INK;x.beginPath();x.roundRect(-w/2+7,-h/2+7,w,h,16);x.fill();x.fillStyle=bg;x.beginPath();x.roundRect(-w/2,-h/2,w,h,16);x.fill();x.lineWidth=5;x.strokeStyle=INK;x.stroke();x.fillStyle=col;x.textAlign='center';x.textBaseline='middle';x.fillText(s,0,4);x.restore()}
+function pill(s,X,Y,p,fs=54,bg=YEL){sticker(s,X,Y,p,fs,0,bg,INK)}
+function count(a,b,p){return lerp(a,b,eo(p))}
+function shutter(p){if(p<0||p>1)return;x.save();x.setTransform(1,0,0,1,0,0);const h=H/2*Math.sin(Math.PI*p);x.fillStyle=INK;x.fillRect(0,0,W,h*0.35);x.fillRect(0,H-h*0.35,W,h*0.35);x.fillStyle=`rgba(255,255,255,${0.7*Math.sin(Math.PI*p)})`;x.fillRect(0,0,W,H);x.restore()}
+function arrow(x0,y0,x1,y1,p,col=CORAL,w=16){if(p<=0)return;const q=eo(p),X=lerp(x0,x1,q),Y=lerp(y0,y1,q),a=Math.atan2(y1-y0,x1-x0);x.save();x.strokeStyle=INK;x.lineCap='round';x.lineWidth=w+10;x.beginPath();x.moveTo(x0,y0);x.lineTo(X,Y);x.stroke();x.strokeStyle=col;x.lineWidth=w;x.beginPath();x.moveTo(x0,y0);x.lineTo(X,Y);x.stroke();
+ x.translate(X,Y);x.rotate(a);x.fillStyle=col;x.strokeStyle=INK;x.lineWidth=5;x.beginPath();x.moveTo(30,0);x.lineTo(-22,-28);x.lineTo(-22,28);x.closePath();x.fill();x.stroke();x.restore()}
+function car2D(X,Y,s,ang=0,col=CORAL,flip=1){x.save();x.translate(X,Y);x.rotate(ang);x.scale(s*flip,s);x.lineWidth=6;x.strokeStyle=INK;x.lineJoin='round';
+ x.fillStyle=col;x.beginPath();x.roundRect(-110,-60,220,60,18);x.fill();x.stroke();x.fillStyle=SKY;x.beginPath();x.moveTo(-60,-60);x.lineTo(-35,-105);x.lineTo(45,-105);x.lineTo(75,-60);x.closePath();x.fill();x.stroke();x.beginPath();x.moveTo(5,-60);x.lineTo(5,-105);x.stroke();
+ [[-62,0],[62,0]].forEach(([a,b])=>{x.fillStyle=INK;x.beginPath();x.arc(a,b,30,0,7);x.fill();x.fillStyle='#ddd';x.beginPath();x.arc(a,b,12,0,7);x.fill()});x.restore()}
+function magnet(X,Y,s,p,shake=0){if(p<=0)return;const sc=back(p)*s;x.save();x.translate(X+Math.sin(shake*40)*6*cl(shake),Y);x.scale(sc,sc);x.lineCap='butt';
+ x.strokeStyle=INK;x.lineWidth=118;x.beginPath();x.arc(0,0,120,Math.PI,0,false);x.lineTo(120,140);x.moveTo(-120,0);x.lineTo(-120,140);x.stroke();
+ x.strokeStyle='#E8332C';x.lineWidth=100;x.beginPath();x.arc(0,0,120,Math.PI,0,false);x.lineTo(120,100);x.moveTo(-120,0);x.lineTo(-120,100);x.stroke();
+ x.fillStyle='#d9dde3';x.strokeStyle=INK;x.lineWidth=6;[-170,70].forEach(a=>{x.beginPath();x.rect(a,100,100,60);x.fill();x.stroke()});x.restore()}
+function fieldLines(x0,y0,x1,y1,t,a){if(a<=0)return;x.save();x.globalAlpha=cl(a);x.strokeStyle=INK;x.lineWidth=5;x.setLineDash([18,14]);x.lineDashOffset=-t*80;for(let k=-2;k<=2;k++){x.beginPath();x.moveTo(x0,y0+k*24);x.quadraticCurveTo((x0+x1)/2,y0+k*90,x1,y1+k*20);x.stroke()}x.restore()}
+function bigX(X,Y,s,p){if(p<=0)return;const q=eo(p);x.save();x.translate(X,Y);x.scale(s,s);x.lineCap='round';[[[-1,-1],[1,1]],[[1,-1],[-1,1]]].forEach(([a,b],k)=>{const qq=cl(q*2-k);if(qq<=0)return;x.strokeStyle=INK;x.lineWidth=60;x.beginPath();x.moveTo(a[0]*120,a[1]*120);x.lineTo(lerp(a[0],b[0],qq)*120,lerp(a[1],b[1],qq)*120);x.stroke();x.strokeStyle=CORAL;x.lineWidth=40;x.stroke()});x.restore()}
+function level(X,Y,w,ang,p,bubble){if(p<=0)return;const sc=back(p);x.save();x.translate(X,Y);x.rotate(ang);x.scale(sc,sc);x.fillStyle=YEL;x.strokeStyle=INK;x.lineWidth=6;x.beginPath();x.roundRect(-w/2,-34,w,68,20);x.fill();x.stroke();x.fillStyle='#c9f7a7';x.beginPath();x.roundRect(-110,-20,220,40,20);x.fill();x.stroke();
+ x.fillStyle=WH;x.beginPath();x.ellipse(bubble*80,0,26,14,0,0,7);x.fill();x.stroke();x.beginPath();x.moveTo(-30,-20);x.lineTo(-30,20);x.moveTo(30,-20);x.lineTo(30,20);x.stroke();x.restore()}
+function brain(X,Y,s,p,t){if(p<=0)return;const sc=back(p)*s;x.save();x.translate(X,Y);x.scale(sc,sc);x.fillStyle='#FF9EC4';x.strokeStyle=INK;x.lineWidth=7;x.beginPath();[[-60,-30,70],[10,-60,70],[70,-20,65],[50,40,60],[-30,40,62]].forEach(([a,b,r])=>{x.moveTo(a+r,b);x.arc(a,b,r,0,7)});x.fill();
+ x.beginPath();[[-60,-30,70],[10,-60,70],[70,-20,65],[50,40,60],[-30,40,62]].forEach(([a,b,r])=>{x.moveTo(a+r,b);x.arc(a,b,r,0,7)});x.stroke();x.fillStyle='#FF9EC4';x.beginPath();x.ellipse(5,0,105,80,0,0,7);x.fill();
+ x.strokeStyle='rgba(17,17,17,0.6)';x.lineWidth=6;x.beginPath();x.moveTo(5,-90);x.bezierCurveTo(-20,-40,30,-10,5,60);x.moveTo(-80,-10);x.bezierCurveTo(-40,-30,-40,20,-70,40);x.moveTo(80,-30);x.bezierCurveTo(50,0,90,30,60,60);x.stroke();
+ x.fillStyle=YEL;x.strokeStyle=INK;x.lineWidth=5;const q=Math.sin(t*6)*0.5+0.5;x.beginPath();x.arc(120,-110,18+6*q,0,7);x.fill();x.stroke();x.restore()}
+function eye(X,Y,s,p,t){if(p<=0)return;const sc=back(p)*s;x.save();x.translate(X,Y);x.scale(sc,sc);x.fillStyle=WH;x.strokeStyle=INK;x.lineWidth=10;x.beginPath();x.moveTo(-160,0);x.quadraticCurveTo(0,-140,160,0);x.quadraticCurveTo(0,140,-160,0);x.fill();x.stroke();
+ const dx=Math.sin(t*2)*40;x.fillStyle=BLUE;x.beginPath();x.arc(dx,0,62,0,7);x.fill();x.stroke();x.fillStyle=INK;x.beginPath();x.arc(dx,0,28,0,7);x.fill();x.fillStyle=WH;x.beginPath();x.arc(dx+18,-20,12,0,7);x.fill();x.restore()}
+function commentBox(cx,cy,p,txt){if(p<=0)return;const s=back(p);x.save();x.translate(cx,cy);x.rotate(-0.02);x.scale(s,s);x.fillStyle=INK;x.beginPath();x.roundRect(-372,-97,760,210,30);x.fill();x.fillStyle=WH;x.beginPath();x.roundRect(-380,-105,760,210,30);x.fill();x.lineWidth=6;x.strokeStyle=INK;x.stroke();
+ x.fillStyle=TEAL;x.beginPath();x.arc(-290,-20,46,0,7);x.fill();x.stroke();x.fillStyle='#fff';x.font='800 46px Baloo';x.textAlign='center';x.textBaseline='middle';x.fillText('आप',-290,-14);
+ x.textAlign='left';x.fillStyle='rgba(17,17,17,0.55)';x.font='700 30px Baloo';x.fillText('कमेंट करें',-220,-52);x.fillStyle=INK;x.font='800 54px Baloo';x.fillText(txt,-220,8);x.restore()}
+function subscribeBtn(X,Y,p,t){if(p<=0)return;x.save();x.translate(X,Y);const s=back(p)*(1+0.05*Math.sin(t*9));x.scale(s,s);x.fillStyle=INK;x.beginPath();x.roundRect(-222,-50,460,116,58);x.fill();x.fillStyle='#D92B2B';x.beginPath();x.roundRect(-230,-58,460,116,58);x.fill();x.lineWidth=6;x.strokeStyle=INK;x.stroke();x.fillStyle='#fff';x.font='700 52px Inter';x.textAlign='center';x.textBaseline='middle';x.fillText('SUBSCRIBE',0,4);x.restore()}
+
+// ================= THREE.JS: road on a slope, mountains, car =================
+const R3=new THREE.WebGLRenderer({antialias:true,alpha:true,preserveDrawingBuffer:true});R3.setSize(1080,1920,false);R3.setClearColor(0,0);R3.outputColorSpace=THREE.SRGBColorSpace;
+const S3=new THREE.Scene();const C3=new THREE.PerspectiveCamera(52,1080/1920,0.1,200);
+S3.add(new THREE.HemisphereLight(0xffffff,0x8a7a6a,1.5));const sunL=new THREE.DirectionalLight(0xfff2dd,2.2);sunL.position.set(5,9,6);S3.add(sunL);
+const WORLD=new THREE.Group();S3.add(WORLD);const SLOPE=-0.14;// true slope: road goes DOWN toward +x
+const ROAD=new THREE.Group();ROAD.rotation.z=SLOPE;WORLD.add(ROAD);
+function canvasTex(w,h,fn){const cv=document.createElement('canvas');cv.width=w;cv.height=h;fn(cv.getContext('2d'),w,h);const t=new THREE.CanvasTexture(cv);t.colorSpace=THREE.SRGBColorSpace;t.wrapS=t.wrapT=THREE.RepeatWrapping;return t}
+const roadTex=canvasTex(1024,128,(g,w,h)=>{g.fillStyle='#3b3f47';g.fillRect(0,0,w,h);g.fillStyle='#ffd23f';for(let i=0;i<w;i+=128)g.fillRect(i+20,h/2-5,70,10);g.fillStyle='#fff';g.fillRect(0,6,w,6);g.fillRect(0,h-12,w,6);
+ g.strokeStyle='#ffffff';g.lineWidth=8;g.strokeRect(w*0.475,26,w*0.05,h-52)});
+const road=new THREE.Mesh(new THREE.BoxGeometry(26,0.12,1.8),[0,0,new THREE.MeshStandardMaterial({map:roadTex,roughness:0.9}),0,0,0].map(m=>m||new THREE.MeshStandardMaterial({color:0x2d3036})));ROAD.add(road);
+const ground=new THREE.Mesh(new THREE.BoxGeometry(26,7,14),new THREE.MeshStandardMaterial({color:0xc9a77a,roughness:1}));ground.position.y=-3.56;ROAD.add(ground);
+// mountains (tilted cones) around: they make the horizon impossible to read
+const MTN=new THREE.Group();WORLD.add(MTN);sd=5;[[-6,-4,3.2,0x9aa7c9],[-1.5,-6,4.2,0x8496c4],[3.5,-5,3.6,0xa58f7c],[7,-3.5,2.8,0xb59a7e],[-7.5,2,2.4,0xa48a72],[6.5,3,2.6,0x9a8270]].forEach(([px,pz,hh,col])=>{const m=new THREE.Mesh(new THREE.ConeGeometry(hh*0.9,hh,6),new THREE.MeshStandardMaterial({color:col,flatShading:true,roughness:1}));m.position.set(px,hh/2-0.6+px*SLOPE*0.2,pz);m.rotation.z=0.12*Math.sign(px);MTN.add(m);
+ const cap=new THREE.Mesh(new THREE.ConeGeometry(hh*0.3,hh*0.33,6),new THREE.MeshStandardMaterial({color:0xffffff,flatShading:true}));cap.position.set(px,hh-0.6-hh*0.165+px*SLOPE*0.2,pz);cap.rotation.z=m.rotation.z;MTN.add(cap)});
+// car
+const CAR=new THREE.Group();ROAD.add(CAR);
+{const body=new THREE.Mesh(new THREE.BoxGeometry(1.1,0.32,0.62),new THREE.MeshStandardMaterial({color:0xff6b4a,roughness:0.5}));body.position.y=0.3;CAR.add(body);
+ const cab=new THREE.Mesh(new THREE.BoxGeometry(0.6,0.28,0.56),new THREE.MeshStandardMaterial({color:0x8fd3ff,roughness:0.2}));cab.position.set(-0.05,0.58,0);CAR.add(cab);
+ [[-0.36,0.33],[0.36,0.33],[-0.36,-0.33],[0.36,-0.33]].forEach(([a,b])=>{const w=new THREE.Mesh(new THREE.CylinderGeometry(0.15,0.15,0.12,18),new THREE.MeshStandardMaterial({color:0x111111}));w.rotation.x=Math.PI/2;w.position.set(a,0.15,b);CAR.add(w)})}
+function setCar(s){CAR.position.set(s,0.06,0)}
+function draw3(dx,dy,dw,dh,a=1){R3.render(S3,C3);x.save();x.setTransform(1,0,0,1,0,0);x.globalAlpha=a;x.drawImage(R3.domElement,dx,dy,dw,dh);x.restore()}
+function proj(v,dx,dy,dw,dh){const p=v.clone().project(C3);return [dx+(p.x+1)/2*dw,dy+(1-p.y)/2*dh]}
+// illusion: tilt the whole world so the downhill road looks uphill; truth: tilt 0
+function world(tilt,camAz,camEl=0.35,dist=11){WORLD.rotation.z=tilt;C3.position.set(Math.sin(camAz)*dist,dist*camEl+0.6,Math.cos(camAz)*dist);C3.lookAt(0,1.7,0)}
+const ILL=0.30;// world tilt for illusion (road appears to rise ~+9 deg)
+
+// ================= SCENES =================
+// A 0-5.54 hook: car "climbs" by itself
+function A(t){popBG(t,SKY,BLUE);world(ILL,0.15,0.25,10);setCar(lerp(-2.2,1.8,eio(cl((t-0.2)/5))));draw3(0,0,1080,1920);
+ const [cx,cy]=proj(new THREE.Vector3(CAR.position.x,0.6,0).applyMatrix4(ROAD.matrixWorld),0,0,1080,1920);arrow(cx-40,cy-80,cx+160,cy-200,(t-1.0)/0.5,YEL);
+ slam('गाड़ी खुद',540,300,cl(t/0.3+0.8),112);slam('ऊपर चढ़ी?!',540,440,cl(t/0.3+0.7),128,YEL);sticker('लद्दाख',540,600,(t-0.6)/0.3,46,0.05)}
+// B 5.54-10.28 "people say the hill is a magnet"
+function B(t){popBG(t+5,YEL,CORAL);magnet(780,820,1.0,(t-0.9)/0.35,t>2.8?t-2.8:0);const pull=eio(cl((t-2.8)/1.6));car2D(lerp(220,520,pull),1170,1.15,0,CORAL);fieldLines(330,1080,700,880,t,(t-1.3)/0.4);
+ slam('लोग कहते हैं...',540,300,cl(t/0.3+0.3),104);if(t>1.0)slam('पहाड़ = चुंबक?',540,440,(t-1.04)/0.35,112,WH);sticker('खींच लेता है!',300,1350,(t-2.8)/0.3,44,-0.06,CORAL,WH)}
+// C 10.28-14.99 question -> raaz
+function C(t){popBG(t+10,PURP,YEL);car2D(540,1000,1.4,0,CORAL);x.save();x.font='800 260px Baloo';x.textAlign='center';x.fillStyle=YEL;x.strokeStyle=INK;x.lineWidth=12;const q=back(cl(t/0.4));x.translate(540,860);x.scale(q,q);x.strokeText('?',220,-80);x.fillText('?',220,-80);x.restore();
+ slam('ये जगह कहाँ है?',540,300,cl(t/0.3+0.3),104);commentBox(540,650,(t-1.7)/0.4,'मुझे पता है...');if(t>2.6){shutter((t-2.6)/0.35);slam('असली राज़',540,1330,(t-2.65)/0.35,130,YEL)}}
+// D 14.99-27.87 Magnetic Hill near Leh, 27 km; white box; neutral; car creeps "up"
+function D(t){const T=t+14.99;
+ if(T<20.4){popBG(t+14,TEAL,YEL);slam('मैग्नेटिक हिल',540,300,cl(t/0.3),118,YEL);
+  // schematic route Leh -> Magnetic Hill
+  const p=cl((T-16.6)/1.4);x.save();x.lineCap='round';x.strokeStyle=INK;x.lineWidth=34;x.beginPath();const pts=[[860,1250],[700,1150],[620,980],[420,900],[240,760]];x.moveTo(...pts[0]);pts.forEach(q=>x.lineTo(...q));x.stroke();
+  x.strokeStyle=YEL;x.lineWidth=20;x.setLineDash([2200]);x.lineDashOffset=2200*(1-p);x.beginPath();x.moveTo(...pts[0]);pts.forEach(q=>x.lineTo(...q));x.stroke();x.restore();
+  sticker('लेह',860,1340,(T-16.0)/0.3,52,0.04);sticker('मैग्नेटिक हिल',300,680,(T-17.9)/0.3,46,-0.04,CORAL,WH);pill(`${Math.round(count(0,27,(T-16.6)/1.4))} किमी`,700,980,(T-16.6)/0.3,60);sticker('श्रीनगर हाईवे',560,1420,(T-18.3)/0.3,40,0.02);return}
+ popBG(t+14,SKY,BLUE);const u=T-20.4;world(ILL,lerp(0.9,0.2,eio(cl(u/1.5))),lerp(0.9,0.28,eio(cl(u/1.5))),lerp(8,10,eio(cl(u/1.5))));
+ const mv=T>24.7?eio(cl((T-24.9)/3))*2.6:0;setCar(lerp(-0.6,-0.6,0)+mv);draw3(0,0,1080,1920);
+ const [bx,by]=proj(new THREE.Vector3(-0.5,0.1,0).applyMatrix4(ROAD.matrixWorld),0,0,1080,1920);
+ slam(T<24.7?'सफ़ेद डिब्बा':'"ऊपर" खिसकी!',540,300,T<24.7?cl(u/0.3):cl((T-24.72)/0.3),112,T<24.7?WH:YEL);
+ if(T<24.7)arrow(bx-260,by-300,bx-40,by-60,(u-0.2)/0.4,YEL);
+ if(T>22.8)pill('गियर: N',800,560,(T-22.85)/0.3,52,WH);if(T>24.9){const [cx,cy]=proj(new THREE.Vector3(CAR.position.x,0.6,0).applyMatrix4(ROAD.matrixWorld),0,0,1080,1920);arrow(cx+20,cy-90,cx+200,cy-190,(T-25.0)/0.4,CORAL)}}
+// E 27.87-34.13 no magnet; road actually slopes DOWN (3D world untilts + side view + spirit level)
+function E(t){const T=t+27.87;
+ if(T<30.8){popBG(t+27,YEL,CORAL);magnet(540,880,1.1,1);bigX(540,900,1.3,(T-29.25)/0.5);slam('पर सच ये है...',540,300,cl(t/0.3),104);if(T>29.2)slam('चुंबक नहीं!',540,440,(T-29.25)/0.35,124,CORAL);return}
+ popBG(t+27,SKY,BLUE);const u=T-30.8;const k=eio(cl(u/1.4));world(lerp(ILL,0,k),lerp(0.2,0,k),lerp(0.28,0.05,k),lerp(10,12,k));setCar(0.2+u*0.4);draw3(0,0,1080,1920);
+ // true horizontal reference + spirit level
+ if(u>1.2){x.save();x.strokeStyle=INK;x.lineWidth=6;x.setLineDash([22,14]);x.beginPath();x.moveTo(60,1000);x.lineTo(1020,1000);x.stroke();x.restore();sticker('सीधी लाइन',220,940,(u-1.3)/0.3,38,-0.03)}
+ level(540,1300,420,SLOPE*1.0,(u-1.5)/0.35,-0.85*cl((u-1.7)/0.4));
+ if(T>32.8)arrow(250,880,850,1060,(T-32.9)/0.5,CORAL,22);
+ slam('असल में',540,300,cl(u/0.3),108);slam(T>32.85?'ढलान ↓ नीचे!':'ढलान...',540,440,cl((u-0.2)/0.3),124,YEL)}
+// F 34.13-46.12 horizon hidden by mountains; brain uses tilted slopes as reference
+function F(t){const T=t+34.13;
+ if(T<40.1){popBG(t+34,'#A9E4FF',BLUE);const tilt=0.13;x.save();const zz=1+0.06*eio(t/6);x.translate(540,1000);x.scale(zz,zz);x.translate(-540,-1000);
+  // true horizon (hidden then revealed)
+  const rv=cl((T-38.4)/0.6);x.save();x.translate(540,1000);x.strokeStyle=`rgba(17,17,17,${0.25+0.75*rv})`;x.lineWidth=7;x.setLineDash([24,14]);x.beginPath();x.moveTo(-520,0);x.lineTo(520,0);x.stroke();x.restore();
+  // tilted mountains in front
+  x.save();x.translate(540,1000);x.rotate(tilt);[[-380,-300,'#8496c4'],[-60,-420,'#9aa7c9'],[300,-330,'#a58f7c']].forEach(([a,hh,col],k)=>{const g=cl((t-0.1-k*0.15)/0.4);x.fillStyle=col;x.strokeStyle=INK;x.lineWidth=7;x.beginPath();x.moveTo(a-260,120);x.lineTo(a,120+hh*back(g));x.lineTo(a+260,120);x.closePath();x.fill();x.stroke()});x.restore();
+  x.fillStyle='#c9a77a';x.strokeStyle=INK;x.lineWidth=7;x.beginPath();x.moveTo(0,1130);x.lineTo(1080,1000);x.lineTo(1080,1930);x.lineTo(0,1930);x.closePath();x.fill();x.stroke();
+  x.restore();if(rv>0){x.save();x.strokeStyle=YEL;x.lineWidth=14;x.shadowColor=YEL;x.shadowBlur=24;x.setLineDash([]);x.beginPath();x.moveTo(60,1000);x.lineTo(lerp(60,1020,eo(rv)),1000);x.stroke();x.restore()}sticker('सीधी लाइन कहाँ?',540,1300,(T-35.3)/0.3,46,-0.04,WH);
+  slam('चारों तरफ़ पहाड़',540,300,cl(t/0.3),104);if(T>36.5)slam('क्षितिज गायब!',540,440,(T-36.55)/0.35,118,CORAL);if(T>38.4)sticker('असली क्षितिज',820,940,(T-38.45)/0.3,40,0.03,YEL);return}
+ popBG(t+34,'#FFB3D1',PURP);const u=T-40.1;
+ if(T<43.4){brain(540,880,1.6,u/0.35,T);arrow(240,1250,840,1150,(u-1.0)/0.5,TEAL,18);sticker('ढलान = सीधा?',540,1340,(u-1.2)/0.3,46,-0.03);slam('हमारा दिमाग',540,300,cl(u/0.3),112);slam('धोखा खाता है',540,440,(u-0.5)/0.35,112,YEL);return}
+ const v=T-43.4;// split: looks vs real
+ x.save();x.fillStyle=WH;x.strokeStyle=INK;x.lineWidth=7;x.beginPath();x.roundRect(60,620,450,640,30);x.fill();x.stroke();x.beginPath();x.roundRect(570,620,450,640,30);x.fill();x.stroke();x.restore();
+ x.save();x.lineWidth=18;x.strokeStyle='#3b3f47';x.lineCap='round';x.beginPath();x.moveTo(110,1080);x.lineTo(460,900);x.stroke();x.beginPath();x.moveTo(620,900);x.lineTo(970,1080);x.stroke();x.restore();
+ car2D(lerp(150,380,eio(cl(v/2))),lerp(1040,940,eio(cl(v/2))),0.45,-0.47,CORAL);car2D(lerp(660,880,eio(cl((v-0.4)/2))),lerp(905,1020,eio(cl((v-0.4)/2))),0.45,0.47,CORAL);
+ sticker('दिखता है ↑',285,700,v/0.3,44,-0.03,YEL);sticker('असल में ↓',795,700,(v-0.4)/0.3,44,0.03,CORAL,WH);slam('आँखें vs सच',540,330,cl(v/0.3),112)}
+// G 46.12-50.39 it's called a gravity hill; many such places worldwide
+function G(t){popBG(t+46,TEAL,YEL);slam('ग्रैविटी हिल',540,300,cl(t/0.3),124,YEL);
+ sd=9;for(let k=0;k<6;k++){const X=170+(k%3)*370,Y=820+Math.floor(k/3)*330;const p=(t-0.35-k*0.22)/0.3;if(p<=0)continue;x.save();x.translate(X,Y);x.rotate((rnd()-0.5)*0.3);const s=back(p);x.scale(s,s);x.fillStyle=YEL;x.strokeStyle=INK;x.lineWidth=7;x.beginPath();x.moveTo(0,-110);x.lineTo(110,0);x.lineTo(0,110);x.lineTo(-110,0);x.closePath();x.fill();x.stroke();
+  x.fillStyle=INK;x.beginPath();x.moveTo(-60,40);x.lineTo(60,-30);x.lineTo(60,40);x.closePath();x.fill();x.restore()}
+ sticker('दुनिया में कई जगह',540,1440,(t-1.65)/0.3,46,0.02,WH)}
+// H 50.39-end: not magic, an optical illusion + CTA
+function Hc(t){popBG(t+50,PURP,YEL);eye(540,720,1.1,t/0.35,t);slam('जादू नहीं...',540,300,cl(t/0.3+0.2),110);slam('आँखों का धोखा!',540,440,(t-0.9)/0.35,118,YEL);
+ commentBox(540,1040,(t-2.75)/0.4,'हाँ, पता था!');subscribeBtn(540,1330,(t-5.4)/0.4,t)}
+const SC=[[0,A],[5.54,B],[10.28,C],[14.99,D],[27.87,E],[34.13,F],[46.12,G],[50.39,Hc]];
+// ---------- captions: 2-3 word pop, yellow active ----------
+let CH=null;function chunks(){CH=[];let cur=[];TM.words.forEach((w,i)=>{cur.push(w);const end=/[.,!?।]$/.test(w.w)||cur.length>=3||i===TM.words.length-1;if(end){CH.push(cur);cur=[]}})}
+function captions(t){if(!TM)return;if(!CH)chunks();const ch=CH.find(c=>t>=c[0].s-0.05&&t<c[c.length-1].e+0.12);if(!ch)return;x.save();x.setTransform(1,0,0,1,0,0);x.font='800 66px Baloo';
+ const GAP=30,txt=ch.map(w=>w.w.replace(/\.\.\.$/,'').replace(/[,।"]/g,'')),ws=txt.map(s=>x.measureText(s).width+GAP),tw=ws.reduce((a,b)=>a+b,0)-GAP;const Y=1550;
+ let X=540-tw/2;x.textBaseline='middle';x.lineJoin='round';ch.forEach((w,i)=>{const on=t>=w.s,act=on&&t<w.e+0.05,wd=ws[i]-GAP;if(!on){X+=ws[i];return}const pp=back(cl((t-w.s)/0.15));x.save();x.translate(X+wd/2,Y);x.scale(pp*(act?1.12:1),pp*(act?1.12:1));x.textAlign='center';
+  x.lineWidth=13;x.strokeStyle=INK;x.strokeText(txt[i],0,0);x.fillStyle=act?YEL:WH;x.fillText(txt[i],0,0);x.restore();X+=ws[i]});x.restore()}
+// ---------- transitions: whip pan + shutter flash ----------
+function drawScene(fn,t){x.save();try{fn(t)}finally{x.restore()}}
+function whip(prev,pt,cur,tt,q){const e=eio(q);for(let k=0;k<4;k++){x.save();x.globalAlpha=k?0.25:1;x.setTransform(1,0,0,1,-e*W-k*40,0);drawScene(prev,pt);x.restore()}
+ for(let k=0;k<4;k++){x.save();x.globalAlpha=k?0.25:1;x.setTransform(1,0,0,1,(1-e)*W+k*40,0);drawScene(cur,tt);x.restore()}shutter(q)}
+window.render=function(t){x.setTransform(1,0,0,1,0,0);x.fillStyle=SKY;x.fillRect(0,0,W,H);
+ let i=0;for(let k=0;k<SC.length;k++)if(t>=SC[k][0])i=k;const tt=t-SC[i][0],TR=0.35;
+ if(i>0&&tt<TR)whip(SC[i-1][1],SC[i][0]-SC[i-1][0]+tt,SC[i][1],tt,tt/TR);else drawScene(SC[i][1],tt);
+ x.setTransform(1,0,0,1,0,0);captions(t);
+ if(IM.logo){x.save();x.globalAlpha=0.95;x.drawImage(IM.logo,70,236,64,64);x.restore()}x.save();x.font='38px Rozha';x.fillStyle=INK;x.textBaseline='middle';x.fillText('भूले किस्से',144,270);x.restore()};
+window.ready=Promise.all([...loads,...['800 66px Baloo','700 46px Baloo','38px Rozha','700 52px Inter'].map(f=>document.fonts.load(f,'रहस्य 1'))]);
+</script></body></html>
