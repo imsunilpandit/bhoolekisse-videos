@@ -49,3 +49,16 @@ Uploads 2026-11-25 15:28-15:31 UK via Zapier (private + scheduled): Loktak cuJd1
 Change 2026-11-25 20:22 UK: Konark d6PgDc0Nfbk moved from 26 Nov 12:30 IST to 30 Nov 19:30 IST (14:00Z). 26 Nov 12:30 IST slot freed for Vaibhav video (user uploads manually via Studio). API upload of Vaibhav throttled 20:20 UK.
 Upload try 2026-11-25 21:31 UK (reminder): Magnetic Hill — Zapier "throttled", Windsor "rate-limited", Chrome not connected → stopped; Hampi not tried. Both still PENDING (Magnetic 29 Nov 19:30, Hampi 30 Nov 12:30 IST).
 SLOT CLASH found: "25 November 2026" (doTh6-XQjUQ, Vaibhav Suryavanshi cricket video, uploaded 20:28 UTC 25 Nov, not by this session) is scheduled 26 Nov 07:00Z = 12:30 IST, same slot as Konark (d6PgDc0Nfbk). Asked the user what to do.
+
+## Weekly analytics report — 2026-11-26 (run 09:49 UTC / 15:19 IST)
+Source: Windsor youtube (account 117962, TRIAL — force_refresh not allowed). YouTube Analytics data in Windsor only reaches 23 Nov (PT), so avg viewed % / engaged views exist only for the first 2 videos; per-video numbers below are lifetime public counts (Data API). "Swiped away" is not offered by Windsor; proxy = 1 - engaged_views/views. Channel: 2 subs, 580 views, 6 public videos (7 more private/scheduled).
+| video | id | slot (IST) | style | live h | views | views/h | likes | comments | avg viewed % | swiped (proxy) | subs |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| Sarangpur Hanuman — Shani stri roop "क्यों?" | ooIZZb4sKjo | 25 Nov 12:30 | Vox paper + user's photo cut-outs | 27 | 247 | 9.1 | 11 | 0 | n/a yet | n/a | n/a |
+| Kailasa Ellora "पूरे पहाड़ को काटकर" | fycbSvUqJOI | 24 Nov 15:00 | 2.5D paper cut-out | 48 | 158 | 3.3 | 2 | 0 | 25.9% (1 view, 23 Nov) | 0% (n=1) | 0 |
+| Brihadeeswarar 80-ton stone | A_U_GO0oKaU | 25 Nov 19:30 | Vox paper + blueprint | 20 | 99 | 5.0 | 2 | 0 | n/a yet | n/a | n/a |
+| Lepakshi hanging pillar | sLzo4gw3LcQ | 25 Nov 09:30 | cinematic 3D | 30 | 66 | 2.2 | 0 | 0 | n/a yet | n/a | n/a |
+| Vaibhav Suryavanshi 204(53) | doTh6-XQjUQ | 26 Nov 12:30 | records/struggle | 3 | 24 | ~8 (early) | 0 | 0 | n/a yet | n/a | n/a |
+| Hasanamba "साल में 1 बार" | bZFW422j8Jw | 24 Nov 09:30 | old card/mascot style | 54 | 30 | 0.6 | 0 | 0 | 9.8% (13 views, 23 Nov) | ~85% | 0 |
+Takeaways: best = Sarangpur (devotional "why" question + real-photo Vox paper, 73 s, 4.5% like rate); worst = Hasanamba (banned old style, 09:30 slot, ~85% swiped on day 1). 09:30 IST slot weakest (both 09:30 videos lowest views/h); 12:30 and 19:30 both fine. Zero comments on every video -> the "कमेंट में लिखिए" CTA is not landing. Baseline week — compare next week.
+Next topic ideas (same formula: devotional/mystery + "क्यों/कैसे?" hook + real-photo Vox paper): Mehandipur Balaji (why no prasad taken home), Kal Bhairav Ujjain (why liquor offering), Karni Mata rats (why kaaba sacred), Shani Shingnapur (houses without doors), Khatu Shyam (Barbarik's head).
