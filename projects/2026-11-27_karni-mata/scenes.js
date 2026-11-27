@@ -83,13 +83,8 @@ function S11(lt,t){dots('#3d6b52','#1f3a2c');tape('विज्ञान कह�
   const b=lt-(P[35]-P[33]);if(b>0){pop(IM.white_rat,740,1060,300,b*1.1,{});goldGlow(740,900,240,lt,.35,'255,255,235')}
   chip('भक्तों के लिए: माँ के दर्शन 🙏',470,1360-40,44,(lt-(P[36]-P[33]))/.3,'#fff','#111',.02);
 }
-function S12(lt,t){const fold=1-cl(lt/1.3);d3('karni',99,t,{el:.14,dist:1.05,az:.25*Math.sin(lt*.3),ly:.7},{fold:Math.max(0,fold)});dark(.42*cl((lt-1.2)/.5));
-  tape('क्या आपको पता था?',470,330,70,cl((lt-.9)/.3),{seed:71});
-  chip('💬 जय करणी माता',470,480,56,(lt-(P[38]-P[37]))/.3,'#fff','#111',-.03);
-  if(lt>P[39]-P[37]){const w=Math.sin((lt-(P[39]-P[37]))*5)*.06;tape('अगला राज़ 🔒',470,640,62,1,{fill:'#F5B841',seed:77,rot:w})}
-  subBtn(lt-(P[40]-P[37])+.2);
-  chip('इससे भी हैरान करने वाला!',470,980,44,(lt-(P[42]-P[37]))/.3,'#fff','#111',.03);
-}
+const OAT=P[37]-.1,OC={c:P[38]-OAT,n:P[39]-OAT,s:P[40]-OAT-.3,e:P[42]-OAT,cmt:'जय करणी माता'};
+function S12(lt,t){outroCTA(lt,t,f=>d3('karni',99,t,{el:.14,dist:1.05,az:.25*Math.sin(lt*.3),ly:.7},{fold:f}),OC)}
 const SCN=[{at:0,f:S1},{at:P[3]-.1,f:S2,tr:'cut',d:0},{at:P[5]-.1,f:S3,tr:'flash',d:.4},{at:P[7]-.1,f:S4,tr:'page'},{at:P[10]-.1,f:S5,tr:'iris',d:.7},{at:P[13]-.1,f:S6,tr:'blinds',d:.6},
   {at:P[19]-.1,f:S7,tr:'wave',d:.7},{at:P[22]-.1,f:S8,tr:'page'},{at:P[26]-.1,f:S9,tr:'flash',d:.5},{at:P[29]-.1,f:S10,tr:'iris',d:.7},{at:P[33]-.1,f:S11,tr:'blinds',d:.6},{at:P[37]-.1,f:S12,tr:'flash',d:.4}];
 function events(){
@@ -104,5 +99,5 @@ function events(){
   ev(P[26]-.5,'whoosh');ev(P[26],'slap');ev(P[27],'tape');ev(P[27]+.05,'boom',.4);ev(P[28],'pop');ev(P[28]+.3,'slap');
   ev(P[29]-.7,'whoosh');ev(P[30],'slap');ev(P[31],'sparkle');ev(P[32],'tape');
   ev(P[33]-.6,'flip');ev(P[33],'tape');ev(P[34]+.5,'pop');ev(P[34]+.5,'slap');ev(P[35],'pop');ev(P[35]+.1,'sparkle');ev(P[36],'slap');
-  ev(P[37]-.5,'whoosh');ev(P[37],'book');ev(P[37]+.9,'tape');ev(P[38],'slap');ev(P[39],'tape');ev(P[40]-.2,'click');ev(P[40],'bell');ev(P[42],'slap');
+  outroEv(OAT,OC);
 }

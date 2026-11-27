@@ -87,14 +87,8 @@ function S9(lt,t){const k=eio(lt/(OUTRO-P[32]));const over={houses:{hide:1},floo
   chip('कहते हैं: भीम ने रक्षा की',470,380,44,(lt-(P[35]-P[32]))/.3,'#fff','#111',.03);
   if(lt>P[36]-P[32]){sparkles(540,1100,320,lt,14);chip('🌼 आज भी पूजा',470,1180,50,(lt-(P[36]-P[32]))/.3,'#FFD43B','#111',-.03)}
 }
-function S10(lt,t){const fold=1-cl(lt/1.3);const over={houses:{hide:1},flood:{hide:1},shila:{l:9}};
-  d3('ked',99,t,{el:.14,dist:1.05,az:.25*Math.sin(lt*.3),ly:.7},{over,fold:Math.max(0,fold)});dark(.42*cl((lt-1.2)/.5));
-  tape('क्या आपको पता था?',470,330,70,cl((lt-.9)/.3),{seed:71});
-  chip('💬 जय बाबा केदार',470,480,56,(lt-(P[38]-P[37]))/.3,'#fff','#111',-.03);
-  if(lt>P[39]-P[37]){const w=Math.sin((lt-(P[39]-P[37]))*5)*.06;tape('अगला राज़ 🔒',470,640,62,1,{fill:'#F5B841',seed:77,rot:w})}
-  subBtn(lt-(P[40]-P[37])+.2);
-  chip('इससे भी हैरान करने वाला!',470,980,44,(lt-(P[42]-P[37]))/.3,'#fff','#111',.03);
-}
+const OAT=P[37]-.1,OC={c:P[38]-OAT,n:P[39]-OAT,s:P[40]-OAT-.3,e:P[42]-OAT,cmt:'जय बाबा केदार'};
+function S10(lt,t){outroCTA(lt,t,f=>d3('ked',99,t,{el:.14,dist:1.05,az:.25*Math.sin(lt*.3),ly:.7},{over:{houses:{hide:1},flood:{hide:1},shila:{l:9}},fold:f}),OC)}
 const SCN=[{at:0,f:S1},{at:P[3]-.1,f:S2,tr:'cut',d:0},{at:P[6]-.1,f:S3,tr:'cut',d:0},{at:P[7]-.1,f:S4,tr:'wave',d:.7},{at:P[10]-.1,f:S5,tr:'blinds',d:.6},
   {at:P[13]-.1,f:S6,tr:'slide',d:.5},{at:P[20]-.1,f:S7,tr:'wave',d:.7},{at:P[25]-.1,f:S8,tr:'page'},{at:P[32]-.1,f:S9,tr:'blinds',d:.6},{at:P[37]-.1,f:S10,tr:'flash',d:.4}];
 function events(){
@@ -107,5 +101,5 @@ function events(){
   ev(P[20]-.7,'wave',.9);ev(P[20],'tape');ev(P[21],'wave',.8);ev(P[23],'slap');ev(P[24]-.05,'stone',1.1);ev(P[24],'boom',.6);ev(P[24]+.2,'slap');
   ev(P[25]-.6,'page');ev(P[25],'tape');ev(P[26],'slap');ev(P[26]+.5,'scribble',.5);ev(P[27],'pop');ev(P[27]+.1,'whoosh',.5);ev(P[28],'slap');ev(P[30],'stamp',.6);ev(P[31],'slap');
   ev(P[32]-.6,'flip');ev(P[32],'swell',.5);ev(P[33],'tape');ev(P[33]+.05,'shankh',.5);ev(P[35],'slap');ev(P[36],'sparkle');ev(P[36]+.1,'slap');
-  ev(P[37]-.5,'whoosh');ev(P[37],'book');ev(P[37]+.9,'tape');ev(P[38],'slap');ev(P[39],'tape');ev(P[40]-.2,'click');ev(P[40],'bell');ev(P[42],'slap');
+  outroEv(OAT,OC);
 }

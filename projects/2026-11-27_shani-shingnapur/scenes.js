@@ -75,13 +75,8 @@ function S9(lt,t){dots('#c9541b','#f6a43c');
   chip('🔒 ताला?',300,640,56,(lt-(P[33]-P[29]))/.3,'#FFD43B','#111',-.04);
   stamp('आज भी नहीं!',560,900,(lt-(P[34]-P[29]))/.35);
 }
-function S10(lt,t){const fold=1-cl(lt/1.3);d3('shani',99,t,{el:.14,dist:1.05,az:.25*Math.sin(lt*.3),ly:.7},{fold:Math.max(0,fold)});dark(.42*cl((lt-1.2)/.5));
-  tape('क्या आपको पता था?',470,330,70,cl((lt-.9)/.3),{seed:71});
-  chip('💬 जय शनिदेव',470,480,56,(lt-(P[36]-P[35]))/.3,'#fff','#111',-.03);
-  if(lt>P[37]-P[35]){const w=Math.sin((lt-(P[37]-P[35]))*5)*.06;tape('अगला राज़ 🔒',470,640,62,1,{fill:'#F5B841',seed:77,rot:w})}
-  subBtn(lt-(P[38]-P[35])+.2);
-  chip('इससे भी हैरान करने वाला!',470,980,44,(lt-(P[40]-P[35]))/.3,'#fff','#111',.03);
-}
+const OAT=P[35]-.1,OC={c:P[36]-OAT,n:P[37]-OAT,s:P[38]-OAT-.3,e:P[40]-OAT,cmt:'जय शनिदेव'};
+function S10(lt,t){outroCTA(lt,t,f=>d3('shani',99,t,{el:.14,dist:1.05,az:.25*Math.sin(lt*.3),ly:.7},{fold:f}),OC)}
 const SCN=[{at:0,f:S1},{at:P[5]-.1,f:S2,tr:'flash',d:.4},{at:P[7]-.1,f:S3,tr:'blinds',d:.6},{at:P[10]-.1,f:S4,tr:'slide',d:.5},{at:P[16]-.1,f:S5,tr:'tear',d:.6},
   {at:P[18]-.1,f:S6,tr:'page'},{at:P[22]-.1,f:S7,tr:'iris',d:.7},{at:P[25]-.1,f:S8,tr:'flash',d:.5},{at:P[29]-.1,f:S9,tr:'slide',d:.5},{at:P[35]-.1,f:S10,tr:'tear',d:.6}];
 function events(){
@@ -94,5 +89,5 @@ function events(){
   ev(P[22]-.7,'whoosh');ev(P[22],'swell',.5);ev(P[22]+.1,'tape');ev(P[23],'slap');ev(P[23]+.6,'scribble',.5);ev(P[24],'slap');ev(P[24]+.1,'sparkle');
   ev(P[25]-.5,'whoosh',.6);ev(P[26],'slap');ev(P[28],'slap');
   ev(P[29]-.5,'whoosh');ev(P[29],'tape');ev(P[31],'slap');ev(P[32],'pop');ev(P[32]+.4,'slap');ev(P[33],'slap');ev(P[34],'stamp',.9);
-  ev(P[35]-.6,'rip');ev(P[35],'book');ev(P[35]+.9,'tape');ev(P[36],'slap');ev(P[37],'tape');ev(P[38]-.2,'click');ev(P[38],'bell');ev(P[40],'slap');
+  outroEv(OAT,OC);
 }

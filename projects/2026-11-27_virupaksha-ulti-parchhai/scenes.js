@@ -82,13 +82,8 @@ function S9(lt,t){const k=eio(lt/(OUTRO-P[33]));d3('hampi',99,t,{el:.1-.06*k,dis
   x.save();x.globalCompositeOperation='screen';const g=x.createRadialGradient(820,330,20,820,330,700);g.addColorStop(0,`rgba(255,200,110,${.45+.1*Math.sin(lt*2)})`);g.addColorStop(1,'rgba(0,0,0,0)');x.fillStyle=g;x.fillRect(0,0,W,H);x.restore();
   sparkles(540,720,300,lt,14);chip('☀️ सदियों से, हर दिन',470,300,52,(lt-(P[34]-P[33]))/.3,'#FFD43B','#111',-.02);
 }
-function S10(lt,t){const fold=1-cl(lt/1.3);d3('hampi',99,t,{el:.12,dist:1.05,az:.15*Math.sin(lt*.3),ly:.8},{fold:Math.max(0,fold)});dark(.42*cl((lt-1.2)/.5));
-  tape('क्या आपको पता था?',470,330,70,cl((lt-.9)/.3),{seed:71});
-  chip('💬 हर हर महादेव',470,480,56,(lt-(P[37]-P[36]))/.3,'#fff','#111',-.03);
-  if(lt>P[38]-P[36]){const w=Math.sin((lt-(P[38]-P[36]))*5)*.06;tape('अगला राज़ 🔒',470,640,62,1,{fill:'#F5B841',seed:77,rot:w})}
-  subBtn(lt-(P[39]-P[36])+.2);
-  chip('इससे भी हैरान करने वाला!',470,980,44,(lt-(P[41]-P[36]))/.3,'#fff','#111',.03);
-}
+const OAT=P[36]-.1,OC={c:P[37]-OAT,n:P[38]-OAT,s:P[39]-OAT-.3,e:P[41]-OAT,cmt:'हर हर महादेव'};
+function S10(lt,t){outroCTA(lt,t,f=>d3('hampi',99,t,{el:.12,dist:1.05,az:.15*Math.sin(lt*.3),ly:.8},{fold:f}),OC)}
 const SCN=[{at:0,f:S1},{at:P[5]-.1,f:S2,tr:'flash',d:.4},{at:P[8]-.1,f:S3,tr:'page'},{at:P[10]-.1,f:S4,tr:'iris',d:.7},{at:P[13]-.1,f:S5,tr:'cut',d:0},
   {at:P[21]-.1,f:S6,tr:'tear',d:.6},{at:P[25]-.1,f:S7,tr:'flash',d:.4},{at:P[29]-.1,f:S8,tr:'page'},{at:P[33]-.1,f:S9,tr:'iris',d:.7},{at:P[36]-.1,f:S10,tr:'flash',d:.4}];
 function events(){
@@ -101,5 +96,5 @@ function events(){
   ev(P[25]-.5,'whoosh',.6);ev(P[25]+.2,'pull',.6);ev(P[26],'pull',.6);ev(P[28],'sparkle');ev(P[28],'tape');
   ev(P[29]-.6,'page');ev(P[29],'pop');ev(P[30],'slap');ev(P[32],'tape');ev(P[32]+.05,'sparkle');
   ev(P[33]-.8,'whoosh');ev(P[33],'swell',.5);ev(P[34],'slap');
-  ev(P[36]-.5,'whoosh');ev(P[36],'book');ev(P[36]+.9,'tape');ev(P[37],'slap');ev(P[38],'tape');ev(P[39]-.2,'click');ev(P[39],'bell');ev(P[41],'slap');
+  outroEv(OAT,OC);
 }

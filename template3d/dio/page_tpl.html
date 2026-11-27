@@ -34,6 +34,49 @@ function buildEv(set,at,sp=1,kind='flap'){const L=D3.SETS[set].L;for(const k in 
   const ts=it.band?it.parts.map((g,i)=>[g.userData.t0,g.userData.mode]):[[it.o.t0||0,it.o.anim||'rise']];ts.forEach(([t0,m],i)=>{if(it.band&&i===0&&it.o.flat)return;ev(at+t0*sp+(m==='drop'?.25:.12),m==='drop'?'stone':kind,.7)})}}
 function qmarks(lt,pos){pos.forEach(([px,py,r],i)=>{const p=back((lt-.4-i*.2)/.3);if(p<=0)return;x.save();x.translate(px,py+Math.sin(lt*2+i)*8);x.rotate(r);x.scale(p,p);x.fillStyle='#FFD43B';x.strokeStyle='#111';x.lineWidth=8;x.font=F(800,130);x.textAlign='center';x.strokeText('?',0,40);x.fillText('?',0,40);x.restore()})}
 function subBtn(l,cx=470,cy=820){if(l<=0)return;subArrow(l);const p=back(l/.35),pul=1+.04*Math.sin(l*6);x.save();x.translate(cx,cy);x.scale(p*pul,p*pul);x.shadowColor='rgba(0,0,0,.35)';x.shadowBlur=16;x.shadowOffsetY=8;x.fillStyle='#E62117';rr(-250,-70,500,140,26);x.fill();x.shadowColor='transparent';x.fillStyle='#fff';x.font=F(800,66);x.textAlign='center';x.textBaseline='middle';x.fillText('सब्सक्राइब करें',0,6);x.restore()}
+
+// ---------- outro: bright CTA with tap-to-subscribe ----------
+function handIcon(cx,cy,s,press){x.save();x.translate(cx,cy);x.scale(s*(press?.9:1),s*(press?.9:1));x.rotate(-.35);
+  x.shadowColor='rgba(0,0,0,.35)';x.shadowBlur=12;x.shadowOffsetY=6;x.fillStyle='#fff';x.strokeStyle='#111';x.lineWidth=6;
+  x.beginPath();rr(-22,-90,44,110,22);x.fill();x.stroke();x.beginPath();rr(-60,-10,120,110,40);x.fill();x.stroke();
+  x.shadowColor='transparent';x.lineWidth=4;[-30,0,30].forEach(dx=>{x.beginPath();x.moveTo(dx,0);x.lineTo(dx,30);x.stroke()});x.restore()}
+function confetti(l,cx,cy){if(l<=0||l>2.6)return;const cols=['#FFD43B','#E62117','#4fc3f7','#7fe08a','#ff8ad8','#fff'];x.save();
+  for(let i=0;i<46;i++){const a=hash(i)*6.28,v=420+hash(i+3)*620,tt=l;const px=cx+Math.cos(a)*v*tt*.75,py=cy+Math.sin(a)*v*tt*.55+520*tt*tt;
+    x.globalAlpha=cl(1.4-tt*.6);x.fillStyle=cols[i%6];x.translate(px,py);x.rotate(tt*8+i);x.fillRect(-9,-5,18,10);x.setTransform(1,0,0,1,0,0)}x.restore()}
+function topShade(a){const g=x.createLinearGradient(0,0,0,1100);g.addColorStop(0,`rgba(10,8,24,${a})`);g.addColorStop(1,'rgba(10,8,24,0)');x.fillStyle=g;x.fillRect(0,0,W,1100)}
+function cmtBubble(l,txt,cx,cy){if(l<=0)return;const p=back(l/.35);const n=Math.floor(cl((l-.3)/1.0)*[...txt].length);const shown=[...txt].slice(0,n).join('');
+  x.save();x.translate(cx,cy);x.scale(p,p);x.shadowColor='rgba(0,0,0,.3)';x.shadowBlur=18;x.shadowOffsetY=8;x.fillStyle='#fff';rr(-330,-70,660,140,28);x.fill();x.shadowColor='transparent';
+  x.save();x.beginPath();x.arc(-260,0,44,0,6.28);x.clip();x.fillStyle='#2a1030';x.fillRect(-304,-44,88,88);x.drawImage(IM.logo,-300,-40,80,80);x.restore();
+  x.textAlign='left';x.textBaseline='middle';x.fillStyle='#777';x.font=F(800,26);x.fillText('@आप  •  अभी',-195,-30);
+  x.fillStyle='#111';x.font=F(800,44);x.fillText(shown+((l*2|0)%2&&n<[...txt].length?'|':''),-195,18);
+  const hp=l-1.5;if(hp>0){const s=back(hp/.3);x.save();x.translate(270,20);x.scale(s,s);x.font=F(800,44);x.textAlign='center';x.fillText('❤️',0,0);x.restore()}
+  x.restore()}
+function subTap(l,cx,cy){if(l<=0)return;const tap=.9,done=l>tap+.12;const p=back(l/.35);
+  const sq=l>tap&&l<tap+.15?1-.08*Math.sin((l-tap)/.15*3.14):1,pul=done?1:1+.035*Math.sin(l*7);
+  x.save();x.translate(cx,cy);x.scale(p*sq*pul,p*sq*pul);x.shadowColor='rgba(0,0,0,.35)';x.shadowBlur=18;x.shadowOffsetY=9;
+  x.fillStyle=done?'#e9e9ee':'#E62117';rr(-300,-74,600,148,74);x.fill();x.shadowColor='transparent';
+  x.save();x.beginPath();x.arc(-226,0,52,0,6.28);x.clip();x.fillStyle='#2a1030';x.fillRect(-278,-52,104,104);x.drawImage(IM.logo,-272,-46,92,92);x.restore();
+  x.textAlign='center';x.textBaseline='middle';x.font=F(800,58);x.fillStyle=done?'#555':'#fff';x.fillText(done?'✓ सब्सक्राइब्ड':'सब्सक्राइब करें',40,6);x.restore();
+  if(l>tap&&l<tap+.7){const r=(l-tap)/.7;x.save();x.globalAlpha=1-r;x.strokeStyle='#fff';x.lineWidth=10;x.beginPath();x.ellipse(cx,cy,300+r*120,74+r*60,0,0,6.28);x.stroke();x.restore()}
+  // bell
+  const bl=l-tap-.35;if(bl>0){const s=back(bl/.3),w=bl>.55&&bl<1.4?Math.sin((bl-.55)*28)*.35*(1-(bl-.55)/.85):0;x.save();x.translate(cx+360,cy);x.rotate(w);x.scale(s,s);
+    x.shadowColor='rgba(0,0,0,.3)';x.shadowBlur=12;x.fillStyle=bl>.55?'#FFD43B':'#fff';x.beginPath();x.arc(0,0,62,0,6.28);x.fill();x.shadowColor='transparent';x.font=F(800,64);x.textAlign='center';x.textBaseline='middle';x.fillText('🔔',0,6);x.restore();
+    if(bl>.55)sparkles(cx+360,cy,110,l,8)}
+  // hand
+  const hx=l<tap?cx+360-200*eio(l/tap):(bl<.3?cx+60+300*eio(cl((l-tap-.1)/.4)):cx+380),hy=l<tap?cy+420-360*eio(l/tap):cy+70+(bl>.4&&bl<.6?-10:0);
+  const press=(l>tap-.05&&l<tap+.12)||(bl>.5&&bl<.62);if(l<tap+1.4)handIcon(hx,hy+40,1,press);
+  confetti(l-tap,cx,cy)}
+function outroCTA(lt,t,draw,o){const fold=1-cl(lt/1.0);draw(Math.max(0,fold));
+  x.save();x.globalCompositeOperation='screen';const g=x.createRadialGradient(540,1050,30,540,1050,700);g.addColorStop(0,'rgba(255,214,140,.35)');g.addColorStop(1,'rgba(0,0,0,0)');x.fillStyle=g;x.fillRect(0,0,W,H);x.restore();
+  topShade(.55*cl((lt-.6)/.5));sparkles(540,900,420,lt,10);
+  tape('क्या आपको पता था?',470,260,74,cl((lt-.7)/.3),{seed:71});
+  cmtBubble(lt-o.c,o.cmt,470,430);
+  if(lt>o.n){const w=Math.sin((lt-o.n)*5)*.06*Math.max(0,1-(lt-o.n)/2.5);tape('अगला राज़ 🔒',470,610,64,cl((lt-o.n)/.3),{fill:'#F5B841',seed:77,rot:w-.02})}
+  subTap(lt-o.s,440,800);
+  if(lt>o.s+2.6)subArrow(lt-o.s-2.6);
+  chip('इससे भी हैरान करने वाला!',470,1010,46,(lt-o.e)/.3,'#fff','#111',.03)}
+function outroEv(at,o){ev(at-.4,'whoosh');ev(at,'book');ev(at+.7,'tape');ev(at+o.c,'pop');for(let i=0;i<8;i++)ev(at+o.c+.35+i*.12,'tick',.4);ev(at+o.c+1.5,'pop',.6);
+  ev(at+o.n,'tape');ev(at+o.s,'pop');ev(at+o.s+.9,'click');ev(at+o.s+.92,'pop',.8);ev(at+o.s+.95,'sparkle');ev(at+o.s+1.45,'click');ev(at+o.s+1.5,'bell');ev(at+o.e,'slap')}
 // ---------- captions: phrases auto-split into 1-3 word stickers ----------
 let KEYW=[];
 function buildCaps(){CUES.phrases.forEach(([s,a,b],i)=>{const ws=s.replace(/["“”]/g,'').split(/\s+/).filter(Boolean);const n=ws.length;const per=n<=3?n:(n<=6?Math.ceil(n/2):3);const groups=[];for(let j=0;j<n;j+=per)groups.push(ws.slice(j,j+per));
