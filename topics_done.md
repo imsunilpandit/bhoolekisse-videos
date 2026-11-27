@@ -73,3 +73,4 @@ Uploads 2026-11-27 13:27-13:28 UK via Zapier (private + publishAt, titles change
 Note 2026-11-27: new reusable engine template3d/dio/ (dio3d.js generic sets/bands/over, page_tpl captions auto-split, prep_voice.py fine-align + coarse-tighten, mix.sh with alimiter level=0, splice.sh for partial re-render). Voices kept in audio_vault/2026-11-27_v{1..4}_*_voice_vikas.mp3.
 Note 2026-11-27 16:05 UK: outro redone (tap-to-subscribe). For the pending 4 uploads use raw URLs at commit 9d1bb14a3c111a3c53da19aab0c2463d952323b3 (NOT 78345ef, that has the old outro).
 Note 2026-11-27 17:00 UK: new crisp coded end card template/common/BhooleKisse_Endcard_v2.mp4 (3 s, scene.html source); old Final card retired (user: low quality/fika). Pending 4 uploads now use the commit below.
+Decision 2026-11-27 17:05 UK (user): NO end card at the end of videos any more — the in-video outro already asks to subscribe twice. Finals = main video only. Pending 4 uploads use the commit below.
