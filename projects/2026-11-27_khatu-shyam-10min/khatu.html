@@ -1,0 +1,19 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>@font-face{font-family:Rozha;src:url(fonts/rozha-one-devanagari-400-normal.woff2)}@font-face{font-family:Tiro;src:url(fonts/tiro-devanagari-hindi-devanagari-400-normal.woff2)}body{margin:0}</style></head><body><canvas id="c" width="1920" height="1080"></canvas>
+<script>const W=1920,H=1080,c=document.getElementById('c'),x=c.getContext('2d');</script>
+<script src="data.js"></script><script src="chars.js"></script><script src="pro.js"></script><script src="faces.js"></script><script src="theme.js"></script><script src="props.js"></script><script src="scenes.js"></script>
+<script>
+window.T={end:TOTAL+1.0};window.EV=[];window.ready=(async()=>{await document.fonts.load('40px Rozha');await document.fonts.load('40px Tiro');return 1})();
+let prev=0;S.forEach(s=>{s.t0=(s.from!==undefined)?s.from:Tm(s.mark,prev);prev=s.t0});S[0].t0=0;S.forEach((s,i)=>{s.t1=i<S.length-1?S[i+1].t0:TOTAL+1});
+const NAMES={krishna:['श्री कृष्ण','#8ad0ff'],barbarik:['बर्बरीक','#ffd23a'],maurvi:['माँ मौरवी','#ff9ac8'],bhishma:['भीष्म','#ffffff'],drona:['द्रोणाचार्य','#ffb070'],karna:['कर्ण','#ffd23a'],arjuna:['अर्जुन','#8ad0ff']};
+function drawScene(i,t){const s=S[i];x.save();s.f(t-s.t0,t,s.t1-s.t0);x.restore()}
+function render(t){TNOW=t;x.setTransform(1,0,0,1,0,0);x.textAlign='left';x.globalAlpha=1;let i=0;while(i<S.length-1&&t>=S[i+1].t0)i++;
+ drawScene(i,t);
+ // comic wipe transition into scene i (first 0.45s): previous scene shown on the right side of a slanted panel edge
+ const lt=t-S[i].t0,TR=.45;if(i>0&&lt<TR){const k=eio(lt/TR);const ex=lerp(-200,W+300,k);x.save();x.beginPath();x.moveTo(ex,0);x.lineTo(W,0);x.lineTo(W,H);x.lineTo(ex-260,H);x.closePath();x.clip();drawScene(i-1,t);x.restore();x.strokeStyle='#1a0a02';x.lineWidth=18;x.beginPath();x.moveTo(ex,0);x.lineTo(ex-260,H);x.stroke();x.strokeStyle='#ffe14a';x.lineWidth=6;x.stroke()}
+ vignetteSoft();
+ if(S[i].title)narr(S[i].title,S[i].t0+.3,S[i].t0+3.6,t);
+ const p=activePhrase(t);if(p){const txt=p[0].replace(/["“”]/g,'');if(p[3]!=='nar'&&NAMES[p[3]]){const [n,col]=NAMES[p[3]];chip(n,W/2,H-190,34,cl((t-p[1]+.05)/.2),col,'#1a0a02')}x.font='54px Rozha';if(x.measureText(txt).width>1650){const ws=txt.split(' ');const ch=[];let cur='';ws.forEach(w=>{const tr=cur?cur+' '+w:w;if(x.measureText(tr).width>1500&&cur){ch.push(cur);cur=w}else cur=tr});if(cur)ch.push(cur);const L=ch.map(c=>c.length),tot=L.reduce((a,b)=>a+b,0);let acc=0,k=0;const fr=(t-p[1])/(p[2]-p[1]);for(k=0;k<ch.length-1;k++){acc+=L[k]/tot;if(fr<acc)break}let s0=p[1],s1=p[2];let a0=0;for(let j=0;j<k;j++)a0+=L[j]/tot;s0=p[1]+a0*(p[2]-p[1])-.05;s1=p[1]+(a0+L[k]/tot)*(p[2]-p[1])+.05;if(k===0)s0=p[1]-.05;if(k===ch.length-1)s1=p[2]+.15;subtitle(ch[k],s0-.3,s1+.3,t)}else subtitle(txt,p[1]-.05,p[2]+.15,t)}
+ x.font='30px Rozha';x.fillStyle='rgba(255,255,255,.85)';x.textAlign='right';x.textBaseline='alphabetic';x.shadowColor='#000';x.shadowBlur=6;x.fillText('भूले किस्से',W-40,56);x.shadowBlur=0;x.textAlign='left';
+ const fo=cl((t-TOTAL)/.8);if(fo>0){x.fillStyle=`rgba(0,0,0,${fo})`;x.fillRect(0,0,W,H)}}
+window.render=render;window.SCN=S.map(s=>[s.mark,+s.t0.toFixed(2)]);
+</script></body></html>
