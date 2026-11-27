@@ -75,3 +75,9 @@ Note 2026-11-27 16:05 UK: outro redone (tap-to-subscribe). For the pending 4 upl
 Note 2026-11-27 17:00 UK: new crisp coded end card template/common/BhooleKisse_Endcard_v2.mp4 (3 s, scene.html source); old Final card retired (user: low quality/fika). Pending 4 uploads now use the commit below.
 Decision 2026-11-27 17:05 UK (user): NO end card at the end of videos any more — the in-video outro already asks to subscribe twice. Finals = main video only. Pending 4 uploads use the commit below.
 Note 2026-11-27 ~18:15 UK: 4 shorts fully re-rendered — objects stand on a real ground plane (no floating), paper thickness edges, contact shadows, gentle camera drift (2.5D). Upload from the commit below.
+
+## 2026-11-27 — 3 non-religious viral topics (papercraft 2.5D, ChatGPT images, grounded sets, no end card) — PENDING UPLOAD
+- Jatinga (Assam) bird "suicide" — recipe: foggy night village, grey fog-wave wipes, lantern glow, clock/compass explainers; transitions wave/iris/blinds/page/flash; music cfg 'j'. videos/2026-11-27_jatinga-pakshi-raaz_FINAL.mp4 (71.5 s)
+- Roopkund skeleton lake — recipe: icy Himalaya + snow, hail storm shake, teal DNA lab, 38-dot grid (23/14), cream timeline; transitions flash/blinds/slide/iris/page/tear; music cfg 'r'. videos/2026-11-27_roopkund-kankal-jheel_FINAL.mp4 (68.7 s)
+- Solapur Boramani labyrinth — recipe: golden-hour savanna, flat-lying labyrinth on ground, ring counter, coin flip + India–Crete arc, sea + ship, trade exchange, Deccan route map with cart; transitions page/wave/slide/iris/blinds/tear; music cfg 'l'. videos/2026-11-27_solapur-bhoolbhulaiya_FINAL.mp4 (72.9 s)
+- Planned slots (re-check first): 4 Dec 14:00Z, 5 Dec 07:00Z, 5 Dec 14:00Z (after the 4 temple videos 2–4 Dec).

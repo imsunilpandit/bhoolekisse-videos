@@ -4,7 +4,10 @@ V=sys.argv[1] if len(sys.argv)>1 else '1'
 CFG={'1':dict(roots=(57,60,62),bpm=(80,92,86),seed=3,bed=0,tab=1.0),
      '2':dict(roots=(52,55,57),bpm=(70,82,80),seed=5,bed=1,tab=.6),
      '3':dict(roots=(55,58,60),bpm=(88,98,92),seed=7,bed=0,tab=1.35),
-     '4':dict(roots=(50,53,55),bpm=(78,90,86),seed=11,bed=.6,tab=1.1)}[V]
+     '4':dict(roots=(50,53,55),bpm=(78,90,86),seed=11,bed=.6,tab=1.1),
+     'j':dict(roots=(53,56,58),bpm=(72,84,80),seed=13,bed=.8,tab=.7),
+     'r':dict(roots=(49,52,54),bpm=(66,78,74),seed=17,bed=1,tab=.5),
+     'l':dict(roots=(58,61,63),bpm=(86,96,90),seed=19,bed=.3,tab=1.25)}[V]
 N=int(SR*DUR);rng=np.random.default_rng(CFG['seed'])
 M=np.zeros((N,2));S=np.zeros((N,2))
 def add(buf,s,t,g=1.,pan=0.):
