@@ -4,10 +4,10 @@ KEYW=['गाँव','दरवाज़े','दरवाज़ा','ताल�
 const RAAZ=P[16],OUTRO=P[35];
 WAVECOLS=['#7a3f12','#a65a1c','#d17f2e','#f0b060'];
 function setup(){
-  D3.addSet('vil',{bg:IM.bg,floorY:1500,slab:{color:'#b07a45',top:'#d6a46a',by:1330,w:9,d:2.6},layers:[
+  D3.addSet('vil',{bg:IM.bg,floorY:1500,groundBy:1330,layers:[
     {k:'house',img:IM.house,w:780,x:540,by:1330,z:0,cols:8,t0:.2},
     {k:'bank',img:IM.bank,w:760,x:540,by:1330,z:.1,cols:8,t0:.2}]});
-  D3.addSet('shani',{bg:IM.bg,floorY:1500,slab:{color:'#b07a45',top:'#d6a46a',by:1340,w:10,d:3},layers:[
+  D3.addSet('shani',{bg:IM.bg,floorY:1500,groundBy:1340,layers:[
     {k:'house',img:IM.house,w:520,x:170,by:1300,z:-1.6,cols:6,t0:.05},
     {k:'bank',img:IM.bank,w:480,x:930,by:1300,z:-1.6,cols:6,t0:.12},
     {k:'shila',img:IM.shila,mode:'band',bands:6,rise:.34,w:400,x:540,by:1345,z:0,cols:5,t0:.3,step:.26,flat:1}]});

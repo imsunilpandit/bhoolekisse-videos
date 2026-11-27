@@ -74,3 +74,4 @@ Note 2026-11-27: new reusable engine template3d/dio/ (dio3d.js generic sets/band
 Note 2026-11-27 16:05 UK: outro redone (tap-to-subscribe). For the pending 4 uploads use raw URLs at commit 9d1bb14a3c111a3c53da19aab0c2463d952323b3 (NOT 78345ef, that has the old outro).
 Note 2026-11-27 17:00 UK: new crisp coded end card template/common/BhooleKisse_Endcard_v2.mp4 (3 s, scene.html source); old Final card retired (user: low quality/fika). Pending 4 uploads now use the commit below.
 Decision 2026-11-27 17:05 UK (user): NO end card at the end of videos any more — the in-video outro already asks to subscribe twice. Finals = main video only. Pending 4 uploads use the commit below.
+Note 2026-11-27 ~18:15 UK: 4 shorts fully re-rendered — objects stand on a real ground plane (no floating), paper thickness edges, contact shadows, gentle camera drift (2.5D). Upload from the commit below.

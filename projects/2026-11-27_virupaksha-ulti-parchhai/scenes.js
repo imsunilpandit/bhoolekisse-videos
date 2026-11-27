@@ -4,7 +4,7 @@ KEYW=['उल्टी','शिखर','दरवाज़ा','हम्पी'
 const RAAZ=P[21],OUTRO=P[36];
 WAVECOLS=['#8a5a2b','#b07a3c','#d3a15a','#efd29a'];
 function setup(){
-  D3.addSet('hampi',{bg:IM.bg,floorY:1500,slab:{color:'#a8875e',top:'#cdb48a',by:1330,w:7,d:2.4},layers:[
+  D3.addSet('hampi',{bg:IM.bg,floorY:1500,groundBy:1330,layers:[
     {k:'gopuram',img:IM.gopuram,mode:'band',bands:7,rise:.3,w:600,x:540,by:1330,z:0,cols:7,t0:.15,step:.27,flat:1},
     {k:'palms',img:IM.palms,w:1300,x:540,by:1560,z:1.7,cols:8,t0:.05,flat:1}]});
 }

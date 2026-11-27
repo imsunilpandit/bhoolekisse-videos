@@ -4,7 +4,7 @@ KEYW=['सोलह','जून','तेरह','सैलाब','बह','ब�
 const RAAZ=P[20],OUTRO=P[37];
 WAVECOLS=['#4a3b2c','#6b5640','#8c7458','#b59c7c'];
 function setup(){
-  D3.addSet('ked',{bg:IM.bg,floorY:1500,slab:{color:'#7d7a72',top:'#a7a39a',by:1300,w:8,d:2.6},layers:[
+  D3.addSet('ked',{bg:IM.bg,floorY:1500,groundBy:1300,layers:[
     {k:'houses',img:IM.houses,w:1300,x:540,by:1290,z:-1.2,cols:8,t0:.05},
     {k:'shila',img:IM.shila,w:780,x:540,by:1300,z:-.7,cols:6,t0:0,anim:'drop'},
     {k:'temple',img:IM.temple,mode:'band',bands:7,rise:.3,w:520,x:540,by:1300,z:0,cols:7,t0:.25,step:.26,flat:1},

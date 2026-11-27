@@ -4,7 +4,7 @@ KEYW=['मंदिर...','बीस','हज़ार','चूहे','दू�
 const RAAZ=P[19],OUTRO=P[37];
 WAVECOLS=['#a8692a','#c98a3c','#e3ad5a','#f5d08a'];
 function setup(){
-  D3.addSet('karni',{bg:IM.bg,floorY:1500,slab:{color:'#d9cdb6',top:'#efe7d8',by:1300,w:9,d:3},layers:[
+  D3.addSet('karni',{bg:IM.bg,floorY:1500,groundBy:1300,layers:[
     {k:'temple',img:IM.temple,mode:'band',bands:6,rise:.34,w:660,x:540,by:1300,z:0,cols:7,t0:.2,step:.26,flat:1},
     {k:'rats',img:IM.rats,w:430,x:300,by:1312,z:1.2,cols:4,t0:9,anim:'pop',mode:'card'},
     {k:'white',img:IM.white_rat,w:230,x:800,by:1315,z:1.5,t0:9,anim:'pop',mode:'card'}]});

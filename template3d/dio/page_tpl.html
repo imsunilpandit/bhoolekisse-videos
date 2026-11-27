@@ -29,7 +29,7 @@ function flashT(A,B,p,col='255,236,200'){if(p<.5)A();else B();x.fillStyle=`rgba(
 function blindsT(A,B,p){A();const n=8;for(let i=0;i<n;i++){const q=eio(cl(p*1.6-i*.08));x.save();x.beginPath();x.rect(0,i*H/n,W*q,H/n+1);x.clip();B();x.restore()}}
 function TR(kind,A,B,p,t){if(kind==='wave')waveWipe(A,B,p,t);else if(kind==='page')pageTurn(A,B,p);else if(kind==='slide')slideUp(A,B,p);else if(kind==='iris')irisT(A,B,p);else if(kind==='tear')tearT(A,B,p);else if(kind==='flash')flashT(A,B,p);else if(kind==='blinds')blindsT(A,B,p);else{if(p<.5)A();else B()}}
 function dark(a){if(a<=0)return;x.fillStyle=`rgba(8,10,24,${a})`;x.fillRect(0,0,W,H)}
-function d3(set,lt,t,cam,o={}){x.drawImage(D3.render(Object.assign({set,lt,t,cam},o)),0,0)}
+function d3(set,lt,t,cam,o={}){const c2=Object.assign({},cam);c2.az=(c2.az||0)+.07*Math.sin(t*.45);c2.el=(c2.el||0)+.025*Math.sin(t*.31+1);x.drawImage(D3.render(Object.assign({set,lt,t,cam:c2},o)),0,0)}
 function buildEv(set,at,sp=1,kind='flap'){const L=D3.SETS[set].L;for(const k in L){if(k==='_slab')continue;const it=L[k];if(it.o.flat&&!it.band)continue;
   const ts=it.band?it.parts.map((g,i)=>[g.userData.t0,g.userData.mode]):[[it.o.t0||0,it.o.anim||'rise']];ts.forEach(([t0,m],i)=>{if(it.band&&i===0&&it.o.flat)return;ev(at+t0*sp+(m==='drop'?.25:.12),m==='drop'?'stone':kind,.7)})}}
 function qmarks(lt,pos){pos.forEach(([px,py,r],i)=>{const p=back((lt-.4-i*.2)/.3);if(p<=0)return;x.save();x.translate(px,py+Math.sin(lt*2+i)*8);x.rotate(r);x.scale(p,p);x.fillStyle='#FFD43B';x.strokeStyle='#111';x.lineWidth=8;x.font=F(800,130);x.textAlign='center';x.strokeText('?',0,40);x.fillText('?',0,40);x.restore()})}
