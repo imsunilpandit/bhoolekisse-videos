@@ -49,7 +49,7 @@ function snapTo(gs,GY,G){const d=GY-gs[0].userData.base.y;gs.forEach(g=>{g.posit
 function floorTex(bg,y,hh){const c=document.createElement('canvas');c.width=1080;c.height=hh;c.getContext('2d').drawImage(bg,0,y,1080,hh,0,0,1080,hh);
   const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.wrapS=t.wrapT=THREE.MirroredRepeatWrapping;t.repeat.set(3,6);return t}
 // cfg: {bg:img, floorY, slab:{color,top,y}, layers:[{k,img,w,x,by,z,cols,mode,t0,bands,flat,fx}]}
-function addSet(name,cfg){const G=new THREE.Group();S.add(G);const L={};
+function addSet(name,cfg){if(cfg.groundBy===undefined)console.log('WARN FLOATING: set '+name+' has no groundBy - objects will hang in the air');const G=new THREE.Group();S.add(G);const L={};
   const bgk=f(-9)*1.25,bgw=10.8*bgk,bgh=19.2*bgk;
   const bt=tex(cfg.bg);bt.wrapS=THREE.MirroredRepeatWrapping;bt.repeat.set(3,1);bt.offset.set(-1,0);const bg=new THREE.Mesh(new THREE.PlaneGeometry(bgw*3,bgh),new THREE.MeshBasicMaterial({map:bt}));bg.position.set(0,cfg.bgY??-0.6,-9);G.add(bg);
   const fl=new THREE.Mesh(new THREE.PlaneGeometry(60,60),new THREE.MeshLambertMaterial({map:floorTex(cfg.bg,cfg.floorY??1500,420)}));fl.rotation.x=-Math.PI/2;const GY=cfg.groundBy!==undefined?(960-cfg.groundBy)/100*f(0):-6.4;fl.position.set(0,GY,12);fl.receiveShadow=true;G.add(fl);
