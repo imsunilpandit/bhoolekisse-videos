@@ -1,0 +1,56 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+html,body{margin:0;background:#000}
+@font-face{font-family:B;font-weight:800;src:url(fonts/baloo-2/files/baloo-2-devanagari-800-normal.woff2)}
+@font-face{font-family:B;font-weight:800;src:url(fonts/baloo-2/files/baloo-2-latin-800-normal.woff2)}
+</style></head><body><canvas id="c" width="1080" height="1920"></canvas>
+<script type="module" src="dio3d.js"></script>
+<script>
+const c=document.getElementById('c'),x=c.getContext('2d'),W=1080,H=1920;
+/*HELPERS*/
+const CUES=/*CUES*/;const P=CUES.phrases.map(p=>p[1]),PE=CUES.phrases.map(p=>p[2]),TOTAL=CUES.total;
+const IM={};function loadImg(src){return new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>{console.log('MISSING '+src);r(i)};i.src=src})}
+const EV=[];function ev(t,type,v=1){EV.push({t:+(+t).toFixed(3),type,v})}
+// ---------- common extras ----------
+function sparkles(cx,cy,r,t,n=10,col='#fff3c4'){x.save();for(let i=0;i<n;i++){const a=hash(i)*6.28+t*.6,rr2=r*(.4+.6*hash(i+5)),tw=.5+.5*Math.sin(t*5+i*2);x.globalAlpha=tw;x.fillStyle=col;const px=cx+Math.cos(a)*rr2,py=cy+Math.sin(a)*rr2*.7,s=5+7*tw;
+  x.beginPath();x.moveTo(px,py-s);x.lineTo(px+s*.3,py-s*.3);x.lineTo(px+s,py);x.lineTo(px+s*.3,py+s*.3);x.lineTo(px,py+s);x.lineTo(px-s*.3,py+s*.3);x.lineTo(px-s,py);x.lineTo(px-s*.3,py-s*.3);x.closePath();x.fill()}x.restore()}
+function card(lt,fn,y0=300,h=960,x0=54,w=520){if(lt<=0)return;const cp=eo(lt/.45);x.save();x.translate(0,(1-cp)*60);x.globalAlpha=cl(lt/.2);
+  x.shadowColor='rgba(0,0,0,.45)';x.shadowBlur=24;x.shadowOffsetY=12;x.fillStyle='#f6efe0';rr(x0,y0,w,h,26);x.fill();x.shadowColor='transparent';
+  x.save();rr(x0+12,y0+12,w-24,h-24,18);x.clip();fn(x0+12,y0+12,w-24,h-24);x.restore();x.restore()}
+function waveLayer(level,col,amp,ph,t){x.fillStyle=col;x.beginPath();x.moveTo(0,H);for(let i=0;i<=40;i++){const px=i/40*W;x.lineTo(px,level+Math.sin(i*.55+ph+t*4)*amp+(hash(i+ph*10)-.5)*10)}x.lineTo(W,H);x.closePath();
+  x.shadowColor='rgba(0,0,0,.35)';x.shadowBlur=18;x.shadowOffsetY=-6;x.fill();x.shadowColor='transparent'}
+let WAVECOLS=['#5b4a3a','#7a6450','#9c8466','#c7b08e'];
+function waveWipe(A,B,p,t){if(p<.5)A();else B();const q=p<.5?eio(p*2):1-eio((p-.5)*2);WAVECOLS.forEach((col,i)=>{const lev=H-(H+260)*cl(q*1.15-i*.05)+i*40;waveLayer(lev,col,26,i*1.3,t)})}
+function irisT(A,B,p,cx=540,cy=900,col='rgba(255,233,168,.9)'){A();const r=eio(p)*1500;x.save();x.beginPath();x.arc(cx,cy,r,0,6.28);x.clip();B();x.restore();x.save();x.strokeStyle=col;x.lineWidth=14;x.beginPath();x.arc(cx,cy,r,0,6.28);x.stroke();x.restore()}
+function tearT(A,B,p){ // paper tear: B revealed as top sheet rips upward
+  B();const e=eio(p),yy=H*(1-e)-80;x.save();x.beginPath();x.moveTo(0,0);x.lineTo(W,0);
+  for(let i=24;i>=0;i--){x.lineTo(i/24*W,yy+(hash(i*3.1)-.5)*70+Math.sin(i)*20)}x.closePath();x.clip();x.translate(0,-e*120);A();x.restore();
+  x.save();x.strokeStyle='#f3ead7';x.lineWidth=16;x.beginPath();for(let i=0;i<=24;i++){const px=i/24*W,py=yy+(hash(i*3.1)-.5)*70+Math.sin(i)*20-e*0;i?x.lineTo(px,py):x.moveTo(px,py)}x.stroke();x.restore()}
+function flashT(A,B,p,col='255,236,200'){if(p<.5)A();else B();x.fillStyle=`rgba(${col},${Math.sin(p*3.1416)*.85})`;x.fillRect(0,0,W,H)}
+function blindsT(A,B,p){A();const n=8;for(let i=0;i<n;i++){const q=eio(cl(p*1.6-i*.08));x.save();x.beginPath();x.rect(0,i*H/n,W*q,H/n+1);x.clip();B();x.restore()}}
+function TR(kind,A,B,p,t){if(kind==='wave')waveWipe(A,B,p,t);else if(kind==='page')pageTurn(A,B,p);else if(kind==='slide')slideUp(A,B,p);else if(kind==='iris')irisT(A,B,p);else if(kind==='tear')tearT(A,B,p);else if(kind==='flash')flashT(A,B,p);else if(kind==='blinds')blindsT(A,B,p);else{if(p<.5)A();else B()}}
+function dark(a){if(a<=0)return;x.fillStyle=`rgba(8,10,24,${a})`;x.fillRect(0,0,W,H)}
+function d3(set,lt,t,cam,o={}){x.drawImage(D3.render(Object.assign({set,lt,t,cam},o)),0,0)}
+function buildEv(set,at,sp=1,kind='flap'){const L=D3.SETS[set].L;for(const k in L){if(k==='_slab')continue;const it=L[k];if(it.o.flat&&!it.band)continue;
+  const ts=it.band?it.parts.map((g,i)=>[g.userData.t0,g.userData.mode]):[[it.o.t0||0,it.o.anim||'rise']];ts.forEach(([t0,m],i)=>{if(it.band&&i===0&&it.o.flat)return;ev(at+t0*sp+(m==='drop'?.25:.12),m==='drop'?'stone':kind,.7)})}}
+function qmarks(lt,pos){pos.forEach(([px,py,r],i)=>{const p=back((lt-.4-i*.2)/.3);if(p<=0)return;x.save();x.translate(px,py+Math.sin(lt*2+i)*8);x.rotate(r);x.scale(p,p);x.fillStyle='#FFD43B';x.strokeStyle='#111';x.lineWidth=8;x.font=F(800,130);x.textAlign='center';x.strokeText('?',0,40);x.fillText('?',0,40);x.restore()})}
+function subBtn(l,cx=470,cy=820){if(l<=0)return;subArrow(l);const p=back(l/.35),pul=1+.04*Math.sin(l*6);x.save();x.translate(cx,cy);x.scale(p*pul,p*pul);x.shadowColor='rgba(0,0,0,.35)';x.shadowBlur=16;x.shadowOffsetY=8;x.fillStyle='#E62117';rr(-250,-70,500,140,26);x.fill();x.shadowColor='transparent';x.fillStyle='#fff';x.font=F(800,66);x.textAlign='center';x.textBaseline='middle';x.fillText('सब्सक्राइब करें',0,6);x.restore()}
+// ---------- captions: phrases auto-split into 1-3 word stickers ----------
+let KEYW=[];
+function buildCaps(){CUES.phrases.forEach(([s,a,b],i)=>{const ws=s.replace(/["“”]/g,'').split(/\s+/).filter(Boolean);const n=ws.length;const per=n<=3?n:(n<=6?Math.ceil(n/2):3);const groups=[];for(let j=0;j<n;j+=per)groups.push(ws.slice(j,j+per));
+  const L=g=>g.join('').length+1,tot=groups.reduce((s2,g)=>s2+L(g),0);let t=a;groups.forEach(g=>{const txt=g.map(w=>KEYW.some(k=>w.includes(k))?'*'+w+'*':w).join(' ');cap(t,txt);t+=(b-a)*L(g)/tot});
+  const nx=CUES.phrases[i+1];if(!nx||nx[1]-b>.45)cap(b+.15,'')});CAP.push({t:TOTAL+.3,s:''})}
+/*SCENES*/
+// ---------- runner ----------
+function render(t){x.setTransform(1,0,0,1,0,0);x.clearRect(0,0,W,H);
+  let i=0;for(let k=0;k<SCN.length;k++)if(t>=SCN[k].at)i=k;const S=SCN[i],N=SCN[i+1];
+  const d=N?(N.d??.6):0;
+  if(N&&t>N.at-d){const p=(t-(N.at-d))/d;TR(N.tr||'cut',()=>S.f(t-S.at,t),()=>N.f(t-N.at+d*(N.lead??.5),t),p,t)}
+  else S.f(t-S.at,t);
+  if(!(S.nocap))captions(t);watermark();grain(.05)}
+window.EV=EV;
+const d3p=new Promise(r=>{if(window.D3)r();else window.addEventListener('d3ready',r)});
+window.ready=(async()=>{await d3p;IM.logo=await loadImg('img/logo.png');
+  await Promise.all(ASSETS.map(async n=>{IM[n.replace(/\.\w+$/,'')]=await loadImg('img/'+n)}));
+  setup();buildCaps();events();window.T={end:+(TOTAL+.9).toFixed(2),raaz:RAAZ,outro:OUTRO};
+  await document.fonts.load('800 40px B','अ');render(0);return 1})();
+</script></body></html>
