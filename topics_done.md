@@ -95,4 +95,5 @@ Note 2026-11-27 ~18:15 UK: 4 shorts fully re-rendered — objects stand on a rea
 | Karni Mata | Wo5hvuwYAKM | 2026-12-03T07:06Z | 12:36 |
 | Shani Shingnapur | eViAGNLjS_M | 2026-12-03T14:14Z | 19:44 |
 | Virupaksha ulti parchhai | Y-kCywXg5Pg | 2026-12-04T07:08Z | 12:38 |
-All set containsSyntheticMedia=true, made for kids = No. Still pending upload: Jatinga, Roopkund, Solapur labyrinth.
+| Jatinga bird mystery | xAQFruQfVgQ | 2026-12-04T14:12Z | 19:42 |
+All set containsSyntheticMedia=true, made for kids = No. Pending (daily cap hit 28 Nov): Roopkund 2026-12-05T07:05Z, Solapur 2026-12-05T14:16Z — retry 29 Nov 14:07Z.
