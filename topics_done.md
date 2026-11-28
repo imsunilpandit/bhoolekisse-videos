@@ -81,3 +81,18 @@ Note 2026-11-27 ~18:15 UK: 4 shorts fully re-rendered — objects stand on a rea
 - Roopkund skeleton lake — recipe: icy Himalaya + snow, hail storm shake, teal DNA lab, 38-dot grid (23/14), cream timeline; transitions flash/blinds/slide/iris/page/tear; music cfg 'r'. videos/2026-11-27_roopkund-kankal-jheel_FINAL.mp4 (68.7 s)
 - Solapur Boramani labyrinth — recipe: golden-hour savanna, flat-lying labyrinth on ground, ring counter, coin flip + India–Crete arc, sea + ship, trade exchange, Deccan route map with cart; transitions page/wave/slide/iris/blinds/tear; music cfg 'l'. videos/2026-11-27_solapur-bhoolbhulaiya_FINAL.mp4 (72.9 s)
 - Planned slots (re-check first): 4 Dec 14:00Z, 5 Dec 07:00Z, 5 Dec 14:00Z (after the 4 temple videos 2–4 Dec).
+
+## Uploads 2026-11-28 (new rule: odd-minute slots in IST peaks)
+| Video | ID | publish_at (UTC) | IST |
+|---|---|---|---|
+| Khatu Shyam – हारे का सहारा (9:34, 16:9) | PvEn-e6-Lp8 | public (user published 28 Nov) | — |
+| Stambheshwar Mahadev | VJtLyq4YuRo | 2026-11-29T14:13Z | 19:43 |
+| Magnetic Hill | Gc6aNc7ATAY | 2026-11-30T07:07Z | 12:37 |
+| Sarangpur Hanuman | f7toOHAxwww | 2026-12-01T07:04Z | 12:34 |
+| Hampi musical pillars | 443yeZEYzbQ | 2026-12-01T14:17Z | 19:47 |
+| Ramappa floating bricks | DuXthyd8XWg | 2026-12-02T07:09Z | 12:39 |
+| Kedarnath Bhim Shila | rtv2phJsqbQ | 2026-12-02T14:11Z | 19:41 |
+| Karni Mata | Wo5hvuwYAKM | 2026-12-03T07:06Z | 12:36 |
+| Shani Shingnapur | eViAGNLjS_M | 2026-12-03T14:14Z | 19:44 |
+| Virupaksha ulti parchhai | Y-kCywXg5Pg | 2026-12-04T07:08Z | 12:38 |
+All set containsSyntheticMedia=true, made for kids = No. Still pending upload: Jatinga, Roopkund, Solapur labyrinth.
